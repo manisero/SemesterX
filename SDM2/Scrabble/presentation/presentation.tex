@@ -1,14 +1,27 @@
 \documentclass[10pt,a4paper]{beamer}
-\usetheme{Malmoe}
+
+% theme %
+
+\usetheme[compress]{Dresden}
+\usefonttheme{professionalfonts}
+
+% color definitions %
+
 \definecolor{Board}{RGB}{60,145,143}
 \definecolor{DoubleWordBonus}{RGB}{239,174,154}
 \definecolor{DoubleLetterBonus}{RGB}{141,201,240}
 \definecolor{TripleLetterBonus}{RGB}{54,156,219}
 \definecolor{Tile}{RGB}{247,225,190}
-\definecolor{UniGreen}{RGB}{0,100,200}
+\definecolor{UniGreen}{RGB}{0,150,0}
+
+% slide colors setup %
+
 \setbeamercolor{title}{fg=UniGreen}
 \setbeamercolor{frametitle}{fg=UniGreen}
 \setbeamercolor{structure}{fg=UniGreen}
+
+% import statements %
+
 \usepackage[utf8]{inputenc}
 \usepackage[MeX]{polski}
 \usepackage{amsmath}
@@ -22,9 +35,16 @@
 \usetikzlibrary{calc,shapes,shapes.multipart, arrows}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.8}
-\author{\texorpdfstring{Jakub Turek \newline \href{mailto:jkbturek@gmail.com}{ jkbturek@gmail.com }}{Jakub Turek}}
-\title{Wykorzystanie sztucznej inteligencji w grze Scrabble}
+
+% page numbers %
+
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+  \insertshorttitle\hfill\insertframenumber\,/\,\inserttotalframenumber}
+
+\author[Jakub Turek]{\texorpdfstring{Jakub Turek \newline \href{mailto:J.Turek@stud.elka.pw.edu.pl}{ J.Turek@stud.elka.pw.edu.pl }}{Jakub Turek} \newline \vskip2pt {\small Promotor: dr inż. Jakub Koperwas}}
+\title{Zaawansowany algorytm gry w~Scrabble}
 \institute{Wydział Elektroniki i Technik Informacyjnych}
+\date{25 kwietnia 2014}
 \begin{document}
 
 \begin{frame}
