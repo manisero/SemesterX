@@ -33,6 +33,7 @@
 \usepackage{array}
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes,shapes.multipart, arrows}
+\usepackage{tikz-uml}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.8}
 
@@ -42,7 +43,7 @@
   \insertshorttitle\hfill\insertframenumber\,/\,\inserttotalframenumber}
 
 \author[Jakub Turek]{\texorpdfstring{Jakub Turek \newline \href{mailto:J.Turek@stud.elka.pw.edu.pl}{ J.Turek@stud.elka.pw.edu.pl }}{Jakub Turek} \newline \vskip2pt {\small Promotor: dr inż. Jakub Koperwas}}
-\title{Zaawansowany algorytm gry w~Scrabble}
+\title{Zaawansowana sztuczna inteligencja do gry Scrabble}
 \institute{Wydział Elektroniki i~Technik Informacyjnych}
 \date{25 kwietnia 2014}
 \begin{document}
@@ -126,6 +127,7 @@
 	\begin{enumerate}
 		\setcounter{enumi}{3}
 		\item Przedstawienie algorytmu Appela-Jacobsona wyznaczającego wszystkie legalne kombinacje ruchów dla ustalonego stanu gry.
+		\item Podział rozgrywki na cztery fazy - MG, PEG-1, PEG-2, EG.
 		\item Porównanie najlepszych algorytmów sztucznej inteligencji obecnej generacji:
 			\begin{itemize}
 				\item Algorytm Maven.
@@ -155,6 +157,104 @@
 				\item Dodanie obsługi nowego języka wymaga przeprowadzenia automatycznej analizy, która może być operacją czasochłonną.
 			\end{itemize}
 	\end{itemize}
+\end{frame}
+
+\section{Podstawy teoretyczne}
+\subsection{Strategia optymalna}
+
+\begin{frame}
+	\frametitle{Strategia optymalna}
+
+	\begin{block}{Twierdzenie}	
+		Istnieje optymalna strategia gry w~Scrabble.
+	\end{block}
+
+	\begin{block}{Przestrzeń stanów}	
+		Stan rozgrywki po~danej turze opisują parametry $P$ - rozmieszczenie klocków na planszy oraz $Z$ - zagranie. Przejście między stanami determinuje zmiana $(\Delta P, \Delta Z)$.
+	\end{block}
+
+	\begin{block}{Dowód}	
+		Dla dowolnej rozgrywki tworzymy graf możliwych stanów wychodząc 
+		od stanu końcowego. Do stanu końcowego można wejść tylko poprzez skończoną liczbę legalnych zagrań. Rozumując iteracyjnie dochodzimy do stanu początkowego, na każdym etapie analizując skończoną liczbę przejść między stanami. Wynika z~tego, że ilość stanów jest skończona. Można więc w~każdym kroku wybrać optymalną strategię, która maksymalizuje prawdopodobieństwo wygranej.
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Strategia optymalna - ilustracja dowodu}
+	
+	\begin{tikzpicture}
+		\tikzstyle{state} = [draw, shape=circle, minimum width=15pt, minimum height=15pt]
+		\node (s0) [state, fill=UniGreen] at (0,0) {};
+		\node (s1) [state] at (2,2) {};
+		\node (s2) [state] at (2,0) {};
+		\node (s3) [state] at (2, -2) {};
+		\node (s4) [state] at (4,3.5) {};
+		\node (s5) [state] at (4,2.5) {};
+		\node (s6) [state] at (4,1.5) {};
+		\node (s7) [state] at (4,0.5) {};
+		\node (s8) [state] at (4,-0.5) {};
+		\node (s9) [state] at (4,-1.5) {};
+		\node (s10) [state] at (4,-2.5) {};
+		\draw (s0) -- node[above, sloped, font=\scriptsize] {Zagranie 1} (s1);
+		\draw (s0) -- node[above, sloped, font=\scriptsize, near end, xshift=-8pt] {Zagranie 2} (s2);
+		\draw (s0) -- node[above, sloped, font=\scriptsize] {Zagranie 3} (s3);
+		\draw (s1) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s4);
+		\draw (s1) -- node[xshift=-6pt, below, near end, sloped, font=\tiny] {Odpowiedź 2} (s5);
+		\draw (s1) -- node[below, sloped, font=\tiny] {Odpowiedź 3} (s6);
+		\draw (s2) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s7);
+		\draw (s2) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s8);
+		\draw (s3) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s9);
+		\draw (s3) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s10);
+		\draw [red, thick] plot [smooth cycle] coordinates {(-0.5, -0.5) (-0.5, 0.5) (2, 0.5) (4.5, 1.05) (4.76, -1.15) (2.3, -0.65)};
+	\end{tikzpicture}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Strategia optymalna - następstwa}
+
+	\begin{itemize}
+		\item Wyznaczenie optymalnej strategii należy do klasy problemów \emph{PSPACE-complete}.
+		\item Analiza przestrzeni stanów jest możliwa wyłącznie dla bardzo ograniczonej przestrzeni stanów:
+			\begin{itemize}
+				\item W~praktyce analiza przestrzeni stanów jest możliwa, gdy w~worku nie ma już klocków lub gdy pozostał jeden/dwa klocki.
+			\end{itemize}
+		\item Należy zmieniać strategię w~zależności od fazy rozgrywki:
+			\begin{description}
+				\item[Pierwszy ruch] maksymalizacja liczby zdobytych punktów.
+				\item[MG] algorytm heurystyczny z~symulacją w~przód.
+				\item[PEG, EG] przeszukiwanie przestrzeni stanów z~ograniczeniami.
+			\end{description}
+	\end{itemize}
+\end{frame}
+
+\section{Implementacja}
+\subsection{Strategia}
+
+\begin{frame}[fragile]
+	\frametitle{Wzorzec projektowy - strategia}
+	
+	\begin{columns}
+		\begin{column}{.5\textwidth}
+			\begin{block}{Strategia}	
+				Wzorzec definiuje rodzinę algorytmów, pakuje je jako osobne klasy i~powoduje, że są one w~pełni wymienne. Zastosowanie strategii pozwala na to, aby zmiany w~implementacji przetwarzania były całkowicie niezależne od strony klienta, który z~nich korzysta.
+			\end{block}
+		\end{column}
+		\begin{column}{.5\textwidth}
+			\scalebox{0.7}{
+				\begin{tikzpicture}
+					\umlclass[type=interface,x=0,y=3]{ScrabbleAI}{\# phase : GamePhase}{+ move() : void \\ \# pickStrategy() : IMoveStrategy} 
+					\umlclass[type=interface,x=0,y=0]{IMoveStrategy}{}{+ move() : void} 
+					\umlclass[x=-2, y=-2.25]{FirstPlayStrategy}{}{+ move() : void}
+					\umlclass[x=0, y=-4.5]{MidGameStrategy}{}{+ move() : void}
+					\umlclass[x=2, y=-2.25]{EndGameStrategy}{}{+ move() : void}
+					\umluniassoc{ScrabbleAI}{IMoveStrategy}
+					\umlimpl{IMoveStrategy}{FirstPlayStrategy}
+					\umlimpl{IMoveStrategy}{MidGameStrategy}
+					\umlimpl{IMoveStrategy}{EndGameStrategy}
+				\end{tikzpicture}
+			}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}[fragile]
