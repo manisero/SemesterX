@@ -135,16 +135,25 @@
 	\end{enumerate}
 \end{frame}
 
-\begin{frame}
-	\frametitle{Statystyczny opis słownika}
+\subsection{Założenia}
+
+\begin{frame}[t]
+	\frametitle{Założenia algorytmu}
 	
-	Na podstawie statystycznego opisu słownika można wyprowadzić szereg użytecznych heurystyk:
-	
+	Cel pracy oraz przyjęte założenia:
+
 	\begin{itemize}
-		\item Częstotliwość występowania liter.
-		\item Najbardziej prawdopodobne n-gramy.
-		\item Najlepsze otwarcia.
-		\item Najlepsze kombinacje liter.
+		\item Zwiększenie procentowej liczby wygranych najlepszych algorytmów obecnej generacji:
+			\begin{itemize}
+				\item Skuteczność mierzona w~starciu z~przeciwnikami klasy mistrzowskiej.
+			\end{itemize}
+		\item Algorytmem bazowym (oraz referencyjnym) jest wykorzystywany przez aplikację Quackle.
+		\item Średni czas wykonania ruchu nie może być większy niż w~algorytmach obecnej generacji.
+		\item Złożoność pamięciowa algorytmu nie jest istotna.
+		\item Słownik dopuszczalnych wyrazów jest znany z~góry:
+			\begin{itemize}
+				\item Dodanie obsługi nowego języka wymaga przeprowadzenia automatycznej analizy, która może być operacją czasochłonną.
+			\end{itemize}
 	\end{itemize}
 \end{frame}
 
