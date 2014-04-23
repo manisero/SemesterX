@@ -31,16 +31,93 @@
 \usepackage{rotating}
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{ragged2e}
 \usepackage{tikz}
-\usetikzlibrary{calc,shapes,shapes.multipart, arrows}
+\usetikzlibrary{calc,shapes,shapes.multipart,arrows,chains}
 \usepackage{tikz-uml}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.8}
 
 % page numbers %
 
 \expandafter\def\expandafter\insertshorttitle\expandafter{%
   \insertshorttitle\hfill\insertframenumber\,/\,\inserttotalframenumber}
+
+% cool timeline %
+
+\definecolor{arrowcolor}{RGB}{0,150,0}
+\definecolor{circlecolor}{RGB}{255,255,255}
+\colorlet{textcolor}{black}
+\definecolor{bordercolor}{RGB}{200,0,0}
+
+\pgfdeclarelayer{background}
+\pgfsetlayers{background,main}
+
+\newcounter{task}
+
+\newlength\taskwidth% width of the box for the task description
+\newlength\taskvsep% vertical distance between the task description and arrow
+
+\setlength\taskwidth{2.5cm}
+\setlength\taskvsep{17pt}
+
+\def\taskpos{}
+\def\taskanchor{}
+
+\newcommand\task[1]{%
+  {\parbox[t]{\taskwidth}{\scriptsize\Centering#1}}}
+
+\tikzset{
+inner/.style={
+  on chain,
+  circle,
+  inner sep=4pt,
+  fill=circlecolor,
+  line width=1.5pt,
+  draw=bordercolor,
+  text width=1.2em,
+  align=center,
+  text height=1.25ex,
+  text depth=0ex
+},
+on grid
+}
+
+\newcommand\Task[2][]{%
+\node[inner xsep=0pt] (c1) {\phantom{A}};
+\stepcounter{task}
+\ifodd\thetask\relax
+  \renewcommand\taskpos{\taskvsep}\renewcommand\taskanchor{south}
+\else
+  \renewcommand\taskpos{-\taskvsep}\renewcommand\taskanchor{north}
+\fi
+\node[inner,font=\footnotesize\sffamily\color{textcolor}]    
+  (c\the\numexpr\value{task}+1\relax) {#1};
+\node[anchor=\taskanchor,yshift=\taskpos] 
+  at (c\the\numexpr\value{task}+1\relax) {\task{#2}};
+}
+
+\newcommand\drawarrow{% the arrow is placed in the background layer 
+                                                     % after the node for the tasks have been placed
+\ifnum\thetask=0\relax
+  \node[on chain] (c1) {}; % if no \Task command is used, the arrow will be drawn
+\fi
+\node[on chain] (f) {};
+\begin{pgfonlayer}{background}
+\node[
+  inner sep=10pt,
+  single arrow,
+  single arrow head extend=0.8cm,
+  draw=none,
+  fill=arrowcolor,
+  fit= (c1) (f)
+] (arrow) {};
+\fill[white] % the decoration at the tail of the arrow
+  (arrow.before tail) -- (c1|-arrow.west) -- (arrow.after tail) -- cycle;
+\end{pgfonlayer}
+}
+
+\newenvironment{timeline}[1][node distance=.75\taskwidth]
+  {\par\noindent\begin{tikzpicture}[start chain,#1]}
+  {\drawarrow\end{tikzpicture}\par}
 
 \author[Jakub Turek]{\texorpdfstring{Jakub Turek \newline \href{mailto:J.Turek@stud.elka.pw.edu.pl}{ J.Turek@stud.elka.pw.edu.pl }}{Jakub Turek} \newline \vskip2pt {\small Promotor: dr inż. Jakub Koperwas}}
 \title{Zaawansowana sztuczna inteligencja do gry Scrabble}
@@ -218,13 +295,45 @@
 			\begin{itemize}
 				\item W~praktyce analiza przestrzeni stanów jest możliwa, gdy w~worku nie ma już klocków lub gdy pozostał jeden/dwa klocki.
 			\end{itemize}
-		\item Należy zmieniać strategię w~zależności od fazy rozgrywki:
-			\begin{description}
-				\item[Pierwszy ruch] maksymalizacja liczby zdobytych punktów.
-				\item[MG] algorytm heurystyczny z~symulacją w~przód.
-				\item[PEG, EG] przeszukiwanie przestrzeni stanów z~ograniczeniami.
-			\end{description}
+		\item \textbf{Należy zmieniać strategię w~zależności od fazy rozgrywki}:
+			\begin{itemize}
+				\item Nie zawsze można użyć strategii optymalnej.
+				\item Wykorzystanie metod heurystycznych.
+			\end{itemize}
 	\end{itemize}
+\end{frame}
+
+\subsection{Fazy gry}
+
+\begin{frame}
+	\frametitle{Fazy gry}
+	
+	Rozgrywkę w~Scrabble można podzielić na cztery zasadnicze fazy:
+
+	\begin{description}
+		\item[OP] \emph{opening-play}. Faza obejmuje pierwsze zagranie.
+		\item[MG] \emph{mid-game}. Faza trwa od momentu rozpoczęcia rozgrywki do momentu, w~którym w~worku pozostaje jeden/dwa klocki lub nie ma już klocków (w~zależności od przebiegu rozgrywki).
+		\item[PEG] \emph{pre-endgame}. Faza trwa, gdy w~worku pozostał pojedynczy klocek. Według szacunków przez tę fazę przechodzi około $50\%$ gier. Można wyróżnić dwie podfazy:
+			\begin{description}
+				\item[PEG-1] W~worku pozostał jeden klocek.
+				\item[PEG-2] W~worku pozostały dwa klocki.
+			\end{description}
+		\item[EG] \emph{end-game}. W~worku nie ma już żadnych klocków.
+	\end{description}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Strategia a~faza gry}
+	
+	\begin{figure}
+		\centering
+		\begin{timeline}
+			\Task[OP]{Maksymalizacja punktów uzyskanych z~zagrania otwierającego}
+			\Task[MG]{Algorytm z~heurystyczną funkcją kosztu i~symulacją w~przód}
+			\Task[EG]{Przeszukiwanie przestrzeni stanów (z~ograniczeniami)}
+		\end{timeline}
+		\caption{Zmiana strategii wraz z~progresją rozgrywki.}
+	\end{figure}
 \end{frame}
 
 \section{Implementacja}
@@ -255,128 +364,6 @@
 			}
 		\end{column}
 	\end{columns}
-\end{frame}
-
-\begin{frame}[fragile]
-	\frametitle{Prawdopodobieństwo występowania liter}
-			
-		\begin{tikzpicture}
-			\begin{axis}[	ytick={0, 0.01, ..., 0.1}, 
-					yticklabel style={/pgf/number format/fixed},
-					bar width=2mm,
-					symbolic x coords={a,i,o,e,n,y,z,w,r,c,m,s,k,p,t,u,l,d,el,j,b,g,on,h,es,zet,een,f,uu,en,ci,ziet},
-					xticklabels={a,i,o,e,n,y,z,w,r,c,m,s,k,p,t,u,l,d,ł,j,b,g,ą,h,ś,ż,ę,f,ó,ń,ć,ź},
-					xticklabel style={text height=1.5ex},
-					xtick=data,
-					legend entries={Prawdopodobieństwo dla słownika,Prawdopodobieństwo w Scrabble},
-					height=.9\textheight,
-					width=\textwidth	]
-					
-    			\addplot[ybar,fill=UniGreen, area legend] coordinates {
-        			(a,0.0937997771175)
-        			(i,0.0894002903657)
-        			(o,0.0796720098207)
-        			(e,0.0765123987403)
-        			(n,0.0683027202572)
-        			(y,0.0497071483395)
-        			(z,0.0466694841626)
-        			(w,0.0453746978807)
-        			(r,0.0440417929225)
-        			(c,0.0409715964269)
-        			(m,0.0387468458849)
-        			(s,0.0322800452968)
-        			(k,0.0316402758911)
-        			(p,0.029784849318)
-        			(t,0.0273647734205)
-        			(u,0.0271062565005)
-        			(l,0.023888810187)
-        			(d,0.0219487338635)
-        			(el,0.0210803509823)
-        			(j,0.0195483416618)
-        			(b,0.0192369186479)
-        			(g,0.0132131819509)
-        			(on,0.0128586125387)
-        			(h,0.0115084555932)
-        			(es,0.0096922978289)
-        			(zet,0.0064777761380)
-        			(een,0.0064627258330)
-        			(f,0.0044409243818)
-        			(uu,0.0035346199898)
-        			(en,0.0027972207673)
-        			(ci, 0.0011952505312)
-        			(ziet,0.0007161382021)
-    			};
-    			
-    			\addplot[ybar,fill=lightgray, area legend] coordinates {
-        			(a,0.09)
-        			(i,0.08)
-        			(o,0.06)
-        			(e,0.07)
-        			(n,0.05)
-        			(y,0.04)
-        			(z,0.05)
-        			(w,0.04)
-        			(r,0.04)
-        			(c,0.03)
-        			(m,0.03)
-        			(s,0.04)
-        			(k,0.03)
-        			(p,0.03)
-        			(t,0.03)
-        			(u,0.02)
-        			(l,0.03)
-        			(d,0.03)
-        			(el,0.02)
-        			(j,0.02)
-        			(b,0.02)
-        			(g,0.02)
-        			(on,0.01)
-        			(h,0.02)
-        			(es,0.01)
-        			(zet,0.01)
-        			(een,0.01)
-        			(f,0.01)
-        			(uu,0.01)
-        			(en,0.01)
-        			(ci, 0.01)
-        			(ziet,0.01)
-    			};
-    			\addplot[forget plot,ybar,fill=UniGreen] coordinates {
-        			(a,0)
-        			(i,0)
-        			(o,0)
-        			(e,0)
-        			(n,0)
-        			(y,0)
-        			(z,0.0466694841626)
-        			(w,0)
-        			(r,0)
-        			(c,0)
-        			(m,0)
-        			(s,0.0322800452968)
-        			(k,0)
-        			(p,0.029784849318)
-        			(t,0.0273647734205)
-        			(u,0)
-        			(l,0.023888810187)
-        			(d,0.0219487338635)
-        			(el,0)
-        			(j,0.0195483416618)
-        			(b,0.0192369186479)
-        			(g,0.0132131819509)
-        			(on,0)
-        			(h,0.0115084555932)
-        			(es,0.0096922978289)
-        			(zet,0.0064777761380)
-        			(een,0.0064627258330)
-        			(f,0.0044409243818)
-        			(uu,0.0035346199898)
-        			(en,0.0027972207673)
-        			(ci, 0.0011952505312)
-        			(ziet,0.0007161382021)
-    			};
-			\end{axis}
-		\end{tikzpicture}
 \end{frame}
 
 \begin{frame}
