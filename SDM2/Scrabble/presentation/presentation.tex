@@ -35,6 +35,8 @@
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes,shapes.multipart,arrows,chains}
 \usepackage{tikz-uml}
+\usepackage{adjustbox}
+\usepackage{caption}
 
 % page numbers %
 
@@ -46,7 +48,7 @@
 \definecolor{arrowcolor}{RGB}{0,150,0}
 \definecolor{circlecolor}{RGB}{255,255,255}
 \colorlet{textcolor}{black}
-\definecolor{bordercolor}{RGB}{200,0,0}
+\definecolor{bordercolor}{RGB}{220,0,0}
 
 \pgfdeclarelayer{background}
 \pgfsetlayers{background,main}
@@ -138,7 +140,9 @@ on grid
 	\begin{enumerate}
 		\item Wprowadzenie.
 		\item Przegląd zagadnień omówionych na pierwszym seminarium.
-		\item Opis algorytmu.
+		\item Istnienie optymalnej strategii gry.
+		\item Ogólny opis algorytmu.
+		\item Omówienie wykorzystanych mechanizmów w~podziale na fazy gry.
 	\end{enumerate}
 \end{frame}
 
@@ -322,6 +326,8 @@ on grid
 	\end{description}
 \end{frame}
 
+\captionsetup[figure]{skip=10pt}
+
 \begin{frame}[fragile]
 	\frametitle{Strategia a~faza gry}
 	
@@ -364,6 +370,74 @@ on grid
 			}
 		\end{column}
 	\end{columns}
+\end{frame}
+
+\subsection{Faza Opening Play}
+
+\begin{frame}
+	\frametitle{Otwarcie gry}
+
+	\begin{itemize}
+		\item Celem jest wybranie najwyżej punktowanego zagrania.
+		\item W~algorytmie aplikacji Quackle jest przeszukiwany słownik i~dla każdej prawidłowej kombinacji liter wyznaczana jest wartość punktowa.
+		\item Wprowadzona optymalizacja wydajnościowa:
+			\begin{itemize}
+				\item Ponieważ słownik jest znany z~góry można przeprowadzać wstępne obliczenia.
+				\item Każdą możliwą kombinację liter indeksujemy 7-wyrazowym ciągiem znaków, które przedstawiają litery ułożone w~porządku alfabetycznym.
+				\item Dla każdego indeksu obliczamy najlepsze otwarcie.
+				\item Najlepsze otwarcie wyznaczane w~czasie jednostkowym (wyjątek: blanki).
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{Faza Mid Game}
+\captionsetup[figure]{skip=2pt}
+
+\begin{frame}
+	\frametitle{Algorytm dla fazy mid-game}
+
+	\begin{figure}
+		\centering
+			\scalebox{0.57}{
+				\begin{tikzpicture}[node distance=2cm]
+					\noindent
+					\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=UniGreen!80]
+					\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!80]
+					\tikzstyle{arrow} = [thick,->,>=stealth]
+					
+					\node (rack) [io] {Stojak};
+					\node (board) [io, right of=rack, xshift=2cm] {Plansza};
+					\coordinate (rackboard) at ($(rack)!0.5!(board)$);
+					\node (movegen) [process, below of= rackboard] {Generacja ruchu};
+					\node (staticeval) [process, below of=movegen] {Statyczne oszacowanie};
+					\coordinate (movegenstaticeval) at ($(movegen)!0.5!(staticeval)$);
+					\node (possmoves) [io, right of=movegenstaticeval, xshift=5cm] {Wszystkie możliwe ruchy};
+					\node (simulation) [process, below of=staticeval] {Symulacja};
+					\node (bestmoves) [io, below of=possmoves] {23 najlepsze ruchy};
+					\node (hypsequences) [io, below of=bestmoves, text width=5cm] {Hipotetyczna sytuacja 2 ruchy w~przód};
+					\node (winpercestimation) [process, below of=simulation, text width=4cm] {Oszacowanie prawdopodobieństwa wygranej};
+					\node (end) [process, draw=none, fill=none, below of=winpercestimation, minimum height=1mm] { };
+					\coordinate (staticevalsimulation) at ($(staticeval)!0.5!(simulation)$);
+					\node (tilesleft) [io, left of=staticevalsimulation,xshift=-3cm] {Pozostałe płytki};
+					\node (score) [io, below of=tilesleft] {Wynik};
+					\coordinate (winpercestimationend) at ($(winpercestimation)!0.5!(end)$);
+					\node (chosenmoves) [io, below of=hypsequences,text width=5cm] {10 wybranych, posortowanych ruchów};
+					\draw [arrow] (movegen) -- (staticeval);
+					\draw [arrow] (staticeval) -- (simulation);
+					\draw [arrow] (simulation) -- (winpercestimation);
+					\draw [arrow] (rack) -- (movegen);
+					\draw [arrow] (board) -- (movegen);
+					\draw [arrow] (winpercestimation) -- (end);
+					\draw [arrow] (tilesleft) -- (winpercestimation);
+					\draw [arrow] (score) -- (winpercestimation);
+					\draw [arrow] ($(movegen)!0.5!(staticeval)$) -- (possmoves);
+					\draw [arrow] ($(staticeval)!0.5!(simulation)$) -- (bestmoves);
+					\draw [arrow] ($(simulation)!0.5!(winpercestimation)$) -- (hypsequences);
+					\draw [arrow] ($(winpercestimation)!0.5!(end)$) -- (chosenmoves);
+				\end{tikzpicture}
+			}
+			\caption{Schemat algorytmu referencyjnego dla fazy MG.}
+	\end{figure}
 \end{frame}
 
 \begin{frame}
@@ -1473,45 +1547,7 @@ on grid
 \begin{frame}
 	\frametitle{Mid-game (Quackle)}
 	
-	\begin{center}
-		\scalebox{0.57}{
-			\begin{tikzpicture}[node distance=2cm]
-				\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=UniGreen!50]
-				\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!50]
-				\tikzstyle{arrow} = [thick,->,>=stealth]
-				
-				\node (rack) [io] {Stojak};
-				\node (board) [io, right of=rack, xshift=2cm] {Plansza};
-				\coordinate (rackboard) at ($(rack)!0.5!(board)$);
-				\node (movegen) [process, below of= rackboard] {Generacja ruchu};
-				\node (staticeval) [process, below of=movegen] {Statyczne oszacowanie};
-				\coordinate (movegenstaticeval) at ($(movegen)!0.5!(staticeval)$);
-				\node (possmoves) [io, right of=movegenstaticeval, xshift=5cm] {Wszystkie możliwe ruchy};
-				\node (simulation) [process, below of=staticeval] {Symulacja};
-				\node (bestmoves) [io, below of=possmoves] {23 najlepsze ruchy};
-				\node (hypsequences) [io, below of=bestmoves, text width=5cm] {Hipotetyczna sytuacja 2 ruchy w~przód};
-				\node (winpercestimation) [process, below of=simulation, text width=4cm] {Oszacowanie prawdopodobieństwa wygranej};
-				\node (end) [process, draw=none, fill=none, below of=winpercestimation] { };
-				\coordinate (staticevalsimulation) at ($(staticeval)!0.5!(simulation)$);
-				\node (tilesleft) [io, left of=staticevalsimulation,xshift=-3cm] {Pozostałe płytki};
-				\node (score) [io, below of=tilesleft] {Wynik};
-				\coordinate (winpercestimationend) at ($(winpercestimation)!0.5!(end)$);
-				\node (chosenmoves) [io, below of=hypsequences,text width=5cm] {10 wybranych, posortowanych ruchów};
-				\draw [arrow] (movegen) -- (staticeval);
-				\draw [arrow] (staticeval) -- (simulation);
-				\draw [arrow] (simulation) -- (winpercestimation);
-				\draw [arrow] (rack) -- (movegen);
-				\draw [arrow] (board) -- (movegen);
-				\draw [arrow] (winpercestimation) -- (end);
-				\draw [arrow] (tilesleft) -- (winpercestimation);
-				\draw [arrow] (score) -- (winpercestimation);
-				\draw [arrow] ($(movegen)!0.5!(staticeval)$) -- (possmoves);
-				\draw [arrow] ($(staticeval)!0.5!(simulation)$) -- (bestmoves);
-				\draw [arrow] ($(simulation)!0.5!(winpercestimation)$) -- (hypsequences);
-				\draw [arrow] ($(winpercestimation)!0.5!(end)$) -- (chosenmoves);
-			\end{tikzpicture}
-			}
-	\end{center}
+
 \end{frame}
 
 \subsection{Przeszukiwanie przestrzeni stanów}
