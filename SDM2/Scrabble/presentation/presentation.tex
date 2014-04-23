@@ -31,17 +31,11 @@
 \usepackage{rotating}
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{adjustbox}
+\usepackage{caption}
 \usepackage{ragged2e}
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes,shapes.multipart,arrows,chains}
-\usepackage{tikz-uml}
-\usepackage{adjustbox}
-\usepackage{caption}
-
-% page numbers %
-
-\expandafter\def\expandafter\insertshorttitle\expandafter{%
-  \insertshorttitle\hfill\insertframenumber\,/\,\inserttotalframenumber}
 
 % cool timeline %
 
@@ -120,6 +114,13 @@ on grid
 \newenvironment{timeline}[1][node distance=.75\taskwidth]
   {\par\noindent\begin{tikzpicture}[start chain,#1]}
   {\drawarrow\end{tikzpicture}\par}
+
+% page numbers %
+
+\expandafter\def\expandafter\insertshorttitle\expandafter{%
+  \insertshorttitle\hfill\insertframenumber\,/\,\inserttotalframenumber}
+
+\usepackage{tikz-uml}
 
 \author[Jakub Turek]{\texorpdfstring{Jakub Turek \newline \href{mailto:J.Turek@stud.elka.pw.edu.pl}{ J.Turek@stud.elka.pw.edu.pl }}{Jakub Turek} \newline \vskip2pt {\small Promotor: dr inż. Jakub Koperwas}}
 \title{Zaawansowana sztuczna inteligencja do gry Scrabble}
@@ -379,6 +380,7 @@ on grid
 		\begin{column}{.5\textwidth}
 			\scalebox{0.7}{
 				\begin{tikzpicture}
+					\tikzumlset{fill class=white!100}
 					\umlclass[type=interface,x=0,y=3]{ScrabbleAI}{\# phase : GamePhase}{+ move() : void \\ \# pickStrategy() : IMoveStrategy} 
 					\umlclass[type=interface,x=0,y=0]{IMoveStrategy}{}{+ move() : void} 
 					\umlclass[x=-2, y=-2.25]{FirstPlayStrategy}{}{+ move() : void}
@@ -504,6 +506,22 @@ on grid
 	\end{block}
 
 	Wartość funkcji jest wyznaczana na podstawie bazy danych gier.
+\end{frame}
+
+\subsection{Faza end-game}
+
+\begin{frame}
+	\frametitle{Faza end-game}
+	
+	\begin{itemize}
+		\item Możliwe wykorzystanie drzewa przestrzeni stanów:
+		\begin{itemize}
+			\item Dla rozgrywki 7~na 7~klocków ilość gałęzi wynosi 200, a~maksymalna ilość zagłębień wynosi 14.
+			\item Nie można zastosować efektywnie algorytmu $\alpha - \beta$.
+			\item Wymagane jest przeszukiwanie drzewa z~ograniczeniami.
+		\end{itemize}
+		\item Wykorzystanie programowania dynamicznego.
+	\end{itemize}
 \end{frame}
 
 \begin{frame}
