@@ -441,6 +441,50 @@ on grid
 \end{frame}
 
 \begin{frame}
+	\frametitle{Faza mid-game: Statyczne oszacowanie}
+	
+	Algorytm referencyjny wykorzystuje do statycznego oszacowania poniższą funkcję celu.
+
+	\begin{block}{Funkcja celu}	
+		$F(x) = P(x) + LV(x)$,
+		\vskip5pt
+		gdzie $P(x)$ to liczba punktów za zagranie $x$, a~$LV(x)$ to \emph{leave value} klocków pozostałych po wykonaniu zagrania $x$. 
+	\end{block}
+
+	\begin{block}{Leave value}	
+		Obliczona na podstawie bazy danych gier wartość, która faworyzuje kombinacje liter o~większym prawdopodobieństwie dopełnienia wysokopunktowych zagrań w~nadchodzących ruchach. Może przyjmować dodatnie oraz ujemne wartości.
+	\end{block}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Faza mid-game: Symulacja}
+
+	Algorytm referencyjny wykonuje następującą symulację:
+
+	\begin{enumerate}
+		\item Gracz wykonuje zagranie $P_{1}$.
+		\item Przeciwnik wybiera 7~losowych klocków, wyznacza wszystkie możliwości ruchu i~wykonuje zagranie $P_{2}$ dla ruchu z~najlepszym statycznym oszacowaniem.
+		\item Gracz uzupełnia klocki, wyznacza wszystkie możliwości ruchu i~wykonuje zagranie $P_{3}$ dla ruchu z~najlepszym statycznym oszacowaniem.
+		\item Gracz oblicza wartość $PV_{1}$ zagrania $P_{1}$ odejmując od liczby swoich punktów po zagraniu $P_{3}$ liczbę punktów przeciwnika po zagraniu $P_{2}$.
+		\item Gracz dodaje do $PV_{1}$ \emph{leave value} po zagraniu $P_{3}$.
+	\end{enumerate}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Faza mid-game: Oszacowanie prawdopodobieństwa wygranej}
+	
+	Algorytm referencyjny szacuje prawdopodobieństwo wygranej zgodnie z~poniższą zależnością.
+
+	\begin{block}{Estymata prawdopodobieństwa wygranej}	
+		$W: PV, TR \rightarrow [0;1]$,
+		\vskip5pt
+		gdzie $PV$ to wartość zagrania obliczona na etapie symulacji, a~$TR$ to liczba klocków pozostałych do wykorzystania w~partii.
+	\end{block}
+
+	Wartość funkcji jest wyznaczana na podstawie bazy danych gier.
+\end{frame}
+
+\begin{frame}
 	\frametitle{Prawdopodobieństwo występowania bigramów}
 	
 	\begin{columns}
