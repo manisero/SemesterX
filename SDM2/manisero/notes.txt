@@ -1,0 +1,23 @@
+Ze Android
+
+Odczytywanie pozycji telefonu:
+- ze gps
+- ze 3 metody
+- ze bledy
+- ze problemy (wysykosc (barometr))
+
+Odczytywanie orientacji telefonu:
+- akcelerometr
+- magnetometr
+
+Rozpoznawanie obrazu:
+- obrazy rzeczywiste omowione na poprzednim seminarium
+- markery
+
+Wyswietlanie obrazu:
+- OpenGL ES 1.x
+- OpenGL ES 2.x
+- definicja modelu
+- obrót modelu
+- uwzględnienie trybu wyświetlania
+- przykład (obrazek)
