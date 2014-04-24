@@ -520,9 +520,9 @@ on grid
 \end{frame}
 
 \begin{frame}
-	\frametitle{Faza mid-game: słabe strony algorytmu}
+	\frametitle{Faza mid-game: słabe strony algorytmu (1/2)}
 
-	Faza symulacji pomija istotne aspekty rozgrywki:
+	Symulacja pomija istotne aspekty rozgrywki:
 
 	\begin{itemize}
 		\item Zawartość stojaka jest losowana z~pozostałej puli klocków z~użyciem rozkładu jednostajnego. Można lepiej wyznaczyć rozkład prawdopodobieństwa:
@@ -534,6 +534,24 @@ on grid
 		\begin{itemize}
 			\item Niektóre kombinacje liter dają $90\%$ prawdopodobieństwo, że po dobraniu do nich kolejnych liter będzie można ułożyć cenny 7-literowy wyraz.
 			\item Próba przewidzenia klocków przeciwnika przy podejrzeniu \emph{łowienia}.
+		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Faza mid-game: słabe strony algorytmu (2/2)}
+	
+	Oszacowanie prawdopodobieństwa wygranej wykorzystuje nieprecyzyjne informacje wejściowe:
+
+	\begin{itemize}
+		\item Pozycja ,,w~przyszłości'' wyznaczona na etapie symulacji może być nieadekwatna do rzeczywistości:
+		\begin{itemize}
+			\item W~trakcie symulacji pominięte zostało \emph{bingo} przeciwnika.
+		\end{itemize}
+		\item Podział zagrań na ofensywne i~defensywne na podstawie ilości otwartych premii oraz ilości otaczających klocków po wykonaniu zagrania.
+		\item Rozważanie opłacalności zagrania ofensywnego / defensywnego na obecnym etapie rozgrywki. 
+		\begin{itemize}
+			\item Wykorzystanie sieci neuronowej.
 		\end{itemize}
 	\end{itemize}
 	
