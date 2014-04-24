@@ -561,6 +561,20 @@ on grid
 	\end{itemize}
 \end{frame}
 
+\subsection{Faza pre-endgame}
+
+\begin{frame}
+	\frametitle{Faza pre-endgame}
+	
+	Algorytm w~fazie \emph{pre-endgame} wymaga połączenia podejść wykorzystywanych w~fazach \emph{mid-game} i~\emph{end-game}:
+
+	\begin{itemize}
+		\item Obliczenia wykonywane w~fazie \emph{mid-game} nadal pozostają poprawne.
+		\item Istnieje możliwość zakończenia gry w~dwóch turach, więc dla uzyskania pełnego obrazu należy przeszukać przestrzeń stanów jak w~fazie \emph{end-game}.
+		\item Hybrydowy algorytm dla fazy \emph{pre-endgame} jest uruchamiany począwszy od 9~klocków pozostałych w~worku.
+	\end{itemize}
+\end{frame}
+
 \begin{frame}
 	\frametitle{Prawdopodobieństwo występowania bigramów}
 	
@@ -610,7 +624,7 @@ on grid
 	
 	\begin{columns}
 		\begin{column}{.3\textwidth}
-			\scalebox{.8}{
+			\scalebox{.8}{m
 				\begin{tabular}{|c|c|}
 					\hline
 					Trigram	&	Wystąpienia	\\
