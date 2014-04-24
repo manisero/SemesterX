@@ -243,7 +243,7 @@ on grid
 
 \subsection{Założenia}
 
-\begin{frame}[t]
+\begin{frame}
 	\frametitle{Założenia algorytmu}
 	
 	Cel pracy oraz przyjęte założenia:
@@ -339,11 +339,12 @@ on grid
 
 	\begin{description}
 		\item[OP] \emph{opening-play}. Faza obejmuje pierwsze zagranie.
-		\item[MG] \emph{mid-game}. Faza trwa od momentu rozpoczęcia rozgrywki do momentu, w~którym w~worku pozostaje jeden/dwa klocki lub nie ma już klocków (w~zależności od przebiegu rozgrywki).
-		\item[PEG] \emph{pre-endgame}. Faza trwa, gdy w~worku pozostał pojedynczy klocek. Według szacunków przez tę fazę przechodzi około $50\%$ gier. Można wyróżnić dwie podfazy:
+		\item[MG] \emph{mid-game}. Faza trwa od momentu rozpoczęcia rozgrywki do momentu rozpoczęcia fazy \emph{pre-endgame}.
+		\item[PEG] \emph{pre-endgame}. Faza rozpoczyna się, gdy w~worku pozostaje $\leq 7$ klocków i~trwa do rozpoczęcia fazy \emph{end-game}. W~PEG każde kolejne zagranie może poskutkować opróżnieniem worka. Dodatkowy podział:
 			\begin{description}
-				\item[PEG-1] W~worku pozostał jeden klocek.
+				\item[PEG-1] W~worku pozostał jeden klocek. Przez tę fazę przechodzi około $50\%$ gier.
 				\item[PEG-2] W~worku pozostały dwa klocki.
+				\item[PEG-X] W~worku pozostało $x \leq 7$ klocków.
 			\end{description}
 		\item[EG] \emph{end-game}. W~worku nie ma już żadnych klocków.
 	\end{description}
@@ -365,7 +366,6 @@ on grid
 	\end{figure}
 \end{frame}
 
-\section{Implementacja}
 \subsection{Strategia}
 
 \begin{frame}[fragile]
@@ -396,7 +396,8 @@ on grid
 	\end{columns}
 \end{frame}
 
-\subsection{Faza Opening Play}
+\section{Algorytmyy}
+\subsection{Faza opening-play}
 
 \begin{frame}
 	\frametitle{Otwarcie gry}
@@ -414,7 +415,7 @@ on grid
 	\end{itemize}
 \end{frame}
 
-\subsection{Faza Mid Game}
+\subsection{Faza mid-game}
 \captionsetup[figure]{skip=2pt}
 
 \begin{frame}
@@ -549,7 +550,7 @@ on grid
 	\begin{itemize}
 		\item Nie zawsze istnieje jedna optymalna ścieżka zagrania dla przeciwnika:
 		\begin{itemize}
-			\item Przykładowo, jeżeli przeciwnik może zagrać słowo \textbf{ALE} w~dwóch pozycjach (za 25 i~28 punktów) korzyść z~zablokowania drugiej pozycji względem zablokowania pierwszej wynosi tylko 3~punkty.
+			\item Przykładowo, jeżeli przeciwnik może zagrać słowo \textbf{ALE} w~dwóch pozycjach (za 25 i~28 punktów) korzyść z~zablokowania drugiej pozycji względem zablokowania pierwszej  wynosi tylko 3~punkty.
 		\end{itemize}
 		\item Rozwiązaniem problemu jest wprowadzenie dwóch oszacowań:
 		\begin{itemize}
