@@ -140,10 +140,21 @@ on grid
 
 	\begin{enumerate}
 		\item Wprowadzenie.
-		\item Przegląd zagadnień omówionych na pierwszym seminarium.
-		\item Istnienie optymalnej strategii gry.
-		\item Ogólny opis algorytmu.
-		\item Omówienie wykorzystanych mechanizmów w~podziale na fazy gry.
+			\begin{enumerate}
+				\item Ogólny opis Scrabble.
+				\item Spis zagadnień omówionych na pierwszym seminarium.
+			\end{enumerate}
+		\item Omówienie podstaw teoretycznych.
+			\begin{enumerate}
+				\item Optymalna strategia.
+				\item Podział na fazy gry.
+			\end{enumerate}
+		\item Opis wykorzystywanych algorytmów w~podziale na fazy gry.
+		\item Wyniki testów.
+		\item Podsumowanie.
+			\begin{enumerate}
+				\item Literatura uzupełniająca.
+ 			\end{enumerate}
 	\end{enumerate}
 \end{frame}
 
@@ -465,7 +476,7 @@ on grid
 \end{frame}
 
 \begin{frame}
-	\frametitle{Faza mid-game: Statyczne oszacowanie}
+	\frametitle{Faza mid-game: statyczne oszacowanie}
 	
 	Algorytm referencyjny wykorzystuje do statycznego oszacowania poniższą funkcję celu.
 
@@ -481,7 +492,7 @@ on grid
 \end{frame}
 
 \begin{frame}
-	\frametitle{Faza mid-game: Symulacja}
+	\frametitle{Faza mid-game: symulacja}
 
 	Algorytm referencyjny wykonuje następującą symulację:
 
@@ -495,7 +506,7 @@ on grid
 \end{frame}
 
 \begin{frame}
-	\frametitle{Faza mid-game: Oszacowanie prawdopodobieństwa wygranej}
+	\frametitle{Faza mid-game: oszacowanie prawdopodobieństwa wygranej}
 	
 	Algorytm referencyjny szacuje prawdopodobieństwo wygranej zgodnie z~poniższą zależnością.
 
@@ -506,6 +517,26 @@ on grid
 	\end{block}
 
 	Wartość funkcji jest wyznaczana na podstawie bazy danych gier.
+\end{frame}
+
+\begin{frame}
+	\frametitle{Faza mid-game: słabe strony algorytmu}
+
+	Faza symulacji pomija istotne aspekty rozgrywki:
+
+	\begin{itemize}
+		\item Zawartość stojaka jest losowana z~pozostałej puli klocków z~użyciem rozkładu jednostajnego. Można lepiej wyznaczyć rozkład prawdopodobieństwa:
+		\begin{itemize}
+			\item W~poprzednim ruchu przeciwnik ułożył słowo \textbf{RADO}. Łatwo wywnioskować, że nie posiadał on liter \textbf{U} oraz \textbf{I}, gdyż w~przeciwnym razie prawdopodobnie ułożyłby lepiej punktowane słowa - \textbf{URODA} lub \textbf{RADIO}.
+			\item Trzy litery są pozostałością po poprzednim ruchu, więc przy ich losowaniu wykluczamy z~worka \textbf{U} oraz \textbf{I}.
+		\end{itemize}
+		\item Symulacja nie uwzględnia zjawiska \emph{łowienia} korzystnych zagrań:
+		\begin{itemize}
+			\item Niektóre kombinacje liter dają $90\%$ prawdopodobieństwo, że po dobraniu do nich kolejnych liter będzie można ułożyć cenny 7-literowy wyraz.
+			\item Próba przewidzenia klocków przeciwnika przy podejrzeniu \emph{łowienia}.
+		\end{itemize}
+	\end{itemize}
+	
 \end{frame}
 
 \subsection{Faza end-game}
@@ -620,10 +651,10 @@ on grid
 \end{frame}
 
 \section{Podsumowanie}
-\subsection{Literatura}
+\subsection{Literatura uzupełniająca}
 
 \begin{frame}
-	\frametitle<presentation>{Literatura}
+	\frametitle<presentation>{Literatura uzupełniająca}
 	\begin{thebibliography}{10}
 		\beamertemplatearticlebibitems
 			\bibitem{ScrabblePSPACE}
