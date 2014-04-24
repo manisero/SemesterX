@@ -298,17 +298,25 @@ on grid
 	
 	\begin{tikzpicture}
 		\tikzstyle{state} = [draw, shape=circle, minimum width=15pt, minimum height=15pt]
-		\node (s0) [state, fill=UniGreen] at (0,0) {};
+		\node (s0) [state] at (0,0) {};
 		\node (s1) [state] at (2,2) {};
 		\node (s2) [state] at (2,0) {};
 		\node (s3) [state] at (2, -2) {};
-		\node (s4) [state] at (4,3.5) {};
+		\node (s4) [state, fill=UniGreen] at (4,3.5) {};
 		\node (s5) [state] at (4,2.5) {};
 		\node (s6) [state] at (4,1.5) {};
 		\node (s7) [state] at (4,0.5) {};
-		\node (s8) [state] at (4,-0.5) {};
+		\node (s8) [state, fill=UniGreen] at (4,-0.5) {};
 		\node (s9) [state] at (4,-1.5) {};
 		\node (s10) [state] at (4,-2.5) {};
+		\node (s11) [state] at (6,2.5) {};
+		\node (s12) [state] at (6,0.5) {};
+		\node (s13) [state, fill=UniGreen] at (6,-1.5) {};
+		\node (s14) [state] at (6,-2.5) {};
+		\node (s15) [state, fill=UniGreen] at (8,3.5) {};
+		\node (s16) [state, fill=UniGreen] at (8,1.5) {};
+		\node (s17) [state, fill=UniGreen] at (8,0.5) {};
+		\node (s18) [state, fill=UniGreen] at (8,-2.5) {};
 		\draw (s0) -- node[above, sloped, font=\scriptsize] {Zagranie 1} (s1);
 		\draw (s0) -- node[above, sloped, font=\scriptsize, near end, xshift=-8pt] {Zagranie 2} (s2);
 		\draw (s0) -- node[above, sloped, font=\scriptsize] {Zagranie 3} (s3);
@@ -319,7 +327,16 @@ on grid
 		\draw (s2) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s8);
 		\draw (s3) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s9);
 		\draw (s3) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s10);
-		\draw [red, thick] plot [smooth cycle] coordinates {(-0.5, -0.5) (-0.5, 0.5) (2, 0.5) (4.5, 1.05) (4.76, -1.15) (2.3, -0.65)};
+		\draw (s5) -- node[above, sloped, font=\tiny] {Zagranie 1} (s11);
+		\draw (s7) -- node[above, sloped, font=\tiny] {Zagranie 1} (s11);
+		\draw (s7) -- node[above, sloped, font=\tiny] {Zagranie 2} (s12);
+		\draw (s9) -- node[above, sloped, font=\tiny] {Zagranie 1} (s13);
+		\draw (s10) -- node[above, sloped, font=\tiny] {Zagranie 1} (s14);
+		\draw (s11) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s15);
+		\draw (s12) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s16);
+		\draw (s12) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s17);
+		\draw (s14) -- node[below, sloped, font=\tiny] {Odpowiedź 1} (s18);
+		\draw [red, thick] plot [smooth cycle] coordinates {(-0.5, -0.5) (-0.5, 0.5) (2, 0.5) (4.5, 1.05) (8.5, 1.94) (9, 1.03) (8, -0.32) (3.96, -0.05) (2.3, -0.45)};
 	\end{tikzpicture}
 \end{frame}
 
@@ -370,6 +387,7 @@ on grid
 		\begin{timeline}
 			\Task[OP]{Maksymalizacja punktów uzyskanych z~zagrania otwierającego}
 			\Task[MG]{Algorytm z~heurystyczną funkcją kosztu i~symulacją w~przód}
+			\Task[PEG]{Złączenie algorytmów dla MG i~EG}
 			\Task[EG]{Przeszukiwanie przestrzeni stanów (z~ograniczeniami)}
 		\end{timeline}
 		\caption{Zmiana strategii wraz z~progresją rozgrywki.}
@@ -406,7 +424,7 @@ on grid
 	\end{columns}
 \end{frame}
 
-\section{Algorytmyy}
+\section{Algorytmy}
 \subsection{Faza opening-play}
 
 \begin{frame}
