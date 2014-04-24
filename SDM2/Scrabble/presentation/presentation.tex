@@ -511,7 +511,7 @@ on grid
 \subsection{Faza end-game}
 
 \begin{frame}
-	\frametitle{Faza end-game}
+	\frametitle{Faza end-game (1/2)}
 	
 	\begin{itemize}
 		\item Możliwe wykorzystanie drzewa przestrzeni stanów:
@@ -520,8 +520,27 @@ on grid
 			\item Nie można zastosować efektywnie algorytmu $\alpha - \beta$.
 			\item Wymagane jest przeszukiwanie drzewa z~ograniczeniami.
 		\end{itemize}
-		\item Wykorzystanie programowania dynamicznego.
+		\item Wykorzystanie programowania dynamicznego:
+			\begin{itemize}
+				\item Założenie, że sytuacja na planszy jest statyczna. Szacowana jest wyłącznie wartość stojaków.
+				\item Wartość każdego możliwego ruchu jest szacowana przy założeniu, że gra zakończy się dokładnie w~$N$ turach.
+				\item Oszacowanie wartości ruchu $F_{N}(x) = P_{N}(x) + LV_{N-1}$, gdzie $P_{N}$ to liczba punktów uzyskanych za ruch, a~$LV_{N-1}$ to oszacowanie wartości pozostałych klocków przy założeniu, że do końca gry pozostało $N-1$ tur.
+			\end{itemize}
 	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\frametitle{Faza end-game (2/2)}
+	
+	Przykład oszacowania:
+
+	\begin{enumerate}
+		\item Gracz 1~($G_{1}$) zakończy grę w~8 ruchach. Wtedy gracz 2~($G_{2}$) rozegra 7~ruchów. Powstaje ścieżka, którą przetwarzamy algorytmem minimax.
+		\item $G_{2}$ zakończy grę w~7~ruchach. $G_{1}$ rozegra wtedy 7~ruchów. Jeżeli ta ścieżka będzie lepsza dla $G_{2}$, $G_{2}$ wybierze właśnie ją.
+		\item $G_{1}$ będzie miał okazję do poprawy jeżeli zakończy grę w~7~ruchach...
+	 \end{enumerate}
+
+	 Algorytm jest powtarzany do momentu, gdy żaden z~graczy nie może się poprawić.
 \end{frame}
 
 \begin{frame}
