@@ -305,6 +305,63 @@ Celem fazy OP jest wybranie najwyżej punktowanego zagrania. W~algorytmie Quackl
 
 Wyszukiwanie najlepszego otwarcia może być zoptymalizowane czasowo. Wykorzystując znajomość słownika można przeprowadzić analizę najlepszych otwarć dla wszystkich możliwych kombinacji klocków. Każdej kombinacji liter można przypisać prostą funkcję skrótu, która sortuje te litery alfabetycznie. Po wstępnej analizie słownika można przygotować mapę, która każdej funkcji skrótu przyporządkuje najlepsze zagranie oraz jego wartość punktową. Dzięki temu możliwe jest wykonanie pierwszego zagrania w~czasie jednostkowym\footnote{Przy założeniu, że wśród liter początkowych nie znajdują się blanki.}.
 
+\section*{Mid Game}
+
+W~fazie MG w~aplikacji Quackle wykorzystywany jest algorytm z~heurystyczną funkcją statyczną oraz symulacją dwóch zagrań w~przyszłość. Schemat tego algorytmu został przedstawiony na rysunku \ref{fig:mid_game_algorithm}.~\cite{quackle_algorithm}
+
+\begin{figure}[ht!]
+	\centering
+	\scalebox{0.57}{
+		\begin{tikzpicture}[node distance=2cm]
+			\noindent
+			\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=UniGreen!80, text width=2.5cm]
+			\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!80]
+			\tikzstyle{arrow} = [thick,->,>=stealth]
+					
+			\node (rack) [io] {Stojak};
+			\node (board) [io, right of=rack, xshift=5cm] {Plansza};
+			\coordinate (rackboard) at ($(rack)!0.5!(board)$);
+			\node (movegen) [process, below of= rackboard] {Generacja ruchu};
+			\node (staticeval) [process, below of=movegen] {Statyczne oszacowanie};
+			\coordinate (movegenstaticeval) at ($(movegen)!0.5!(staticeval)$);
+			\node (possmoves) [io, right of=movegenstaticeval, xshift=4cm] {Wszystkie możliwe ruchy};
+			\node (simulation) [process, below of=staticeval] {Symulacja};
+			\node (bestmoves) [io, below of=possmoves] {23 najlepsze ruchy};
+			\node (hypsequences) [io, below of=bestmoves, text width=5cm] {Hipotetyczna sytuacja 2 ruchy w~przód};
+			\node (winpercestimation) [process, below of=simulation, text width=4cm] {Oszacowanie prawdopodobieństwa wygranej};
+			\node (end) [process, draw=none, fill=none, below of=winpercestimation, minimum height=1mm] { };
+			\coordinate (staticevalsimulation) at ($(staticeval)!0.5!(simulation)$);
+			\node (tilesleft) [io, left of=winpercestimation,xshift=-2cm,yshift=2cm] {Pozostałe płytki};
+			\node (score) [io, left of=winpercestimation,xshift=-1.5cm,yshift=-2cm] {Wynik};
+			\coordinate (winpercestimationend) at ($(winpercestimation)!0.5!(end)$);
+			\node (chosenmoves) [io, below of=hypsequences,text width=5cm] {10 wybranych, posortowanych ruchów};
+			\draw [arrow] (movegen) -- (staticeval);
+			\draw [arrow] (staticeval) -- (simulation);
+			\draw [arrow] (simulation) -- (winpercestimation);
+			\draw [arrow] (rack) -- (movegen);
+			\draw [arrow] (board) -- (movegen);
+			\draw [arrow] (winpercestimation) -- (end);
+			\draw [arrow] (tilesleft) -- (winpercestimation);
+			\draw [arrow] (score) -- (winpercestimation);
+			\draw [arrow] ($(movegen)!0.5!(staticeval)$) -- (possmoves);
+			\draw [arrow] ($(staticeval)!0.5!(simulation)$) -- (bestmoves);
+			\draw [arrow] ($(simulation)!0.5!(winpercestimation)$) -- (hypsequences);
+			\draw [arrow] ($(winpercestimation)!0.5!(end)$) -- (chosenmoves);
+		\end{tikzpicture}
+	}
+	\caption{Schemat algorytmu dla fazy MG.}
+	\label{fig:mid_game_algorithm}
+\end{figure}
+
+Algorytm składa się z~czterech kroków:
+
+\begin{enumerate}
+	\item Na podstawie stanu planszy i~dostępnych klocków generowane są wszystkie możliwości ruchu.
+	\item Dla każdej możliwości ruchu obliczana jest funkcja oszacowania. Ruchy są sortowane względem malejącej wartości funkcji oszacowania. Lista ruchów jest skracana do najlepszych 23 pozycji.
+	\item Dla każdego z~pozostałych ruchów wykonywana jest symulacja stanu rozgrywki na dwa kroki w~przód.
+	\item Dla każdego rezultatu oszacowania, biorąc pod uwagę liczbę płytek pozostałych do końca rozgrywki, obliczane jest prawdopodobieństwo wygranej. W~rezultacie powstaje lista 10 ruchów o~największym oszacowanym prawdopodobieństwie wygranej.
+\end{enumerate}
+
 \section*{Słowniki do gier}
 
 Reguły Scrabble dopuszczają układanie ,,wszystkich słów występujących w~słownikach języka polskiego oraz wszystkich ich prawidłowych form gramatycznych, z~wyjątkiem takich słów, które rozpoczynają się od wielkiej litery, są skrótami, bądź słowami wymagającymi cudzysłowu lub łącznika''. \cite{scrabble_word_rules} 
@@ -789,14 +846,14 @@ Przedstawione w~artykule informacje posłużą także do rozbudowy oprogramowani
 	\bibitem{deterministic_scrabble} M. Lampis, V. Mitsou, K. Sołtys, \emph{Scrabble is PSPACE-Complete}, 2012.
 	\bibitem{sheppard_maven} B. Sheppard, \emph{World-championship-caliber Scrabble}, ,,Artificial Intelligence'', vol. 134, p. 241-275, 2002.
 	\bibitem{strategy_pattern_definition} E.~Freeman, B.~Bates, K.~Sierra, \emph{Rusz głową! Wzorce projektowe}, Wyd. 2, Gliwice, Wydawnictwo Helion, 2011, ISBN 978-83-246-2803-2, strona 56.
+	\bibitem{quackle_algorithm}
+		Jason Katz-Brown, John O'Laughlin, \emph{How Quackle Plays Scrabble} [online], Quackle [dostęp: 25 kwietnia 2014], Dostępny w~Internecie: \href{http://people.csail.mit.edu/jasonkb/quackle/doc/how_quackle_plays_scrabble.html}{\nolinkurl{<http://people.csail.mit.edu/jasonkb/quackle/doc/how\_quackle\_plays\_scrabble.html>}}.
 	\bibitem{game_dictionary_definition}
 		Anna Andrzejczuk, \emph{Słowniki do gier słownych jako nowy typ wydawnictw leksykograficznych}, pod kierownictwem dr hab. R. Pawelec, Warszawa, 2006. 
 	\bibitem{worlds_fastest_scrabble_program}
 		A.~Appel, G.~Jacobson, \emph{The world's fastest Scrabble program}, ,,Communications of the ACM'' 1988, 31(5), strony 572-585.
 	\bibitem{faster_move_generation_algorithm}
 		S.~Gordon, \emph{A Faster Scrabble Move Generation Algorithm}, ,,Software - Practice and Experience'' 1994, 24(2), strony 219-232.
-	\bibitem{quackle_algorithm}
-		Jason Katz-Brown, John O'Laughlin, \emph{How Quackle Plays Scrabble} [online], Quackle [dostęp: 25 kwietnia 2014], Dostępny w~Internecie: \href{http://people.csail.mit.edu/jasonkb/quackle/doc/how_quackle_plays_scrabble.html}{\nolinkurl{<http://people.csail.mit.edu/jasonkb/quackle/doc/how\_quackle\_plays\_scrabble.html>}}.
 	\bibitem{intelligent_game_playing}
 		Jacek Mańdziuk, \emph{Knowledge-Free and Learning-Based Methods in Intelligent Game Playing}, Wydawnictwo Springer, 2010, ISBN 978-3-642-11677-3.
 \end{thebibliography}
