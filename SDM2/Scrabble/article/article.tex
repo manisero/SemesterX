@@ -299,6 +299,11 @@ Wykonywany algorytm będzie różny w~zależności od fazy rozgrywki. Podczas im
 	\label{fig:strategy_pattern}
 \end{figure}
 
+\section*{Opening Play}
+
+Celem fazy OP jest wybranie najwyżej punktowanego zagrania. W~algorytmie Quackle wybór ten jest dokonywany poprzez przeszukiwanie słownika pod kątem posiadanych liter. Wynik punktowy uzyskany za zagranie jest obliczany dynamicznie. 
+
+Wyszukiwanie najlepszego otwarcia może być zoptymalizowane czasowo. Wykorzystując znajomość słownika można przeprowadzić analizę najlepszych otwarć dla wszystkich możliwych kombinacji klocków. Każdej kombinacji liter można przypisać prostą funkcję skrótu, która sortuje te litery alfabetycznie. Po wstępnej analizie słownika można przygotować mapę, która każdej funkcji skrótu przyporządkuje najlepsze zagranie oraz jego wartość punktową. Dzięki temu możliwe jest wykonanie pierwszego zagrania w~czasie jednostkowym\footnote{Przy założeniu, że wśród liter początkowych nie znajdują się blanki.}.
 
 \section*{Słowniki do gier}
 
