@@ -2,12 +2,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage[MeX]{polski}
 \usepackage{fullpage}
-\usepackage{tikz}
-\usetikzlibrary{calc,shapes,shapes.multipart,arrows}
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.8}
 \usepackage[breaklinks=true]{hyperref}
 \usepackage{amsthm}
+\usepackage{ragged2e}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes,shapes.multipart,arrows,chains}
+\usepackage{tikz-uml}
 
 % ;;;;;;;;; colors ;;;;;;;;;;;;
 
@@ -207,7 +207,7 @@ Punktacja za dane zagranie jest obliczana jako suma punktów za wszystkie płytk
  \item [Premia słowna] podwaja lub potraja wartość całego wyrazu.
 \end{description}
 
-\section*{Istnienie strategii optymalnej}
+\section*{Strategia optymalna}
 
 Kluczowym zagadnieniem podczas implementacji algorytmu sztucznej inteligencji do gier planszowych (w~tym Scrabble) jest zbadanie istnienia strategii optymalnej.
 
@@ -264,6 +264,42 @@ Dysponując definicją \ref{def:scrabble_state_space}~można dowieść twierdzen
 
 Zostało udowodnione, że deterministyczna wersja Scrabble dla dwóch graczy należy do problemów klasy \emph{PSPACE-Complete}. \cite{deterministic_scrabble} Klasa \emph{PSPACE-Complete} jest najbardziej obszerną klasą problemów wielomianowych. Każdy problem należący do przestrzeni problemów wielomianowych można przekształcić, w~wielomianowym czasie, do problemu klasy \emph{PSPACE-Complete}.
 
+\section*{Strategia zależna od fazy gry}
+
+Niestety, w~praktyce wykorzystywanie strategii optymalnej nie jest możliwe. Dla rozgrywki końcowej 7~klocków przeciwko 7~klockom średnia ilość gałęzi w~drzewie przestrzeni stanów wynosi 200. Kolejnym problemem jest głębokość drzewa, która może sięgać czternastu poziomów (gdy gracze wykładają klocki pojedynczo) lub więcej (dochodzi możliwość pasowania). Wartości te są zbyt duże, by stosować pełny algorytm typu $\alpha - \beta$, a~odnoszą się wyłącznie do sytuacji, w~której posiadamy pełną informację o~rozgrywce (to znaczy znane są klocki przeciwnika). Na pozostałych etapach rozgrywki analiza przestrzeni stanów nie jest opcją. Wynika z~tego, że algorytm sztucznej inteligencji do Scrabble musi zmieniać strategię rozgrywki w~zależności od etapu gry.
+
+Wyróżnia się cztery zasadnicze fazy rozgrywki: \cite{sheppard_maven}
+
+\begin{description}
+	\item[Opening Play]\footnote{Opening Play, w~skrócie OP. W~dalszej części artykułu dla określenia faz rozgrywki stosowane będą wyłącznie nazwy skrótowe, a~więc OP, MG, PEG oraz EG} faza otwarcia. Dotyczy wyłącznie pierwszego zagrania, a~więc kiedy na planszy nie znajduje się jeszcze żaden klocek.
+	\item[Mid Game] faza śródgry. Rozpoczyna się po otwarciu, a~kończy wraz z~rozpoczęciem fazy PEG.
+	\item[Pre-End Game] faza przedkońcowa rozgrywki. Rozpoczyna się w~momencie, kiedy rozgrywka może zakończyć się w~dwóch turach, a~więc kiedy w~worku pozostaje siedem lub mniej klocków. Kończy się wraz z~rozpoczęciem fazy EG.
+	\item[End Game] faza zakończenia. Rozpoczyna się, gdy w~worku nie ma już klocków i~trwa aż do końca gry. Charakteryzuje się tym, że w~trakcie jej trwania zawodnicy dysponują pełną informacją o~grze, a~więc również o~literach posiadanych przez przeciwnika.
+\end{description}
+
+Wykonywany algorytm będzie różny w~zależności od fazy rozgrywki. Podczas implementacji takiego rozwiązania warto wykorzystać wzorzec projektowy Strategia. Strategia to wzorzec, który ,,definiuje rodzinę algorytmów, pakuje je jako osobne klasy i~powoduje, że są one w pełni wymienne. Zastosowanie strategii pozwala na to, aby zmiany w~implementacji przetwarzania były całkowicie niezależne od strony klienta, który z nich korzysta''. \cite{strategy_pattern_definition} Wzorzec strategii dostosowany do opisywanej dziedziny problemu został schematycznie przedstawiony na rysunku \ref{fig:strategy_pattern}.
+
+\begin{figure}[ht!]
+	\centering
+	\scalebox{0.7}{
+		\begin{tikzpicture}
+			\tikzumlset{fill class=white!100}
+			\umlclass[type=interface,x=0,y=4]{ScrabbleAI}{\# phase : GamePhase}{+ move() : void \\ \# pickStrategy() : IMoveStrategy} 
+			\umlclass[type=interface,x=0,y=0]{IMoveStrategy}{}{+ move() : void} 
+			\umlclass[x=-3, y=-3]{FirstPlayStrategy}{}{+ move() : void}
+			\umlclass[x=0, y=-6]{MidGameStrategy}{}{+ move() : void}
+			\umlclass[x=3, y=-3]{EndGameStrategy}{}{+ move() : void}
+			\umluniassoc{ScrabbleAI}{IMoveStrategy}
+			\umlimpl{IMoveStrategy}{FirstPlayStrategy}
+			\umlimpl{IMoveStrategy}{MidGameStrategy}
+			\umlimpl{IMoveStrategy}{EndGameStrategy}
+		\end{tikzpicture}
+	}
+	\caption{Przykład użycia wzorca projektowego Strategia w~kontekście implementacji algorytmu.}
+	\label{fig:strategy_pattern}
+\end{figure}
+
+
 \section*{Słowniki do gier}
 
 Reguły Scrabble dopuszczają układanie ,,wszystkich słów występujących w~słownikach języka polskiego oraz wszystkich ich prawidłowych form gramatycznych, z~wyjątkiem takich słów, które rozpoczynają się od wielkiej litery, są skrótami, bądź słowami wymagającymi cudzysłowu lub łącznika''. \cite{scrabble_word_rules} 
@@ -283,133 +319,7 @@ Poza dopuszczalnymi źródłami informacji słowniki posiadają jeszcze jedną z
 
 W~celu wyznaczenia heurystyk mogących wspomóc sztuczną inteligencję grającą w~Scrabble autor przeanalizował dane zawarte w~Słowniku alternatywnym. Pierwszą analizowaną informacją jest częstotliwość występowania poszczególnych liter w~słowniku. Wynika to z~faktu, że zasady gry Scrabble są oparte na rozkładzie prawdopodobieństwa występowania liter w~danym języku. Możliwe jest, że badanie statystyczne słownika przyniesie informacje o~literach, których warto używać w~pierwszej kolejności.
 
-\begin{figure}[ht!]
-	\begin{center}
-		\begin{tikzpicture}
-			\begin{axis}[	ytick={0, 0.01, ..., 0.1}, 
-					yticklabel style={/pgf/number format/fixed},
-					bar width=1mm,
-					symbolic x coords={a,i,o,e,n,y,z,w,r,c,m,s,k,p,t,u,l,d,el,j,b,g,on,h,es,zet,een,f,uu,en,ci,ziet},
-					xticklabels={a,i,o,e,n,y,z,w,r,c,m,s,k,p,t,u,l,d,ł,j,b,g,ą,h,ś,ż,ę,f,ó,ń,ć,ź},
-					xticklabel style={font=\scriptsize, text height=1ex},
-					xtick=data,
-					yticklabel style={font=\scriptsize},
-					legend entries={Prawdopodobieństwo dla słownika,Prawdopodobieństwo w Scrabble},
-					legend style={font=\scriptsize},
-					height=.3\textheight,
-					width=.5\textwidth]
-					
-    			\addplot[ybar,fill=UniGreen, area legend] coordinates {
-        			(a,0.0937997771175)
-        			(i,0.0894002903657)
-        			(o,0.0796720098207)
-        			(e,0.0765123987403)
-        			(n,0.0683027202572)
-        			(y,0.0497071483395)
-        			(z,0.0466694841626)
-        			(w,0.0453746978807)
-        			(r,0.0440417929225)
-        			(c,0.0409715964269)
-        			(m,0.0387468458849)
-        			(s,0.0322800452968)
-        			(k,0.0316402758911)
-        			(p,0.029784849318)
-        			(t,0.0273647734205)
-        			(u,0.0271062565005)
-        			(l,0.023888810187)
-        			(d,0.0219487338635)
-        			(el,0.0210803509823)
-        			(j,0.0195483416618)
-        			(b,0.0192369186479)
-        			(g,0.0132131819509)
-        			(on,0.0128586125387)
-        			(h,0.0115084555932)
-        			(es,0.0096922978289)
-        			(zet,0.0064777761380)
-        			(een,0.0064627258330)
-        			(f,0.0044409243818)
-        			(uu,0.0035346199898)
-        			(en,0.0027972207673)
-        			(ci, 0.0011952505312)
-        			(ziet,0.0007161382021)
-    			};
-    			
-    			\addplot[ybar,fill=lightgray, area legend] coordinates {
-        			(a,0.09)
-        			(i,0.08)
-        			(o,0.06)
-        			(e,0.07)
-        			(n,0.05)
-        			(y,0.04)
-        			(z,0.05)
-        			(w,0.04)
-        			(r,0.04)
-        			(c,0.03)
-        			(m,0.03)
-        			(s,0.04)
-        			(k,0.03)
-        			(p,0.03)
-        			(t,0.03)
-        			(u,0.02)
-        			(l,0.03)
-        			(d,0.03)
-        			(el,0.02)
-        			(j,0.02)
-        			(b,0.02)
-        			(g,0.02)
-        			(on,0.01)
-        			(h,0.02)
-        			(es,0.01)
-        			(zet,0.01)
-        			(een,0.01)
-        			(f,0.01)
-        			(uu,0.01)
-        			(en,0.01)
-        			(ci, 0.01)
-        			(ziet,0.01)
-    			};
-    			\addplot[forget plot,ybar,fill=UniGreen] coordinates {
-        			(a,0)
-        			(i,0)
-        			(o,0)
-        			(e,0)
-        			(n,0)
-        			(y,0)
-        			(z,0.0466694841626)
-        			(w,0)
-        			(r,0)
-        			(c,0)
-        			(m,0)
-        			(s,0.0322800452968)
-        			(k,0)
-        			(p,0.029784849318)
-        			(t,0.0273647734205)
-        			(u,0)
-        			(l,0.023888810187)
-        			(d,0.0219487338635)
-        			(el,0)
-        			(j,0.0195483416618)
-        			(b,0.0192369186479)
-        			(g,0.0132131819509)
-        			(on,0)
-        			(h,0.0115084555932)
-        			(es,0.0096922978289)
-        			(zet,0.0064777761380)
-        			(een,0.0064627258330)
-        			(f,0.0044409243818)
-        			(uu,0.0035346199898)
-        			(en,0.0027972207673)
-        			(ci, 0.0011952505312)
-        			(ziet,0.0007161382021)
-    			};
-			\end{axis}
-		\end{tikzpicture}
-		\caption{Wykres ilustrujący zależność pomiędzy wystąpieniem danej litery w~wyrazach słownika, a~prawdopodobieństwem wylosowania płytki z~tą literą w~grze Scrabble.}
-		\label{fig:letter_probability_distribution}
-	\end{center}
-\end{figure}
-
-Wykres przedstawiony na rysunku \ref{fig:letter_probability_distribution} dostarcza nam informacji, że autorzy polskich reguł do gry Scrabble nie oszacowali poprawnie częstotliwości występowania wszystkich liter. Przykładowo litera \textbf{o} występuje w~słowniku częściej niż litera \textbf{e}, natomiast prawdopodobieństwo wylosowania odpowiadających tym literom płytek w~grze kształtuje się odwrotnie. Wynika z~tego, że porównując dwa podobnie punktowane zagrania, warto wybrać to, które wykorzystuje więcej samogłosek \textbf{e} niż \textbf{o}. Podobną zależność można stwierdzić w~przypadku litery \textbf{h}, której częstotliwość występowania została przez autorów zasad znacząco zawyżona. Korzytnie jest wybierać zagrania, które powodują wyłożenie płytek z~literą \textbf{h}.
+Wykres przedstawiony na rysunku 69 dostarcza nam informacji, że autorzy polskich reguł do gry Scrabble nie oszacowali poprawnie częstotliwości występowania wszystkich liter. Przykładowo litera \textbf{o} występuje w~słowniku częściej niż litera \textbf{e}, natomiast prawdopodobieństwo wylosowania odpowiadających tym literom płytek w~grze kształtuje się odwrotnie. Wynika z~tego, że porównując dwa podobnie punktowane zagrania, warto wybrać to, które wykorzystuje więcej samogłosek \textbf{e} niż \textbf{o}. Podobną zależność można stwierdzić w~przypadku litery \textbf{h}, której częstotliwość występowania została przez autorów zasad znacząco zawyżona. Korzytnie jest wybierać zagrania, które powodują wyłożenie płytek z~literą \textbf{h}.
 
 Interesującą statystyką są najlepsze otwarcia (czyli pierwsze zagrania w~grze). Pozwalają one, przy wylosowaniu szczęśliwej kombinacji płytek, zagrać w~najbardziej opłacalny sposób (na początku rozgrywki nie ma ryzyka pozostawienia przeciwnikowi ,,otwartej gry''). Statystyka ta jest szczególnie przydatna dla ludzi, chociaż również sztuczna inteligencja może wykorzystać ją do pominięcia zbędnych obliczeń. Najlepsze otwarcia dla słownika alternatywnego zebrano na rysunku \ref{fig:best_openings}.
 
@@ -872,6 +782,8 @@ Przedstawione w~artykule informacje posłużą także do rozbudowy oprogramowani
 	\bibitem{scrabble_word_rules}
 		\emph{Zasady dopuszczalności słów} [online], Polska Federacja Scrabble [dostęp: 25 kwietnia 2014], Dostępny w~Internecie: \href{http://www.pfs.org.pl/zds.php}{\nolinkurl{<http://www.pfs.org.pl/zds.php>}}.
 	\bibitem{deterministic_scrabble} M. Lampis, V. Mitsou, K. Sołtys, \emph{Scrabble is PSPACE-Complete}, 2012.
+	\bibitem{sheppard_maven} B. Sheppard, \emph{World-championship-caliber Scrabble}, ,,Artificial Intelligence'', vol. 134, p. 241-275, 2002.
+	\bibitem{strategy_pattern_definition} E.~Freeman, B.~Bates, K.~Sierra, \emph{Rusz głową! Wzorce projektowe}, Wyd. 2, Gliwice, Wydawnictwo Helion, 2011, ISBN 978-83-246-2803-2, strona 56.
 	\bibitem{game_dictionary_definition}
 		Anna Andrzejczuk, \emph{Słowniki do gier słownych jako nowy typ wydawnictw leksykograficznych}, pod kierownictwem dr hab. R. Pawelec, Warszawa, 2006. 
 	\bibitem{worlds_fastest_scrabble_program}
