@@ -7,6 +7,7 @@
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.8}
 \usepackage[breaklinks=true]{hyperref}
+\usepackage{amsthm}
 
 % ;;;;;;;;; colors ;;;;;;;;;;;;
 
@@ -16,6 +17,13 @@
 \definecolor{TripleLetterBonus}{RGB}{54,156,219}
 \definecolor{Tile}{RGB}{247,225,190}
 \definecolor{UniGreen}{RGB}{0,100,200}
+
+% ;;;;;;;;; theorems ;;;;;;;;;;;;
+
+\theoremstyle{definition}
+\newtheorem{theorem}{Twierdzenie}
+\newtheorem{definition}{Definicja}
+\newtheorem{pro}{Dowód}
 
 % ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -198,6 +206,63 @@ Punktacja za dane zagranie jest obliczana jako suma punktów za wszystkie płytk
  \item [Premia literowa] podwaja lub potraja wartość danej płytki.
  \item [Premia słowna] podwaja lub potraja wartość całego wyrazu.
 \end{description}
+
+\section*{Istnienie strategii optymalnej}
+
+Kluczowym zagadnieniem podczas implementacji algorytmu sztucznej inteligencji do gier planszowych (w~tym Scrabble) jest zbadanie istnienia strategii optymalnej.
+
+\begin{theorem}
+	Istnieje optymalna strategia gry w~Scrabble.
+	\label{thm:optimal_strategy_existence}
+\end{theorem}
+
+Aby dowieść twierdzenie \ref{thm:optimal_strategy_existence}~należy uprzednio zdefiniować przestrzeń stanów w~Scrabble.
+
+\begin{definition}
+	Stan rozgrywki po danej turze opisują jednoznacznie rozmieszczenie klocków na planszy $P$~oraz zagranie $Z$. Przejście między stanami determinuje zmiana $(\Delta P, \Delta Z)$.
+	\label{def:scrabble_state_space}
+\end{definition}
+
+Dysponując definicją \ref{def:scrabble_state_space}~można dowieść twierdzenie \ref{thm:optimal_strategy_existence}. Ilustrację dla dowodu \ref{pro:optimal_strategy_existence}~przedstawia rysunek \ref{fig:state_space}.
+
+\begin{pro}
+	Dla ułatwienia analiza rozgrywki zostanie przeprowadzona wychodząc od stanu końcowego. Nie wpływa to na ogólność dowodu. Dla dowolnej rozgrywki prawdziwe jest twierdzenie, że do stanu końcowego można wejść tylko na skończoną liczbę sposobów, które reprezentują legalne zagrania. Przeprowadzając rozumowanie iteracyjne możliwe jest przejście do stanu początkowego. Należy zauważyć, że w~każdej iteracji analizowana liczba wejść do stanu jest zawsze skończona, ponieważ skończona jest liczba kombinacji, na które można wylosować litery oraz liczba zagrań legalnych dla danej kombinacji liter. Podobne rozumowanie można przeprowadzić dla każdego stanu końcowego, budując skończone drzewo przestrzeni stanów. Skoro drzewo przestrzeni stanów jest skończone, można na podstawie jego znajomości w~każdym zagraniu wyznaczyć ruch, który maksymalizuje prawdopodobieństwo wygranej.
+	\label{pro:optimal_strategy_existence}
+\end{pro}
+
+\begin{figure}[ht!]
+	\begin{center}
+			\begin{tikzpicture}
+				\tikzstyle{state} = [draw, shape=circle, minimum width=15pt, minimum height=15pt]
+				\node (s0) [state] at (0,0) {};
+				\node (s1) [state] at (2,2) {};
+				\node (s2) [state] at (2,0) {};
+				\node (s3) [state] at (2, -2) {};
+				\node (s4) [state, fill=UniGreen] at (4,3.5) {};
+				\node (s5) [state, fill=UniGreen] at (4,2.5) {};
+				\node (s6) [state, fill=UniGreen] at (4,1.5) {};
+				\node (s7) [state, fill=UniGreen] at (4,0.5) {};
+				\node (s8) [state, fill=UniGreen] at (4,-0.5) {};
+				\node (s9) [state, fill=UniGreen] at (4,-1.5) {};
+				\node (s10) [state, fill=UniGreen] at (4,-2.5) {};
+				\draw (s0) -- node[above, sloped, font=\scriptsize] {Zagranie 1} (s1);
+				\draw (s0) -- node[above, sloped, font=\scriptsize, near end, xshift=-8pt] {Zagranie 2} (s2);
+				\draw (s0) -- node[above, sloped, font=\scriptsize] {Zagranie 3} (s3);
+				\draw (s1) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s4);
+				\draw (s1) -- node[xshift=-6pt, below, near end, sloped, font=\tiny] {Odpowiedź 2} (s5);
+				\draw (s1) -- node[below, sloped, font=\tiny] {Odpowiedź 3} (s6);
+				\draw (s2) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s7);
+				\draw (s2) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s8);
+				\draw (s3) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s9);
+				\draw (s3) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s10);
+				\draw [red, thick] plot [smooth cycle] coordinates {(-0.5, -0.5) (-0.5, 0.5) (2, 0.5) (4.5, 1.05) (4.76, -1.15) (2.3, -0.65)};
+			\end{tikzpicture}
+			\caption{Ilustracja dowodu istnienia strategii optymalnej. Stany końcowe oznaczono kolorem niebieskim.}
+			\label{fig:state_space}
+	\end{center}
+\end{figure}
+
+Zostało udowodnione, że deterministyczna wersja Scrabble dla dwóch graczy należy do problemów klasy \emph{PSPACE-Complete}. \cite{deterministic_scrabble} Klasa \emph{PSPACE-Complete} jest najbardziej obszerną klasą problemów wielomianowych. Każdy problem należący do przestrzeni problemów wielomianowych można przekształcić, w~wielomianowym czasie, do problemu klasy \emph{PSPACE-Complete}.
 
 \section*{Słowniki do gier}
 
@@ -788,38 +853,6 @@ W~fazie \emph{MG} liczba możliwych kombinacji płytek przeciwnika oraz ruchów 
 
 W~fazach \emph{PEG} oraz \emph{EG} stosowane jest inne podejście. Liczba scenariuszy rozgrywki znacząco spada, dlatego możliwe staje się analizowanie przestrzeni stanów, która została poglądowo zaprezentowana na rysunku \ref{fig:state_space}. 
 
-\begin{figure}[ht!]
-	\begin{center}
-			\begin{tikzpicture}
-				\tikzstyle{state} = [draw, shape=circle, minimum width=15pt, minimum height=15pt]
-				\node (s0) [state, fill=UniGreen] at (0,0) {};
-				\node (s1) [state] at (2,2) {};
-				\node (s2) [state] at (2,0) {};
-				\node (s3) [state] at (2, -2) {};
-				\node (s4) [state] at (4,3.5) {};
-				\node (s5) [state] at (4,2.5) {};
-				\node (s6) [state] at (4,1.5) {};
-				\node (s7) [state] at (4,0.5) {};
-				\node (s8) [state] at (4,-0.5) {};
-				\node (s9) [state] at (4,-1.5) {};
-				\node (s10) [state] at (4,-2.5) {};
-				\draw (s0) -- node[above, sloped, font=\scriptsize] {Zagranie 1} (s1);
-				\draw (s0) -- node[above, sloped, font=\scriptsize, near end, xshift=-8pt] {Zagranie 2} (s2);
-				\draw (s0) -- node[above, sloped, font=\scriptsize] {Zagranie 3} (s3);
-				\draw (s1) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s4);
-				\draw (s1) -- node[xshift=-6pt, below, near end, sloped, font=\tiny] {Odpowiedź 2} (s5);
-				\draw (s1) -- node[below, sloped, font=\tiny] {Odpowiedź 3} (s6);
-				\draw (s2) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s7);
-				\draw (s2) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s8);
-				\draw (s3) -- node[above, sloped, font=\tiny] {Odpowiedź 1} (s9);
-				\draw (s3) -- node[below, sloped, font=\tiny] {Odpowiedź 2} (s10);
-				\draw [red, thick] plot [smooth cycle] coordinates {(-0.5, -0.5) (-0.5, 0.5) (2, 0.5) (4.5, 1.05) (4.76, -1.15) (2.3, -0.65)};
-			\end{tikzpicture}
-			\caption{Schematyczne przedstawienie przestrzeni stanów w~Scrabble.}
-			\label{fig:state_space}
-	\end{center}
-\end{figure}
-
 Na etapach \emph{PEG} oraz \emph{EG} wciąż nie jest możliwe dokonanie pełnego przeszukiwania przestrzeni stanów, nie można więc skorzystać z~algorytmów $\alpha - \beta$, czy $A^{*}$. Użyteczne są algorytmy pozwalające przeszukiwać przestrzeń stanów z~ograniczeniami (przykładowo: $B^{*}$) istnieje bowiem sposób na wyznaczenie dobrego przybliżenia zarówno górnego, jak i~dolnego przedziału wartości punktowych, które pozwolą odnieść zwycięstwo w~rozgrywce. Dodatkowo przeszukiwanie powinno być prowadzone w~sposób progresywny, a~więc rozpoczynając od miejsc, w~których najszybciej możemy zakończyć przeszukiwanie. Miejsca takie związane są z~możliwie małą ilością zagrań, a~tym samym możliwie długimi układanymi wyrazami.
 
 Przeszukiwanie przestrzeni stanów jest podejściem, które pozwala wygrać każdą rozgrywkę, o~ile warunki początkowe przy wchodzeniu w~fazę \emph{EG} pozwalają na zwycięstwo. Świadczą o~tym wyniki uzyskiwane przez komputerowych graczy Scrabble przeciwko najlepszym ludziom. Podczas turnieju, w~którym najlepsze algorytmy sztucznej inteligencji rywalizowały przeciwko ludziom, \emph{Quackle} uzyskał rezultat 32 wygranych i~4 porażek, a~następnie pokonał ówczesnego mistrza świata - Davida Boysa - rezultatem 3 do 2. \cite{intelligent_game_playing}
@@ -837,7 +870,8 @@ Przedstawione w~artykule informacje posłużą także do rozbudowy oprogramowani
 	\bibitem{scrabble_definition} 
 		\emph{Wielki słownik ortograficzny PWN}, pod red. Edwarda Polańskiego, Wyd. 3 popr. i~uzup., Warszawa, Wydawnictwo Naukowe PWN, 2012, ISBN 978-83-01-16405-8.
 	\bibitem{scrabble_word_rules}
-		\emph{Zasady dopuszczalności słów} [online], Polska Federacja Scrabble [dostęp: 19 grudnia 2013], Dostępny w~Internecie: \href{http://www.pfs.org.pl/zds.php}{\nolinkurl{<http://www.pfs.org.pl/zds.php>}}.
+		\emph{Zasady dopuszczalności słów} [online], Polska Federacja Scrabble [dostęp: 25 kwietnia 2014], Dostępny w~Internecie: \href{http://www.pfs.org.pl/zds.php}{\nolinkurl{<http://www.pfs.org.pl/zds.php>}}.
+	\bibitem{deterministic_scrabble} M. Lampis, V. Mitsou, K. Sołtys, \emph{Scrabble is PSPACE-Complete}, 2012.
 	\bibitem{game_dictionary_definition}
 		Anna Andrzejczuk, \emph{Słowniki do gier słownych jako nowy typ wydawnictw leksykograficznych}, pod kierownictwem dr hab. R. Pawelec, Warszawa, 2006. 
 	\bibitem{worlds_fastest_scrabble_program}
@@ -845,7 +879,7 @@ Przedstawione w~artykule informacje posłużą także do rozbudowy oprogramowani
 	\bibitem{faster_move_generation_algorithm}
 		S.~Gordon, \emph{A Faster Scrabble Move Generation Algorithm}, ,,Software - Practice and Experience'' 1994, 24(2), strony 219-232.
 	\bibitem{quackle_algorithm}
-		Jason Katz-Brown, John O'Laughlin, \emph{How Quackle Plays Scrabble} [online], Quackle [dostęp: 19 grudnia 2013], Dostępny w~Internecie: \href{http://people.csail.mit.edu/jasonkb/quackle/doc/how_quackle_plays_scrabble.html}{\nolinkurl{<http://people.csail.mit.edu/jasonkb/quackle/doc/how\_quackle\_plays\_scrabble.html>}}.
+		Jason Katz-Brown, John O'Laughlin, \emph{How Quackle Plays Scrabble} [online], Quackle [dostęp: 25 kwietnia 2014], Dostępny w~Internecie: \href{http://people.csail.mit.edu/jasonkb/quackle/doc/how_quackle_plays_scrabble.html}{\nolinkurl{<http://people.csail.mit.edu/jasonkb/quackle/doc/how\_quackle\_plays\_scrabble.html>}}.
 	\bibitem{intelligent_game_playing}
 		Jacek Mańdziuk, \emph{Knowledge-Free and Learning-Based Methods in Intelligent Game Playing}, Wydawnictwo Springer, 2010, ISBN 978-3-642-11677-3.
 \end{thebibliography}
