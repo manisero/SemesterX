@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.spdb.tests;
+package pl.edu.pw.elka.spdb.tests.dao.location;
 
 import junit.framework.TestCase;
 import org.junit.Test;
