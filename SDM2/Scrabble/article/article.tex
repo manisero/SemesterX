@@ -420,6 +420,24 @@ Kolejnym usprawnieniem algorytmu może być wprowadzenie rozróżnienia na zagra
 
 Podział zagrań na defensywne i~ofensywne można przeprowadzić na podstawie wielu kryteriów. Pod uwagę można brać, między innymi, liczbę wykorzystanych podczas zagrania klocków, które znajdowały się na planszy przed rozegraniem. Innym przykładem takiego kryterium jest ilość nowych premii otwartych w~wyniku zagrania.
 
+\section*{End-game}
+
+Algorytm operujący w~fazie EG dysponuje pełną informacją o~grze, gdyż wiadomo jakimi literami dysponuje przeciwnik. W~tych warunkach naturalne jest wykorzystanie przeszukiwania przestrzeni stanów algorytmem typu $\alpha - \beta$. Niestety, nawet w~końcowych etapach rozgrywki przestrzeń stanów jest zbyt duża i~zbyt głęboka aby wykonać takie przeszukiwane. Niezbędne jest wyznaczenie ograniczeń.
+
+Do wyznaczania ograniczeń można wykorzystać programowanie dynamiczne. Na potrzeby oszacowania przyjęte zostanie założenie, że sytuacja na planszy jest statyczna i~wartość możliwych do uzyskania zagrań zależy jedynie od stanu planszy i~zawartości stojaka, a~nie superpozycji kolejnych zagrań obu graczy. Zakładając, że partia zakończy się w~$N$~ruchach można ograniczyć przeszukiwaną przestrzeń tylko do $N$ poziomów. Każdemu zagraniu zostanie przypisana jego szacowana wartość postaci $F_{N}(x) = P_{N}(x) + LV_{N-1}$. $P_{N}$ oznacza liczbę punktów uzyskanych za zagranie, a~$LV_{N-1}$ to oszacowanie wartości pozostałych po zagraniu płytek przy założeniu, że do końca rozgrywki pozostało $N - 1$ tur.
+
+Przykład oszacowania dla fazy EG:
+
+\begin{enumerate}
+	\item Gracz 1~($G_{1}$) zakończy grę w~8~ruchach. Wtedy gracz 2~($G_{2}$) rozegra 7~ruchów. Powstaje ścieżka do przetworzenia algorytmem minimax.
+	\item $G_{2}$ zakończy grę w~7 ruchach. $G_{1}$ rozegra wtedy 7 ruchów. Jeżeli ta ścieżka będzie lepsza dla $G_{2}$, $G{2}$ wybierze właśnie ją.
+	\item $G_{1}$ będzie miał okazję do poprawy jeżeli zakończy grę w~7~ruchach...
+\end{enumerate}
+
+Algorytm ten jest kontynuowany do momentu, gdy żaden z~graczy nie może się poprawić.
+
+Analiza przestrzeni stanów może być dalej usprawniana. Nie zawsze istnieje bowiem jedna optymalna ścieżka zagrania dla przeciwnika. Przykładowo, gdy może on zagrać słowo \textbf{ALE} w~dwóch różnych pozycjach (za 25 i~28 punktów odpowiednio) korzyść z~zablokowania drugiej na rzecz pierwszej pozycji wynosi tylko trzy punkty. Spostrzeżenie to można zawrzeć w~algorytmie przez wprowadzenie dwóch progów oszacowania: optymistycznego i~pesymistycznego. Niestety, algorytm minimax nie wspiera przedziałów, więc do przeszukiwania przestrzeni stanów należy wykorzystać inny algorytm. Przykładem przeszukiwania wspierającego przedziały jest algorytm $B^{*}$. \cite{bstar}
+
 \section*{Słowniki do gier}
 
 Reguły Scrabble dopuszczają układanie ,,wszystkich słów występujących w~słownikach języka polskiego oraz wszystkich ich prawidłowych form gramatycznych, z~wyjątkiem takich słów, które rozpoczynają się od wielkiej litery, są skrótami, bądź słowami wymagającymi cudzysłowu lub łącznika''. \cite{scrabble_word_rules} 
@@ -906,6 +924,7 @@ Przedstawione w~artykule informacje posłużą także do rozbudowy oprogramowani
 	\bibitem{strategy_pattern_definition} E.~Freeman, B.~Bates, K.~Sierra, \emph{Rusz głową! Wzorce projektowe}, Wyd. 2, Gliwice, Wydawnictwo Helion, 2011, ISBN 978-83-246-2803-2, strona 56.
 	\bibitem{quackle_algorithm}
 		Jason Katz-Brown, John O'Laughlin, \emph{How Quackle Plays Scrabble} [online], Quackle [dostęp: 25 kwietnia 2014], Dostępny w~Internecie: \href{http://people.csail.mit.edu/jasonkb/quackle/doc/how_quackle_plays_scrabble.html}{\nolinkurl{<http://people.csail.mit.edu/jasonkb/quackle/doc/how\_quackle\_plays\_scrabble.html>}}.
+	\bibitem{bstar} H.~J.~Berliner, C.~McConnell, \emph{$B^{*}$ Probability Based Search}, Carnegie Mellon University, 1995.
 	\bibitem{game_dictionary_definition}
 		Anna Andrzejczuk, \emph{Słowniki do gier słownych jako nowy typ wydawnictw leksykograficznych}, pod kierownictwem dr hab. R. Pawelec, Warszawa, 2006. 
 	\bibitem{worlds_fastest_scrabble_program}
