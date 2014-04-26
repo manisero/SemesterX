@@ -267,14 +267,14 @@ Zostało udowodnione, że deterministyczna wersja Scrabble dla dwóch graczy nal
 
 \section*{Strategia zależna od fazy gry}
 
-Niestety, w~praktyce wykorzystywanie strategii optymalnej nie jest możliwe. Dla rozgrywki końcowej 7~klocków przeciwko 7~klockom średnia ilość gałęzi w~drzewie przestrzeni stanów wynosi 200. Kolejnym problemem jest głębokość drzewa, która może sięgać czternastu poziomów (gdy gracze wykładają klocki pojedynczo) lub więcej (dochodzi możliwość pasowania). Wartości te są zbyt duże, by stosować pełny algorytm typu $\alpha - \beta$, a~odnoszą się wyłącznie do sytuacji, w~której posiadamy pełną informację o~rozgrywce (to znaczy znane są klocki przeciwnika). Na pozostałych etapach rozgrywki analiza przestrzeni stanów nie jest opcją. Wynika z~tego, że algorytm sztucznej inteligencji do Scrabble musi zmieniać strategię rozgrywki w~zależności od etapu gry.
+Niestety, w~praktyce wykorzystywanie strategii optymalnej nie jest możliwe. Dla rozgrywki końcowej 7~klocków przeciwko 7~klockom średnia ilość gałęzi w~drzewie przestrzeni stanów wynosi 200. Kolejnym problemem jest głębokość drzewa, która może sięgać czternastu poziomów (gdy gracze wykładają klocki pojedynczo) lub więcej (dochodzi możliwość pasowania). Wartości te są zbyt duże aby stosować pełny algorytm typu $\alpha - \beta$, a~odnoszą się wyłącznie do sytuacji, w~której posiadamy pełną informację o~rozgrywce (to znaczy znane są klocki przeciwnika). Na pozostałych etapach rozgrywki analiza przestrzeni stanów nie jest opcją. Wynika z~tego, że algorytm sztucznej inteligencji do Scrabble musi zmieniać strategię rozgrywki w~zależności od etapu gry.
 
 Wyróżnia się cztery zasadnicze fazy rozgrywki: \cite{sheppard_maven}
 
 \begin{description}
-	\item[Opening Play]\footnote{Opening Play, w~skrócie OP. W~dalszej części artykułu dla określenia faz rozgrywki stosowane będą wyłącznie nazwy skrótowe, a~więc OP, MG, PEG oraz EG} faza otwarcia. Dotyczy wyłącznie pierwszego zagrania, a~więc kiedy na planszy nie znajduje się jeszcze żaden klocek.
+	\item[Opening Play]\footnote{Opening Play, w~skrócie OP. W~dalszej części artykułu dla określenia faz rozgrywki stosowane będą wyłącznie nazwy skrótowe, a~więc OP, MG, PEG oraz EG.} faza otwarcia. Dotyczy wyłącznie pierwszego zagrania, a~więc kiedy na planszy nie znajduje się jeszcze żaden klocek.
 	\item[Mid Game] faza śródgry. Rozpoczyna się po otwarciu, a~kończy wraz z~rozpoczęciem fazy PEG.
-	\item[Pre-End Game] faza przedkońcowa rozgrywki. Rozpoczyna się w~momencie, kiedy rozgrywka może zakończyć się w~dwóch turach, a~więc kiedy w~worku pozostaje siedem lub mniej klocków. Kończy się wraz z~rozpoczęciem fazy EG.
+	\item[Pre-End Game] faza przedkońcowa rozgrywki. Rozpoczyna się w~momencie, w~którym rozgrywka może zakończyć się w~dwóch turach, a~więc kiedy w~worku pozostaje siedem lub mniej klocków. Kończy się wraz z~rozpoczęciem fazy EG.
 	\item[End Game] faza zakończenia. Rozpoczyna się, gdy w~worku nie ma już klocków i~trwa aż do końca gry. Charakteryzuje się tym, że w~trakcie jej trwania zawodnicy dysponują pełną informacją o~grze, a~więc również o~literach posiadanych przez przeciwnika.
 \end{description}
 
@@ -308,7 +308,7 @@ Wyszukiwanie najlepszego otwarcia może być zoptymalizowane czasowo. Wykorzystu
 
 \section*{Mid Game}
 
-W~fazie MG w~aplikacji Quackle wykorzystywany jest algorytm z~heurystyczną funkcją statyczną oraz symulacją dwóch zagrań w~przyszłość. Schemat tego algorytmu został przedstawiony na rysunku \ref{fig:mid_game_algorithm}.~\cite{quackle_algorithm}
+W~fazie MG w~aplikacji Quackle wykorzystywany jest algorytm z~heurystyczną funkcją oszacowania oraz symulacją dwóch zagrań ,,w~przód''. Schemat tego algorytmu został przedstawiony na rysunku \ref{fig:mid_game_algorithm}.~\cite{quackle_algorithm}
 
 \begin{figure}[ht!]
 	\centering
@@ -370,10 +370,10 @@ Na potrzeby artykułu pominięte zostanie omówienie fazy generacji ruchu. Jej w
 Do statycznego oszacowania wykorzystywana jest funkcja celu postaci $F(x) = P(x) + LV(x)$, gdzie $F(x)$ to wartość oszacowania dla zagrania $x$, $P(x)$ to wartość punktowa tego zagrania, a~$LV(x)$ to współczynnik \emph{leave value} dla klocków pozostałych po zagraniu.
 
 \begin{definition}
-	\emph{Leave value} to funkcja, który zestawowi klocków pozostałych po zagraniu przypisuje wartość punktową odzwierciedlającą ,,perspektywiczność'' pod kątem wysoko punktowanych zagrań w~przyszłości. Funkcja przyjmuje wartości należące do zbioru $\mathbb{R}$ liczb rzeczywistych.
+	\emph{Leave value} to funkcja, która zestawowi klocków pozostałych po zagraniu przypisuje wartość punktową odzwierciedlającą ,,perspektywiczność'' pod kątem wysoko punktowanych zagrań w~przyszłości. Funkcja przyjmuje wartości należące do zbioru $\mathbb{R}$ liczb rzeczywistych.
 \end{definition}
 
-Przykładowo, jeśli płytki pozostałe po ułożeniu czteroliterowego wyrazu to \textbf{Ą}, \textbf{Ź} oraz \textbf{Ń}, ich wartość \emph{leave value} będzie ujemna, gdyż prawdopodobieństwo siedmioliterowego zagrania w~kolejnym ruchu jest bardzo niskie. Wartości funkcji \emph{leave value} wyznaczane są na podstawie bazy danych wcześniejszych gier, którą można zbudować na podstawie zapisów turniejowych. 
+Przykładowo jeśli płytki pozostałe po ułożeniu czteroliterowego wyrazu to \textbf{Ą}, \textbf{Ź}~oraz \textbf{Ń}, wtedy ich wartość \emph{leave value} będzie ujemna, gdyż prawdopodobieństwo siedmioliterowego zagrania w~kolejnym ruchu jest bardzo niskie. Wartości funkcji \emph{leave value} wyznaczane są na podstawie bazy danych wcześniejszych gier, którą można zbudować wykorzystując zapisy partii z~turniejów.
 
 Statyczne oszacowanie przeprowadza się dla wszystkich dozwolonych ruchów wyznaczonych na etapie generacji. Do kolejnego etapu wybierane są 23 ruchy z~najwyższą wartością funkcji celu.
 
@@ -397,7 +397,7 @@ W~fazie symulacji dla każdego z~pozostałych 23 ruchów szacuje się jaki może
 
 Dla każdego z~23 wyników symulacji szacowane jest następnie prawdopodobieństwo wygranej. Prawdopodobieństwo wygranej jest funkcją $W: PV, TR \rightarrow [0;1]$, gdzie $PV$ jest wartością zagrania wyznaczoną w trakcie symulacji, a~$TR$ jest liczbą klocków pozostałych do wykorzystania w~partii. 
 
-Wartości funkcji $W$, podobnie jak wartości funkcji celu dla fazy statycznego oszacowania, są wyznaczane na podstawie bazy danych gier. W~wyniku etapu oszacowania prawdopodobieństwa wygranej pozostawiane jest 10 zagrań o~największym prawdopodobieństwie.
+Wartości funkcji $W$, podobnie jak wartości funkcji celu dla fazy statycznego oszacowania, są wyznaczane na podstawie bazy danych gier. W~wyniku etapu oszacowania prawdopodobieństwa wygranej pozostawiane jest 10 zagrań o~największym prawdopodobieństwie wygranej.
 
 \subsection*{Usprawnienia fazy mid-game}
 
@@ -416,7 +416,7 @@ Jeżeli w~poprzednim ruchu przeciwnik ułożył na planszy słowo \textbf{RADO} 
 
 Niestety, w~praktyce trudno określić kryteria, które pozwalają rozpoznać \emph{łowienie} przeciwnika. Umiarkowanie dobrym kryterium jest analiza ilości liter użytych do poprzedniego zagrania. Jeżeli przeciwnik wykorzystał tylko jedną literę bardzo prawdopodobne jest, że próbował \emph{złowić} dobrą kombinację liter. Aby przeciwdziałać \emph{łowieniu} należy wybrać specjalną estymatę zawartości stojaka przeciwnika na etapie symulacji. Dzięki temu symulacja preferować będzie zagrania blokujące \emph{hot-spoty}, czyli otwarte punkty planszy umożliwiające wysoko punktowaną rozgrywkę.
 
-Kolejnym usprawnieniem algorytmu może być wprowadzenie rozróżnienia na zagrania ofensywne oraz defensywne. Etap oszacowania prawdopodobieństwa wygranej bazuje na nieprecyzyjnych informacjach wejściowych. Zasymulowana pozycja ,,w~przyszłości'' może być nieadekwatna do rzeczywistości, na przykład gdy zostało pominięte możliwe \emph{bingo} przeciwnika. Wprowadzając podział zagrań na defensywne i~ofensywne możliwe jest wprowadzenie dodatkowego elementu algorytmu rozważającego opłacalność zagrania otwierającego planszę. Do rozważania opłacalności można wykorzystać sieci neuronowe.
+Kolejnym usprawnieniem algorytmu może być wprowadzenie rozróżnienia na zagrania ofensywne oraz defensywne. Etap oszacowania prawdopodobieństwa wygranej bazuje na nieprecyzyjnych informacjach wejściowych. Zasymulowana pozycja ,,w~przyszłości'' może być nieadekwatna do rzeczywistości, na przykład gdy zostało pominięte możliwe \emph{bingo} przeciwnika. Wprowadzając podział zagrań na defensywne i~ofensywne możliwe jest wprowadzenie dodatkowego elementu algorytmu rozważającego opłacalność zagrania otwierającego planszę. Do rozważania opłacalności można wykorzystać sieć neuronową.
 
 Podział zagrań na defensywne i~ofensywne można przeprowadzić na podstawie wielu kryteriów. Pod uwagę można brać, między innymi, liczbę wykorzystanych podczas zagrania klocków, które znajdowały się na planszy przed rozegraniem. Innym przykładem takiego kryterium jest ilość nowych premii otwartych w~wyniku zagrania.
 
@@ -424,7 +424,7 @@ Podział zagrań na defensywne i~ofensywne można przeprowadzić na podstawie wi
 
 Algorytm operujący w~fazie EG dysponuje pełną informacją o~grze, gdyż wiadomo jakimi literami dysponuje przeciwnik. W~tych warunkach naturalne jest wykorzystanie przeszukiwania przestrzeni stanów algorytmem typu $\alpha - \beta$. Niestety, nawet w~końcowych etapach rozgrywki przestrzeń stanów jest zbyt duża i~zbyt głęboka aby wykonać takie przeszukiwane. Niezbędne jest wyznaczenie ograniczeń.
 
-Do wyznaczania ograniczeń można wykorzystać programowanie dynamiczne. Na potrzeby oszacowania przyjęte zostanie założenie, że sytuacja na planszy jest statyczna i~wartość możliwych do uzyskania zagrań zależy jedynie od stanu planszy i~zawartości stojaka, a~nie superpozycji kolejnych zagrań obu graczy. Zakładając, że partia zakończy się w~$N$~ruchach można ograniczyć przeszukiwaną przestrzeń tylko do $N$ poziomów. Każdemu zagraniu zostanie przypisana jego szacowana wartość postaci $F_{N}(x) = P_{N}(x) + LV_{N-1}$. $P_{N}$ oznacza liczbę punktów uzyskanych za zagranie, a~$LV_{N-1}$ to oszacowanie wartości pozostałych po zagraniu płytek przy założeniu, że do końca rozgrywki pozostało $N - 1$ tur.
+Do wyznaczania ograniczeń można wykorzystać programowanie dynamiczne. Na potrzeby oszacowania przyjęte zostanie założenie, że sytuacja na planszy jest statyczna i~wartość możliwych do uzyskania zagrań zależy jedynie od stanu planszy i~zawartości stojaka, a~nie superpozycji kolejnych zagrań obu graczy. Zakładając, że partia zakończy się w~$N$~ruchach można ograniczyć przeszukiwaną przestrzeń tylko do $N$ poziomów. Każdemu zagraniu zostanie przypisana jego szacowana wartość w~postaci $F_{N}(x) = P_{N}(x) + LV_{N-1}$. $P_{N}$ oznacza liczbę punktów uzyskanych za zagranie, a~$LV_{N-1}$ to oszacowanie wartości pozostałych po zagraniu płytek przy założeniu, że do końca rozgrywki pozostało $N - 1$ tur.
 
 Przykład oszacowania dla fazy EG:
 
@@ -436,7 +436,7 @@ Przykład oszacowania dla fazy EG:
 
 Algorytm ten jest kontynuowany do momentu, gdy żaden z~graczy nie może się poprawić.
 
-Analiza przestrzeni stanów może być dalej usprawniana. Nie zawsze istnieje bowiem jedna optymalna ścieżka zagrania dla przeciwnika. Przykładowo, gdy może on zagrać słowo \textbf{ALE} w~dwóch różnych pozycjach (za 25 i~28 punktów odpowiednio) korzyść z~zablokowania drugiej na rzecz pierwszej pozycji wynosi tylko trzy punkty. Spostrzeżenie to można zawrzeć w~algorytmie przez wprowadzenie dwóch progów oszacowania: optymistycznego i~pesymistycznego. Niestety, algorytm minimax nie wspiera przedziałów, więc do przeszukiwania przestrzeni stanów należy wykorzystać inny algorytm. Przykładem przeszukiwania wspierającego przedziały jest algorytm $B^{*}$. \cite{bstar}
+Analiza przestrzeni stanów może być dalej usprawniana. Nie zawsze istnieje bowiem jedna optymalna ścieżka zagrania dla przeciwnika. Przykładowo, gdy może on zagrać słowo \textbf{ALE} w~dwóch różnych pozycjach (za 25 i~28 punktów odpowiednio) korzyść z~zablokowania drugiej na rzecz pierwszej pozycji wynosi tylko trzy punkty. Spostrzeżenie to można zawrzeć w~algorytmie przez wprowadzenie dwóch progów oszacowania: optymistycznego i~pesymistycznego. Niestety, algorytm minimax nie wspiera przedziałów. Do przeszukiwania przestrzeni stanów należy zatem wykorzystać inny algorytm. Przykładem przeszukiwania wspierającego przedziały jest algorytm $B^{*}$. \cite{bstar}
 
 \section*{Pre-end Game}
 
@@ -444,7 +444,7 @@ W~fazie PEG obliczenia wykonywane przez algorytm dla fazy MG pozostaną poprawne
 
 \section*{Wyniki testów}
 
-Na potrzeby testowania usprawnień algorytmów przedstawionych w~artykule zostały wykonane dwie implementacje sztucznej inteligencji do Scrabble. Jedna, nazywana dalej algorytmem referencyjnym, bazuje bezpośrednio na specyfikacji aplikacji Quackle. \cite{quackle_algorithm} Druga, tak zwany algorytm zmodyfikowany, nanosi do algorytmu referencyjnego wszystkie umodyfikacje opisane w~artykule. Oba algorytmy rozegrały przeciwko sobie 1523 partie. Podsumowanie wyników zostało zamieszczone w~tabeli~\ref{tab:test_results}.
+Na potrzeby testowania usprawnień algorytmów przedstawionych w~artykule zostały wykonane dwie implementacje sztucznej inteligencji do Scrabble. Jedna, nazywana dalej algorytmem referencyjnym, bazuje bezpośrednio na specyfikacji aplikacji Quackle. \cite{quackle_algorithm} Druga, tak zwany algorytm zmodyfikowany, nanosi do algorytmu referencyjnego wszystkie modyfikacje opisane w~artykule. Oba algorytmy rozegrały przeciwko sobie 1523 partie. Podsumowanie wyników zostało zamieszczone w~tabeli~\ref{tab:test_results}.
 
 \begin{figure}[ht!]
 	\centering
@@ -466,15 +466,15 @@ Na potrzeby testowania usprawnień algorytmów przedstawionych w~artykule zosta�
 
 Rozkład procentowy wygranych znacząco odbiega od rozkładu $50\% - 50\%$, którego można byłoby oczekiwać dla równorzędnych przeciwników. Na podstawie przedstawionej próby można wnioskować, że modyfikacje wprowadzone do algorytmu przyczyniły się do zwiększenia jego skuteczności.
 
-Ze względu na brak odpowiedniej klasy przeciwników, algorytm nie został należycie przetestowany przeciwko ludziom. Okazało się, że przewaga, którą daje znajomość całego słownika jest zbyt duża, aby gracze-amatorzy mogli wygrać chociaż jedną partię z~algorytmem. W~dotychczasowych testach zmodyfikowany algorytm odniósł $100\%$ zwycięstw.
+Ze względu na brak odpowiedniej klasy przeciwników algorytm nie został należycie przetestowany przeciwko ludziom. Okazało się, że przewaga, którą daje znajomość całego słownika jest zbyt duża, aby gracze-amatorzy mogli wygrać chociaż jedną partię z~algorytmem. W~dotychczasowych testach zmodyfikowany algorytm odniósł $100\%$ zwycięstw.
 
 \section*{Podsumowanie}
 
-Artykuł prezentuje informacje, które mogą posłużyć do implementacji zaawansowanego algorytmu sztucznej inteligencji grającego w~Scrabble. Przedstawia on podstawy teoretyczne niezbędne do implementacji. Ponadto, opisuje szczegółowo różne strategie, które mogą być stosowane na różnym stopniu zaawansowania rozgrywki. 
+Artykuł prezentuje informacje, które mogą posłużyć do implementacji zaawansowanego algorytmu sztucznej inteligencji grającego w~Scrabble. Artykuł przedstawia podstawy teoretyczne niezbędne do jego implementacji. Ponadto opisuje szczegółowo  strategie, które mogą być stosowane na różnym stopniu zaawansowania rozgrywki. 
 
 Artykuł koncentruje się na wskazaniu słabych ogniw algorytmów dla poszczególnych etapów rozgrywki. Autor prezentuje modyfikacje, które należy wprowadzić celem eliminacji omawianych wad. Zaprezentowane w~artykule wyniki testów pozwalają sądzić, że wprowadzone modyfikacje pozytywnie wpływają na skuteczność całego algorytmu. 
 
-Dalszym kierunkiem rozwoju algorytmu może być badanie sposobu na wykrycie próby \emph{złowienia} dobrych liter przez przeciwnika. Testy algorytmu referencyjnego wskazują, że wiele przegranych wynika z~powszechnego wykorzystywania \emph{łowienia} przez zawodników klasy mistrzowskiej. Zaproponowany w~artykule sposób wykrywania tego typu zagrań nie jest wyczerpujący i~może być przedmiotem dalszych usprawnień.
+Dalszym kierunkiem rozwoju algorytmu może być badanie sposobu na wykrycie próby \emph{złowienia} dobrych liter przez przeciwnika. Testy algorytmu referencyjnego wskazują, że wiele przegranych wynika z~powszechnego wykorzystywania \emph{łowienia} przez zawodników klasy mistrzowskiej. Zaproponowany w~artykule sposób wykrywania tego typu zagrań nie jest wyczerpujący i~może być przedmiotem dalszych usprawnień. Dalszemu badaniu może podlegać również efektywność wprowadzonych modyfikacji dla innych języków rozgrywki.
 
 \begin{thebibliography}{9}
 	\small
