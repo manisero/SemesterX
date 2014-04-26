@@ -3,7 +3,11 @@ package pl.edu.pw.elka.spdb.model;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
+import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.support.index.IndexType;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 @NodeEntity
 public class MapEntry {
@@ -12,6 +16,9 @@ public class MapEntry {
 
     @Indexed(indexType = IndexType.POINT, indexName = "MapEntryLocation")
     private String wkt;
+
+    @RelatedToVia
+    private Collection<Route> routes = new HashSet<>();
 
     protected MapEntry() {
     }
@@ -28,6 +35,17 @@ public class MapEntry {
         wkt = String.format("POINT( %.2f %.2f )", latitude, longitude).replace(",", ".");
     }
 
+    public Route addRoute(MapEntry mapEntry) {
+        final Route route = new Route(this, mapEntry);
+        routes.add(route);
+
+        return route;
+    }
+
+    public boolean routesTo(MapEntry mapEntry) {
+        return routes.stream().anyMatch(entry -> entry.routeFrom.equals(this) && entry.routeTo.equals(mapEntry));
+    }
+
     public String toString() {
         return String.format("MapEntry of id: %1$s and location: %2$s", id, wkt);
     }
@@ -36,6 +54,10 @@ public class MapEntry {
     public boolean equals(Object object) {
         MapEntry other = (MapEntry) object;
 
-        return id.equals(other.id) && wkt.equals(other.wkt);
+        if (id == null || other.id == null) {
+            return false;
+        }
+
+        return id.equals(other.id);
     }
 }

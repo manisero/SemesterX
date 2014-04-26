@@ -29,12 +29,35 @@ public class Neo4jMapEntryDAOTests extends TestCase {
 
     @Test
     public void testInsertAndFindLocationMethods() {
-        MapEntry mapEntry = new MapEntry(52.2206062, 21.0105747);
+        MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
 
-        Long mapEntryId = mapEntryDAO.insertMapEntry(mapEntry).getId();
+        Long mapEntryId = mapEntryDAO.insertMapEntry(universityOfTechnology).getId();
         MapEntry foundMapEntry = mapEntryDAO.findMapEntryById(mapEntryId);
 
         assertNotNull(foundMapEntry);
-        assertEquals(mapEntry, foundMapEntry);
+        assertEquals(universityOfTechnology, foundMapEntry);
+    }
+
+    @Test
+    public void testAddRouteMethod() {
+        MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
+        MapEntry subway = new MapEntry(52.2190664, 21.0153627);
+        MapEntry mlocinyMetroStation = new MapEntry(52.290513, 20.930355);
+        universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
+        subway = mapEntryDAO.insertMapEntry(subway);
+        mlocinyMetroStation = mapEntryDAO.insertMapEntry(mlocinyMetroStation);
+        template.save(universityOfTechnology.addRoute(subway));
+        template.save(subway.addRoute(universityOfTechnology));
+
+        universityOfTechnology = mapEntryDAO.findMapEntryById(universityOfTechnology.getId());
+        subway = mapEntryDAO.findMapEntryById(subway.getId());
+        mlocinyMetroStation = mapEntryDAO.findMapEntryById(mlocinyMetroStation.getId());
+
+        assertTrue(universityOfTechnology.routesTo(subway));
+        assertTrue(subway.routesTo(universityOfTechnology));
+        assertFalse(universityOfTechnology.routesTo(mlocinyMetroStation));
+        assertFalse(mlocinyMetroStation.routesTo(universityOfTechnology));
+        assertFalse(subway.routesTo(mlocinyMetroStation));
+        assertFalse(mlocinyMetroStation.routesTo(subway));
     }
 }
