@@ -1,7 +1,7 @@
 package pl.edu.pw.elka.spdb.dao;
 
-import pl.edu.pw.elka.spdb.dao.location.ILocationDAO;
+import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 
 public interface IDAOFactory {
-    ILocationDAO getLocationDAO();
+    IMapEntryDAO getMapEntryDAO();
 }

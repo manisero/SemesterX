@@ -1,12 +1,12 @@
 package pl.edu.pw.elka.spdb.dao.impl;
 
 import pl.edu.pw.elka.spdb.dao.IDAOFactory;
-import pl.edu.pw.elka.spdb.dao.location.ILocationDAO;
-import pl.edu.pw.elka.spdb.dao.location.impl.Neo4jLocationDAO;
+import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
+import pl.edu.pw.elka.spdb.dao.entries.impl.Neo4jMapEntryDAO;
 
 public class Neo4jDAOFactory implements IDAOFactory {
     @Override
-    public ILocationDAO getLocationDAO() {
-        return new Neo4jLocationDAO();
+    public IMapEntryDAO getMapEntryDAO() {
+        return new Neo4jMapEntryDAO();
     }
 }
