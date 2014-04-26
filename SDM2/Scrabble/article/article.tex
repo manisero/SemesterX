@@ -28,7 +28,7 @@
 
 % ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-\title{\LARGE{Zaawansowana sztuczna inteligencja do Scrabble} \\ \vspace{2mm} \large{Podstawy teoretyczne i~implementacja algorytmu}}
+\title{\LARGE{Zaawansowana sztuczna inteligencja do Scrabble} \\ \vspace{2mm} \large{Podstawy teoretyczne i~opis implementacji algorytmu}}
 \author{Jakub Turek}
 \date{\today}
 
@@ -398,6 +398,27 @@ W~fazie symulacji dla każdego z~pozostałych 23 ruchów szacuje się jaki może
 Dla każdego z~23 wyników symulacji szacowane jest następnie prawdopodobieństwo wygranej. Prawdopodobieństwo wygranej jest funkcją $W: PV, TR \rightarrow [0;1]$, gdzie $PV$ jest wartością zagrania wyznaczoną w trakcie symulacji, a~$TR$ jest liczbą klocków pozostałych do wykorzystania w~partii. 
 
 Wartości funkcji $W$, podobnie jak wartości funkcji celu dla fazy statycznego oszacowania, są wyznaczane na podstawie bazy danych gier. W~wyniku etapu oszacowania prawdopodobieństwa wygranej pozostawiane jest 10 zagrań o~największym prawdopodobieństwie.
+
+\subsection*{Usprawnienia fazy mid-game}
+
+Na etapie symulacji pomijane są dwa istotne aspekty rozgrywki:
+
+\begin{itemize}
+	\item Losowanie zawartości stojaka przeciwnika odbywa się z~rozkładem jednostajnym. Obserwując poprzedni ruch przeciwnika można lepiej przybliżyć ten rozkład.
+	\item Gracze korzystają z~\emph{łowienia} korzystnych wyrazów.
+\end{itemize}
+
+Jeżeli w~poprzednim ruchu przeciwnik ułożył na planszy słowo \textbf{RADO} można wnioskować, że nie posiadał on liter \textbf{I} oraz \textbf{U}. W~przeciwnym razie utworzyłby wyżej punktowane słowa - \textbf{RADIO} lub \textbf{URODA}. Korzystając z~tej obserwacji możemy wylosować $\frac{3}{7}$ zawartości stojaka przeciwnika ze zbioru pozostałych klocków z~pominięciem liter \textbf{U} oraz \textbf{I}. 
+
+\begin{definition}
+	\emph{Łowienie} w~grze Scrabble to umyślny brak wykorzystania większości klocków do wykonania zagrania ze względu na duże prawdopodobieństwo wylosowania układu pozwalającego na wysoko punktowane zagranie w~kolejnym ruchu.
+\end{definition}
+
+Niestety, w~praktyce trudno określić kryteria, które pozwalają rozpoznać \emph{łowienie} przeciwnika. Umiarkowanie dobrym kryterium jest analiza ilości liter użytych do poprzedniego zagrania. Jeżeli przeciwnik wykorzystał tylko jedną literę bardzo prawdopodobne jest, że próbował \emph{złowić} dobrą kombinację liter. Aby przeciwdziałać \emph{łowieniu} należy wybrać specjalną estymatę zawartości stojaka przeciwnika na etapie symulacji. Dzięki temu symulacja preferować będzie zagrania blokujące \emph{hot-spoty}, czyli otwarte punkty planszy umożliwiające wysoko punktowaną rozgrywkę.
+
+Kolejnym usprawnieniem algorytmu może być wprowadzenie rozróżnienia na zagrania ofensywne oraz defensywne. Etap oszacowania prawdopodobieństwa wygranej bazuje na nieprecyzyjnych informacjach wejściowych. Zasymulowana pozycja ,,w~przyszłości'' może być nieadekwatna do rzeczywistości, na przykład gdy zostało pominięte możliwe \emph{bingo} przeciwnika. Wprowadzając podział zagrań na defensywne i~ofensywne możliwe jest wprowadzenie dodatkowego elementu algorytmu rozważającego opłacalność zagrania otwierającego planszę. Do rozważania opłacalności można wykorzystać sieci neuronowe.
+
+Podział zagrań na defensywne i~ofensywne można przeprowadzić na podstawie wielu kryteriów. Pod uwagę można brać, między innymi, liczbę wykorzystanych podczas zagrania klocków, które znajdowały się na planszy przed rozegraniem. Innym przykładem takiego kryterium jest ilość nowych premii otwartych w~wyniku zagrania.
 
 \section*{Słowniki do gier}
 
