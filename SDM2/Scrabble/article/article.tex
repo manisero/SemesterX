@@ -3,6 +3,7 @@
 \usepackage[MeX]{polski}
 \usepackage{fullpage}
 \usepackage[breaklinks=true]{hyperref}
+\usepackage{amsfonts}
 \usepackage{amsthm}
 \usepackage{ragged2e}
 \usepackage{tikz}
@@ -361,6 +362,42 @@ Algorytm składa się z~czterech kroków:
 	\item Dla każdego z~pozostałych ruchów wykonywana jest symulacja stanu rozgrywki na dwa kroki w~przód.
 	\item Dla każdego rezultatu oszacowania, biorąc pod uwagę liczbę płytek pozostałych do końca rozgrywki, obliczane jest prawdopodobieństwo wygranej. W~rezultacie powstaje lista 10 ruchów o~największym oszacowanym prawdopodobieństwie wygranej.
 \end{enumerate}
+
+Na potrzeby artykułu pominięte zostanie omówienie fazy generacji ruchu. Jej wynikiem jest lista wszystkich poprawnych ruchów dla określonej kombinacji liter i~ułożenia klocków na planszy.
+
+\subsection*{Statyczne oszacowanie}
+
+Do statycznego oszacowania wykorzystywana jest funkcja celu postaci $F(x) = P(x) + LV(x)$, gdzie $F(x)$ to wartość oszacowania dla zagrania $x$, $P(x)$ to wartość punktowa tego zagrania, a~$LV(x)$ to współczynnik \emph{leave value} dla klocków pozostałych po zagraniu.
+
+\begin{definition}
+	\emph{Leave value} to funkcja, który zestawowi klocków pozostałych po zagraniu przypisuje wartość punktową odzwierciedlającą ,,perspektywiczność'' pod kątem wysoko punktowanych zagrań w~przyszłości. Funkcja przyjmuje wartości należące do zbioru $\mathbb{R}$ liczb rzeczywistych.
+\end{definition}
+
+Przykładowo, jeśli płytki pozostałe po ułożeniu czteroliterowego wyrazu to \textbf{Ą}, \textbf{Ź} oraz \textbf{Ń}, ich wartość \emph{leave value} będzie ujemna, gdyż prawdopodobieństwo siedmioliterowego zagrania w~kolejnym ruchu jest bardzo niskie. Wartości funkcji \emph{leave value} wyznaczane są na podstawie bazy danych wcześniejszych gier, którą można zbudować na podstawie zapisów turniejowych. 
+
+Statyczne oszacowanie przeprowadza się dla wszystkich dozwolonych ruchów wyznaczonych na etapie generacji. Do kolejnego etapu wybierane są 23 ruchy z~najwyższą wartością funkcji celu.
+
+\subsection*{Symulacja}
+
+W~fazie symulacji dla każdego z~pozostałych 23 ruchów szacuje się jaki może być ich skutek na dwa zagrania w~przód. Symulacja przeprowadzana jest według poniższego algorytmu:
+
+\begin{enumerate}
+	\item Gracz $G_{1}$ wykonuje zagranie $P_{1}$.
+	\item Ze zbioru pozostałych płytek wybierana jest losowa zawartość stojaka gracza $G_{2}$.
+	\item Generowane są wszystkie możliwości ruchu dla gracza $G_{2}$.
+	\item Gracz $G_{2}$ wykonuje zagranie $P_{2}$ z~najwyższą wartością statycznego oszacowania.
+	\item Gracz $G_{1}$ uzupełnia płytki. 
+	\item Generowane są wszystkie możliwości ruchu dla gracza $G_{1}$.
+	\item Gracz $G_{1}$ wykonuje zagranie $P_{3}$ z~najwyższą wartością statycznego oszacowania.
+	\item Dla zagrania $P_{1}$ obliczana jest wartość symulacji $PV_{1}$. Jest to liczba punktów $G_{1}$ po zagraniu $P_{3}$ pomniejszona o~liczbę punktów $G_{2}$ po zagraniu $P_{2}$.
+	\item Wartość $PV_{1}$ jest powiększana o~\emph{leave value} płytek gracza $G_{1}$ po zagraniu $P_{3}$.
+\end{enumerate}
+
+\subsection*{Szacowanie prawdopodobieństwa wygranej}
+
+Dla każdego z~23 wyników symulacji szacowane jest następnie prawdopodobieństwo wygranej. Prawdopodobieństwo wygranej jest funkcją $W: PV, TR \rightarrow [0;1]$, gdzie $PV$ jest wartością zagrania wyznaczoną w trakcie symulacji, a~$TR$ jest liczbą klocków pozostałych do wykorzystania w~partii. 
+
+Wartości funkcji $W$, podobnie jak wartości funkcji celu dla fazy statycznego oszacowania, są wyznaczane na podstawie bazy danych gier. W~wyniku etapu oszacowania prawdopodobieństwa wygranej pozostawiane jest 10 zagrań o~największym prawdopodobieństwie.
 
 \section*{Słowniki do gier}
 
