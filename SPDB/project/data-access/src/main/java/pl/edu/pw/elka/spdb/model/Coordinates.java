@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.model;
+package pl.edu.pw.elka.spdb.model;
 
 public class Coordinates {
     private double latitude;
