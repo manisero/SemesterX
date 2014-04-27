@@ -1,4 +1,4 @@
-package pl.edu.pw.elka;
+package pl.edu.pw.elka.spdb.test;
 
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
@@ -6,6 +6,7 @@ import org.codehaus.jackson.JsonParser;
 import org.codehaus.jackson.map.MappingJsonFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import pl.edu.pw.elka.spdb.JsonBean;
 
 import javax.ws.rs.core.Response;
 import java.io.InputStream;

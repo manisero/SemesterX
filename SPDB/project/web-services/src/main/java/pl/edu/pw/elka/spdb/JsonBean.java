@@ -1,4 +1,4 @@
-package pl.edu.pw.elka;
+package pl.edu.pw.elka.spdb;
 
 
 public class JsonBean {
