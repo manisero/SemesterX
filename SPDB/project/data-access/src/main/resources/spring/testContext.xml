@@ -14,6 +14,16 @@
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
 
+    <bean id="conversionService"
+          class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <list>
+                <bean class="pl.edu.pw.elka.spdb.converters.DurationToLongConverterFactory"/>
+                <bean class="pl.edu.pw.elka.spdb.converters.LongToDurationConverterFactory"/>
+            </list>
+        </property>
+    </bean>
+
     <context:spring-configured/>
     <context:annotation-config/>
     <context:component-scan base-package="pl.edu.pw.elka.spdb"/>

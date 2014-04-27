@@ -6,6 +6,7 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.support.index.IndexType;
 
+import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
 
@@ -35,15 +36,20 @@ public class MapEntry {
         wkt = String.format("POINT( %.2f %.2f )", latitude, longitude).replace(",", ".");
     }
 
-    public Route addRoute(MapEntry mapEntry) {
-        final Route route = new Route(this, mapEntry);
+    public Route addRoute(MapEntry mapEntry, Duration duration) {
+        final Route route = new Route(this, mapEntry, duration);
         routes.add(route);
 
         return route;
     }
 
     public boolean routesTo(MapEntry mapEntry) {
-        return routes.stream().anyMatch(entry -> entry.routeFrom.equals(this) && entry.routeTo.equals(mapEntry));
+        return routes.stream().anyMatch(route -> route.routeFrom.equals(this) && route.routeTo.equals(mapEntry));
+    }
+
+    public Duration getTravelTime(MapEntry mapEntry) {
+        Route foundRoute = routes.stream().filter(route -> route.routeTo.equals(mapEntry)).findFirst().orElse(null);
+        return foundRoute != null ? foundRoute.duration : null;
     }
 
     public String toString() {

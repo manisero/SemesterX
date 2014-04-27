@@ -14,6 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 
+import java.time.Duration;
+
 @ContextConfiguration(locations = "classpath:/spring/testContext.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
@@ -46,8 +48,8 @@ public class Neo4jMapEntryDAOTests extends TestCase {
         universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
         subway = mapEntryDAO.insertMapEntry(subway);
         mlocinyMetroStation = mapEntryDAO.insertMapEntry(mlocinyMetroStation);
-        template.save(universityOfTechnology.addRoute(subway));
-        template.save(subway.addRoute(universityOfTechnology));
+        template.save(universityOfTechnology.addRoute(subway, Duration.ofMinutes(5)));
+        template.save(subway.addRoute(universityOfTechnology, Duration.ofMinutes(5)));
 
         universityOfTechnology = mapEntryDAO.findMapEntryById(universityOfTechnology.getId());
         subway = mapEntryDAO.findMapEntryById(subway.getId());
@@ -59,5 +61,23 @@ public class Neo4jMapEntryDAOTests extends TestCase {
         assertFalse(mlocinyMetroStation.routesTo(universityOfTechnology));
         assertFalse(subway.routesTo(mlocinyMetroStation));
         assertFalse(mlocinyMetroStation.routesTo(subway));
+    }
+
+    @Test
+    public void testGetTravelTimeMethod() {
+        MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
+        MapEntry subway = new MapEntry(52.2190664, 21.0153627);
+        MapEntry mlocinyMetroStation = new MapEntry(52.290513, 20.930355);
+        universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
+        subway = mapEntryDAO.insertMapEntry(subway);
+        mlocinyMetroStation = mapEntryDAO.insertMapEntry(mlocinyMetroStation);
+        template.save(universityOfTechnology.addRoute(subway, Duration.ofMinutes(5)));
+
+        universityOfTechnology = mapEntryDAO.findMapEntryById(universityOfTechnology.getId());
+        subway = mapEntryDAO.findMapEntryById(subway.getId());
+        mlocinyMetroStation = mapEntryDAO.findMapEntryById(mlocinyMetroStation.getId());
+
+        assertTrue(universityOfTechnology.getTravelTime(subway).equals(Duration.ofMinutes(5)));
+        assertNull(universityOfTechnology.getTravelTime(mlocinyMetroStation));
     }
 }
