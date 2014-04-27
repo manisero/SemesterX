@@ -7,7 +7,7 @@
         <version>1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>spdb-webservice</artifactId>
+    <artifactId>spdb-web-services</artifactId>
     <packaging>war</packaging>
     <name>Simple CXF JAX-RS webapp service using spring configuration</name>
     <description>Simple CXF JAX-RS webapp service using spring configuration</description>
