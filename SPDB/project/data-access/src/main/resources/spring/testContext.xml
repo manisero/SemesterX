@@ -17,12 +17,15 @@
     <bean id="conversionService"
           class="org.springframework.context.support.ConversionServiceFactoryBean">
         <property name="converters">
-            <list>
+            <set>
                 <bean class="pl.edu.pw.elka.spdb.converters.DurationToLongConverterFactory"/>
                 <bean class="pl.edu.pw.elka.spdb.converters.LongToDurationConverterFactory"/>
-            </list>
+            </set>
         </property>
     </bean>
+
+    <bean id="configurationProvider"
+          class="pl.edu.pw.elka.spdb.configuration.impl.ConfigurationProvider" />
 
     <context:spring-configured/>
     <context:annotation-config/>

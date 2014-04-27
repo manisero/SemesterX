@@ -33,7 +33,7 @@ public class MapEntry {
     }
 
     public void setLocation(double latitude, double longitude) {
-        wkt = String.format("POINT( %.2f %.2f )", latitude, longitude).replace(",", ".");
+        wkt = String.format("POINT( %.8f %.8f )", latitude, longitude).replace(",", ".");
     }
 
     public Route addRoute(MapEntry mapEntry, Duration duration) {

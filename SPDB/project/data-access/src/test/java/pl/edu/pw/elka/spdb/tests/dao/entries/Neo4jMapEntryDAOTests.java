@@ -108,4 +108,19 @@ public class Neo4jMapEntryDAOTests extends TestCase {
         assertEquals(goldenTerrace.getId(), fastestRoute.get(2).getId());
         assertEquals(centralUndergroundStation.getId(), fastestRoute.get(3).getId());
     }
+
+    @Test
+    public void testFindNearestMapEntryMethod() {
+        MapEntry saviourSquare = new MapEntry(52.219929, 21.017988);
+        MapEntry subway = new MapEntry(52.2190664, 21.0153627);
+        MapEntry mlocinyUndergroundStation = new MapEntry(52.290513, 20.930355);
+        mapEntryDAO.insertMapEntry(saviourSquare);
+        subway = mapEntryDAO.insertMapEntry(subway);
+        mapEntryDAO.insertMapEntry(mlocinyUndergroundStation);
+
+        MapEntry nearestToUniversityOfTechnology = mapEntryDAO.findNearestMapEntry(52.2206062, 21.0105747);
+
+        assertNotNull(nearestToUniversityOfTechnology);
+        assertEquals(subway.getId(), nearestToUniversityOfTechnology.getId());
+    }
 }

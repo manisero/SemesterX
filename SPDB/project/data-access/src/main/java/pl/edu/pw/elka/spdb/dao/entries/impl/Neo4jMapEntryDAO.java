@@ -8,15 +8,18 @@ import org.neo4j.graphdb.DynamicRelationshipType;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.PathExpanders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.neo4j.conversion.EndResult;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.edu.pw.elka.spdb.configuration.IConfigurationProvider;
 import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.relationships.MapEntryRelationships;
 import pl.edu.pw.elka.spdb.repositories.IMapEntryRepository;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -26,6 +29,8 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
     private IMapEntryRepository mapEntryRepository;
     @Autowired
     private Neo4jTemplate template;
+    @Autowired
+    private IConfigurationProvider configurationProvider;
 
     @Override
     public MapEntry insertMapEntry(MapEntry mapEntry) {
@@ -49,9 +54,23 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
 
     private WeightedPath getShortestPath(Node start, Node end) {
         PathFinder<WeightedPath> finder = GraphAlgoFactory.dijkstra(PathExpanders.forTypeAndDirection
-                (DynamicRelationshipType.withName(MapEntryRelationships.ROUTES_TO.getValue()), Direction.OUTGOING),
-                "duration");
+                (DynamicRelationshipType.withName(MapEntryRelationships.ROUTES_TO.getValue()),
+                        Direction.OUTGOING), "duration");
 
         return finder.findSinglePath(start, end);
+    }
+
+    @Override
+    public MapEntry findNearestMapEntry(double latitude, double longitude) {
+        EndResult<MapEntry> entriesWithinDistance = mapEntryRepository.findWithinDistance("MapEntryLocation", latitude,
+                longitude, configurationProvider.getSearchRadius());
+
+        Iterator<MapEntry> entryIterator = entriesWithinDistance.iterator();
+
+        while (entryIterator.hasNext()) {
+            return entryIterator.next();
+        }
+
+        return null;
     }
 }

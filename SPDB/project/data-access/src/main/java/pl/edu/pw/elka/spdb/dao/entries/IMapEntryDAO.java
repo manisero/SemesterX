@@ -8,4 +8,5 @@ public interface IMapEntryDAO {
     MapEntry insertMapEntry(MapEntry mapEntry);
     MapEntry findMapEntryById(Long id);
     List<MapEntry> findFastestRoute(MapEntry start, MapEntry end);
+    MapEntry findNearestMapEntry(double latitude, double longitude);
 }
