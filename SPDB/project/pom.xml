@@ -10,6 +10,7 @@
     <version>1.0</version>
     <modules>
         <module>data-access</module>
+        <module>web-services</module>
     </modules>
 
     <dependencies>
