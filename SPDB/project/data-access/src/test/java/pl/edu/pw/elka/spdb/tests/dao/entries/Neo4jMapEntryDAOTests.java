@@ -15,6 +15,7 @@ import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 
 import java.time.Duration;
+import java.util.List;
 
 @ContextConfiguration(locations = "classpath:/spring/testContext.xml")
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -44,40 +45,67 @@ public class Neo4jMapEntryDAOTests extends TestCase {
     public void testAddRouteMethod() {
         MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
         MapEntry subway = new MapEntry(52.2190664, 21.0153627);
-        MapEntry mlocinyMetroStation = new MapEntry(52.290513, 20.930355);
+        MapEntry mlocinyUndergroundStation = new MapEntry(52.290513, 20.930355);
         universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
         subway = mapEntryDAO.insertMapEntry(subway);
-        mlocinyMetroStation = mapEntryDAO.insertMapEntry(mlocinyMetroStation);
+        mlocinyUndergroundStation = mapEntryDAO.insertMapEntry(mlocinyUndergroundStation);
         template.save(universityOfTechnology.addRoute(subway, Duration.ofMinutes(5)));
         template.save(subway.addRoute(universityOfTechnology, Duration.ofMinutes(5)));
 
         universityOfTechnology = mapEntryDAO.findMapEntryById(universityOfTechnology.getId());
         subway = mapEntryDAO.findMapEntryById(subway.getId());
-        mlocinyMetroStation = mapEntryDAO.findMapEntryById(mlocinyMetroStation.getId());
+        mlocinyUndergroundStation = mapEntryDAO.findMapEntryById(mlocinyUndergroundStation.getId());
 
         assertTrue(universityOfTechnology.routesTo(subway));
         assertTrue(subway.routesTo(universityOfTechnology));
-        assertFalse(universityOfTechnology.routesTo(mlocinyMetroStation));
-        assertFalse(mlocinyMetroStation.routesTo(universityOfTechnology));
-        assertFalse(subway.routesTo(mlocinyMetroStation));
-        assertFalse(mlocinyMetroStation.routesTo(subway));
+        assertFalse(universityOfTechnology.routesTo(mlocinyUndergroundStation));
+        assertFalse(mlocinyUndergroundStation.routesTo(universityOfTechnology));
+        assertFalse(subway.routesTo(mlocinyUndergroundStation));
+        assertFalse(mlocinyUndergroundStation.routesTo(subway));
     }
 
     @Test
     public void testGetTravelTimeMethod() {
         MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
         MapEntry subway = new MapEntry(52.2190664, 21.0153627);
-        MapEntry mlocinyMetroStation = new MapEntry(52.290513, 20.930355);
+        MapEntry mlocinyUndergroundStation = new MapEntry(52.290513, 20.930355);
         universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
         subway = mapEntryDAO.insertMapEntry(subway);
-        mlocinyMetroStation = mapEntryDAO.insertMapEntry(mlocinyMetroStation);
+        mlocinyUndergroundStation = mapEntryDAO.insertMapEntry(mlocinyUndergroundStation);
         template.save(universityOfTechnology.addRoute(subway, Duration.ofMinutes(5)));
 
         universityOfTechnology = mapEntryDAO.findMapEntryById(universityOfTechnology.getId());
         subway = mapEntryDAO.findMapEntryById(subway.getId());
-        mlocinyMetroStation = mapEntryDAO.findMapEntryById(mlocinyMetroStation.getId());
+        mlocinyUndergroundStation = mapEntryDAO.findMapEntryById(mlocinyUndergroundStation.getId());
 
         assertTrue(universityOfTechnology.getTravelTime(subway).equals(Duration.ofMinutes(5)));
-        assertNull(universityOfTechnology.getTravelTime(mlocinyMetroStation));
+        assertNull(universityOfTechnology.getTravelTime(mlocinyUndergroundStation));
+    }
+
+    @Test
+    public void testFindFastestRouteMethod() {
+        MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
+        MapEntry saviourSquare = new MapEntry(52.219929, 21.017988);
+        MapEntry centralUndergroundStation = new MapEntry(52.229896, 21.011701);
+        MapEntry independenceStreet = new MapEntry(52.220159, 21.005006);
+        MapEntry goldenTerrace = new MapEntry(52.227809, 21.001938);
+        universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
+        saviourSquare = mapEntryDAO.insertMapEntry(saviourSquare);
+        centralUndergroundStation = mapEntryDAO.insertMapEntry(centralUndergroundStation);
+        independenceStreet = mapEntryDAO.insertMapEntry(independenceStreet);
+        goldenTerrace = mapEntryDAO.insertMapEntry(goldenTerrace);
+        template.save(universityOfTechnology.addRoute(saviourSquare, Duration.ofMinutes(5)));
+        template.save(saviourSquare.addRoute(centralUndergroundStation, Duration.ofMinutes(10)));
+        template.save(universityOfTechnology.addRoute(independenceStreet, Duration.ofMinutes(3)));
+        template.save(independenceStreet.addRoute(goldenTerrace, Duration.ofMinutes(5)));
+        template.save(goldenTerrace.addRoute(centralUndergroundStation, Duration.ofMinutes(3)));
+
+        List<MapEntry> fastestRoute = mapEntryDAO.findFastestRoute(universityOfTechnology, centralUndergroundStation);
+
+        assertEquals(4, fastestRoute.size());
+        assertEquals(universityOfTechnology.getId(), fastestRoute.get(0).getId());
+        assertEquals(independenceStreet.getId(), fastestRoute.get(1).getId());
+        assertEquals(goldenTerrace.getId(), fastestRoute.get(2).getId());
+        assertEquals(centralUndergroundStation.getId(), fastestRoute.get(3).getId());
     }
 }

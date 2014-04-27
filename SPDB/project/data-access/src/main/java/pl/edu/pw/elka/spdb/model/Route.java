@@ -1,6 +1,7 @@
 package pl.edu.pw.elka.spdb.model;
 
 import org.springframework.data.neo4j.annotation.*;
+import pl.edu.pw.elka.spdb.relationships.MapEntryRelationships;
 
 import java.time.Duration;
 

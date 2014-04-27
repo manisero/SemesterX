@@ -7,6 +7,7 @@ import java.time.Duration;
 
 public class DurationToLongConverterFactory implements ConverterFactory<Duration, Long> {
     @Override
+    @SuppressWarnings("unchecked")
     public <T extends Long> Converter<Duration, T> getConverter(Class<T> type) {
         return duration -> (T) new Long(duration.getSeconds());
     }
