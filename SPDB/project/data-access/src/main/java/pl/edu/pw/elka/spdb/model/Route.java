@@ -6,17 +6,53 @@ import java.time.Duration;
 
 @RelationshipEntity(type = "ROUTES_TO")
 public class Route {
-    @GraphId Long id;
-    @StartNode MapEntry routeFrom;
-    @EndNode MapEntry routeTo;
-    @GraphProperty(propertyType = Long.class) Duration duration;
+    @GraphId
+    private Long id;
+    @StartNode
+    private MapEntry routeFrom;
+    @EndNode
+    private MapEntry routeTo;
+    @GraphProperty(propertyType = Long.class)
+    private Duration duration;
 
-    protected Route() {
+    public Route() {
     }
 
     public Route(MapEntry routeFrom, MapEntry routeTo, Duration duration) {
         this.routeFrom = routeFrom;
         this.routeTo = routeTo;
+        this.duration = duration;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public MapEntry getRouteFrom() {
+        return routeFrom;
+    }
+
+    public void setRouteFrom(MapEntry routeFrom) {
+        this.routeFrom = routeFrom;
+    }
+
+    public MapEntry getRouteTo() {
+        return routeTo;
+    }
+
+    public void setRouteTo(MapEntry routeTo) {
+        this.routeTo = routeTo;
+    }
+
+    public Duration getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Duration duration) {
         this.duration = duration;
     }
 }

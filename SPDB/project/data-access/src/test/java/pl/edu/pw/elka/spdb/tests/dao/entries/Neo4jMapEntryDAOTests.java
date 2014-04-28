@@ -11,6 +11,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.BeforeTransaction;
 import org.springframework.transaction.annotation.Transactional;
+import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 
@@ -32,7 +33,7 @@ public class Neo4jMapEntryDAOTests extends TestCase {
 
     @Test
     public void testInsertAndFindLocationMethods() {
-        MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
+        MapEntry universityOfTechnology = new MapEntry(new Coordinates(52.2206062, 21.0105747));
 
         Long mapEntryId = mapEntryDAO.insertMapEntry(universityOfTechnology).getId();
         MapEntry foundMapEntry = mapEntryDAO.findMapEntryById(mapEntryId);
@@ -43,9 +44,9 @@ public class Neo4jMapEntryDAOTests extends TestCase {
 
     @Test
     public void testAddRouteMethod() {
-        MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
-        MapEntry subway = new MapEntry(52.2190664, 21.0153627);
-        MapEntry mlocinyUndergroundStation = new MapEntry(52.290513, 20.930355);
+        MapEntry universityOfTechnology = new MapEntry(new Coordinates(52.2206062, 21.0105747));
+        MapEntry subway = new MapEntry(new Coordinates(52.2190664, 21.0153627));
+        MapEntry mlocinyUndergroundStation = new MapEntry(new Coordinates(52.290513, 20.930355));
         universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
         subway = mapEntryDAO.insertMapEntry(subway);
         mlocinyUndergroundStation = mapEntryDAO.insertMapEntry(mlocinyUndergroundStation);
@@ -66,9 +67,9 @@ public class Neo4jMapEntryDAOTests extends TestCase {
 
     @Test
     public void testGetTravelTimeMethod() {
-        MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
-        MapEntry subway = new MapEntry(52.2190664, 21.0153627);
-        MapEntry mlocinyUndergroundStation = new MapEntry(52.290513, 20.930355);
+        MapEntry universityOfTechnology = new MapEntry(new Coordinates(52.2206062, 21.0105747));
+        MapEntry subway = new MapEntry(new Coordinates(52.2190664, 21.0153627));
+        MapEntry mlocinyUndergroundStation = new MapEntry(new Coordinates(52.290513, 20.930355));
         universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
         subway = mapEntryDAO.insertMapEntry(subway);
         mlocinyUndergroundStation = mapEntryDAO.insertMapEntry(mlocinyUndergroundStation);
@@ -84,11 +85,11 @@ public class Neo4jMapEntryDAOTests extends TestCase {
 
     @Test
     public void testFindFastestRouteMethod() {
-        MapEntry universityOfTechnology = new MapEntry(52.2206062, 21.0105747);
-        MapEntry saviourSquare = new MapEntry(52.219929, 21.017988);
-        MapEntry centralUndergroundStation = new MapEntry(52.229896, 21.011701);
-        MapEntry independenceStreet = new MapEntry(52.220159, 21.005006);
-        MapEntry goldenTerrace = new MapEntry(52.227809, 21.001938);
+        MapEntry universityOfTechnology = new MapEntry(new Coordinates(52.2206062, 21.0105747));
+        MapEntry saviourSquare = new MapEntry(new Coordinates(52.219929, 21.017988));
+        MapEntry centralUndergroundStation = new MapEntry(new Coordinates(52.229896, 21.011701));
+        MapEntry independenceStreet = new MapEntry(new Coordinates(52.220159, 21.005006));
+        MapEntry goldenTerrace = new MapEntry(new Coordinates(52.227809, 21.001938));
         universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
         saviourSquare = mapEntryDAO.insertMapEntry(saviourSquare);
         centralUndergroundStation = mapEntryDAO.insertMapEntry(centralUndergroundStation);
@@ -111,9 +112,9 @@ public class Neo4jMapEntryDAOTests extends TestCase {
 
     @Test
     public void testFindNearestMapEntryMethod() {
-        MapEntry saviourSquare = new MapEntry(52.219929, 21.017988);
-        MapEntry subway = new MapEntry(52.2190664, 21.0153627);
-        MapEntry mlocinyUndergroundStation = new MapEntry(52.290513, 20.930355);
+        MapEntry saviourSquare = new MapEntry(new Coordinates(52.219929, 21.017988));
+        MapEntry subway = new MapEntry(new Coordinates(52.2190664, 21.0153627));
+        MapEntry mlocinyUndergroundStation = new MapEntry(new Coordinates(52.290513, 20.930355));
         mapEntryDAO.insertMapEntry(saviourSquare);
         subway = mapEntryDAO.insertMapEntry(subway);
         mapEntryDAO.insertMapEntry(mlocinyUndergroundStation);

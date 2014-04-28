@@ -11,6 +11,14 @@
 
     <artifactId>spdb-data-access</artifactId>
 
+    <properties>
+        <neo4j.version>2.0.2</neo4j.version>
+        <neo4j.spring.data.version>3.0.1.RELEASE</neo4j.spring.data.version>
+        <neo4j.spatial.version>0.12-neo4j-2.0.2</neo4j.spatial.version>
+        <spring.framework.version>4.0.3.RELEASE</spring.framework.version>
+        <hibernate.validator.version>5.1.0.Final</hibernate.validator.version>
+    </properties>
+
     <repositories>
         <repository>
             <id>neo4j-contrib-releases</id>
@@ -36,39 +44,34 @@
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-        </dependency>
-        <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j</artifactId>
-            <version>2.0.2</version>
+            <version>${neo4j.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-neo4j</artifactId>
-            <version>3.0.1.RELEASE</version>
+            <version>${neo4j.spring.data.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>4.0.3.RELEASE</version>
+            <version>${spring.framework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.0.3.RELEASE</version>
+            <version>${spring.framework.version}</version>
         </dependency>
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>5.1.0.Final</version>
+            <version>${hibernate.validator.version}</version>
         </dependency>
         <dependency>
             <groupId>org.neo4j</groupId>
             <artifactId>neo4j-spatial</artifactId>
-            <version>0.12-neo4j-2.0.2</version>
+            <version>${neo4j.spatial.version}</version>
         </dependency>
     </dependencies>
 </project>

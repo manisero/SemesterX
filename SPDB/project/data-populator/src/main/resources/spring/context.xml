@@ -1,18 +1,29 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
        xmlns:neo4j="http://www.springframework.org/schema/data/neo4j"
        xmlns:tx="http://www.springframework.org/schema/tx"
        xsi:schemaLocation="
-       	http://www.springframework.org/schema/beans 
+       	http://www.springframework.org/schema/beans
        	http://www.springframework.org/schema/beans/spring-beans.xsd
-		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context
 		http://www.springframework.org/schema/context/spring-context.xsd
 		http://www.springframework.org/schema/data/neo4j
 		http://www.springframework.org/schema/data/neo4j/spring-neo4j.xsd
 		http://www.springframework.org/schema/tx
 		http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <context:property-placeholder/>
+    <context:annotation-config/>
+    <context:spring-configured/>
+    <context:component-scan base-package="pl.edu.pw.elka.spdb"/>
+
+    <neo4j:config storeDirectory="entries-db"
+                  base-package="pl.edu.pw.elka.spdb.model"/>
+    <neo4j:repositories base-package="pl.edu.pw.elka.spdb.repositories"/>
+
+    <tx:annotation-driven/>
 
     <bean id="conversionService"
           class="org.springframework.context.support.ConversionServiceFactoryBean">
@@ -24,15 +35,7 @@
         </property>
     </bean>
 
-    <bean class="pl.edu.pw.elka.spdb.configuration.impl.ConfigurationProvider" />
-
-    <context:spring-configured/>
-    <context:annotation-config/>
-    <context:component-scan base-package="pl.edu.pw.elka.spdb"/>
-
-    <neo4j:config storeDirectory="target/test-db"
-                  base-package="pl.edu.pw.elka.spdb.model"/>
-    <neo4j:repositories base-package="pl.edu.pw.elka.spdb.repositories"/>
-
-    <tx:annotation-driven/>
+    <bean class="pl.edu.pw.elka.spdb.population.impl.DataPopulator" />
+    <bean class="pl.edu.pw.elka.spdb.population.repository.impl.DataPopulatorRepository" />
+    <bean class="pl.edu.pw.elka.spdb.configuration.impl.ConfigurationProvider"/>
 </beans>

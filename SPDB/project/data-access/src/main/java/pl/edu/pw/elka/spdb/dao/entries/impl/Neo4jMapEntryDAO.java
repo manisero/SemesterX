@@ -47,7 +47,10 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
         List<MapEntry> fastestRoute = new ArrayList<>();
 
         WeightedPath shortestPath = getShortestPath(template.getNode(start.getId()), template.getNode(end.getId()));
-        shortestPath.nodes().forEach(node -> fastestRoute.add(findMapEntryById(node.getId())));
+
+        if (shortestPath != null) {
+            shortestPath.nodes().forEach(node -> fastestRoute.add(findMapEntryById(node.getId())));
+        }
 
         return fastestRoute;
     }
