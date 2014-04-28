@@ -24,8 +24,7 @@
         </property>
     </bean>
 
-    <bean id="configurationProvider"
-          class="pl.edu.pw.elka.spdb.configuration.impl.ConfigurationProvider" />
+    <bean class="pl.edu.pw.elka.spdb.configuration.impl.ConfigurationProvider" />
 
     <context:spring-configured/>
     <context:annotation-config/>

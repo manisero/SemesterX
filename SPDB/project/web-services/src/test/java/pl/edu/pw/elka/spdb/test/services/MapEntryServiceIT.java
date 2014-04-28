@@ -1,0 +1,28 @@
+package pl.edu.pw.elka.spdb.test.services;
+
+import junit.framework.TestCase;
+import org.apache.cxf.helpers.IOUtils;
+import org.apache.cxf.jaxrs.client.WebClient;
+import org.junit.Test;
+
+import javax.ws.rs.core.Response;
+import java.io.InputStream;
+
+public class MapEntryServiceIT extends TestCase {
+    private static String endpointUrl;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        endpointUrl = System.getProperty("service.url");
+    }
+
+    @Test
+    public void testGetNearestMapEntries() throws Exception {
+        WebClient client = WebClient.create(endpointUrl + "/entry/nearest/52.2206062/21.0105747");
+        Response r = client.accept("application/json").get();
+        assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
+        String value = IOUtils.toString((InputStream) r.getEntity());
+        assertEquals("SierraTangoNevada", value);
+    }
+}

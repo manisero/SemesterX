@@ -62,6 +62,10 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
 
     @Override
     public MapEntry findNearestMapEntry(double latitude, double longitude) {
+        System.out.println("lat: " + latitude + " lon: " + longitude);
+        System.out.println("repo: " + (mapEntryRepository != null));
+        System.out.println("cp: " + (configurationProvider != null));
+
         EndResult<MapEntry> entriesWithinDistance = mapEntryRepository.findWithinDistance("MapEntryLocation", latitude,
                 longitude, configurationProvider.getSearchRadius());
 
