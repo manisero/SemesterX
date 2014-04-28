@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import org.apache.cxf.helpers.IOUtils;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
+import pl.edu.pw.elka.spdb.model.MapEntry;
 
 import javax.ws.rs.core.Response;
 import java.io.InputStream;
@@ -20,9 +21,10 @@ public class MapEntryServiceIT extends TestCase {
     @Test
     public void testGetNearestMapEntries() throws Exception {
         WebClient client = WebClient.create(endpointUrl + "/entry/nearest/52.2206062/21.0105747");
-        Response r = client.accept("application/json").get();
-        assertEquals(Response.Status.OK.getStatusCode(), r.getStatus());
-        String value = IOUtils.toString((InputStream) r.getEntity());
-        assertEquals("SierraTangoNevada", value);
+        Response response = client.accept("application/json").get();
+        String content = IOUtils.toString((InputStream) response.getEntity());
+
+        assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
+        assertEquals("{\"id\":0,\"wkt\":\"POINT( 52.22006700 21.01211900 )\"}", content);
     }
 }

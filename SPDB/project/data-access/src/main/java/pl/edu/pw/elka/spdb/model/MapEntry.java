@@ -6,12 +6,13 @@ import org.springframework.data.neo4j.annotation.NodeEntity;
 import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.support.index.IndexType;
 
+import java.io.Serializable;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
 
 @NodeEntity
-public class MapEntry {
+public class MapEntry implements Serializable {
     @GraphId
     private Long id;
 
@@ -30,6 +31,18 @@ public class MapEntry {
 
     public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getWkt() {
+        return wkt;
+    }
+
+    public void setWkt(String wkt) {
+        this.wkt = wkt;
     }
 
     public void setLocation(double latitude, double longitude) {
