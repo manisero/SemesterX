@@ -1,5 +1,6 @@
 package pl.edu.pw.elka.spdb.population.repository.impl;
 
+import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.Route;
 import pl.edu.pw.elka.spdb.population.repository.IDataPopulatorRepository;
@@ -16,8 +17,8 @@ public class DataPopulatorRepository implements IDataPopulatorRepository {
         if (entries == null) {
             entries = new ArrayList<>();
 
-            entries.add(new MapEntry(52.220067, 21.012119));
-            entries.add(new MapEntry(52.220146, 21.004913));
+            entries.add(new MapEntry(new Coordinates(52.220067, 21.012119)));
+            entries.add(new MapEntry(new Coordinates(52.220146, 21.004913)));
         }
 
         return entries;

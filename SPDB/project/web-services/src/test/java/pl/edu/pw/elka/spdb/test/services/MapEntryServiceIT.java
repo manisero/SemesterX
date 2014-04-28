@@ -19,12 +19,12 @@ public class MapEntryServiceIT extends TestCase {
     }
 
     @Test
-    public void testGetNearestMapEntries() throws Exception {
+    public void testGetNearestMapEntry() throws Exception {
         WebClient client = WebClient.create(endpointUrl + "/entry/nearest/52.2206062/21.0105747");
         Response response = client.accept("application/json").get();
         String content = IOUtils.toString((InputStream) response.getEntity());
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertEquals("{\"id\":0,\"wkt\":\"POINT( 52.22006700 21.01211900 )\"}", content);
+        assertEquals("{\"latitude\":52.220067,\"longitude\":21.012119}", content);
     }
 }
