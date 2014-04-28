@@ -23,9 +23,9 @@ public class MapEntryService {
     @Produces("application/json")
     public Response getNearestMapEntries(@PathParam("latitude") double latitude,
                                          @PathParam("longitude") double longitude) {
-        Coordinates nearestCoordinates = mapEntryDAO.findNearestMapEntry(latitude, longitude).getCoordinates();
+        MapEntry nearestMapEntry = mapEntryDAO.findNearestMapEntry(latitude, longitude);
 
-        return Response.ok().entity(nearestCoordinates).build();
+        return Response.ok().entity(nearestMapEntry).build();
     }
 
     @GET

@@ -25,6 +25,12 @@ public class MapEntryServiceIT extends TestCase {
         String content = IOUtils.toString((InputStream) response.getEntity());
 
         assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
-        assertEquals("{\"latitude\":52.220067,\"longitude\":21.012119}", content);
+        assertEquals("{\"id\":0,\"wkt\":\"POINT( 52.22006700 21.01211900 )\",\"coordinates\":{\"latitude\":52.220067," +
+                "\"longitude\":21.012119}}", content);
+    }
+
+    @Test
+    public void testGetShortestPath() throws Exception {
+        WebClient client = WebClient.create(endpointUrl + "/entry/nearest/52.2206062/21.0105747");
     }
 }
