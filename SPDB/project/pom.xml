@@ -11,6 +11,7 @@
     <modules>
         <module>data-access</module>
         <module>web-services</module>
+        <module>data-populator</module>
     </modules>
 
     <properties>
