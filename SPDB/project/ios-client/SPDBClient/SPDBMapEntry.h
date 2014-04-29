@@ -15,4 +15,6 @@
 @property (nonatomic, strong) NSNumber *longitude;
 @property (nonatomic, strong) NSString *wkt;
 
++ (id)mapEntryWithLatitude:(NSNumber *)latitude andLongitude:(NSNumber *)longitude;
+
 @end

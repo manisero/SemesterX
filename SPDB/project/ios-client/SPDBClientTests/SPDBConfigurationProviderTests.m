@@ -21,7 +21,7 @@
 {
     NSString *serviceAddress = [SPDBConfigurationProvider getServiceAddress];
     
-    XCTAssertTrue([serviceAddress isEqualToString:@"http://localhost:8080"], @"Service address does not match!");
+    XCTAssertTrue([serviceAddress isEqualToString:@"http://localhost:8080/spdb-web-services-1.0/"], @"Service address does not match!");
 }
 
 @end

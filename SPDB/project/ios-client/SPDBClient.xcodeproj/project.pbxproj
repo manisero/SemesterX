@@ -25,11 +25,12 @@
 		8CAA198C190F986A00992379 /* mapentry.json in Resources */ = {isa = PBXBuildFile; fileRef = 8CAA198B190F986A00992379 /* mapentry.json */; };
 		8CAA1990190F99AA00992379 /* SPDBMapEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA198F190F99AA00992379 /* SPDBMapEntry.m */; };
 		8CAA1994190F9A0E00992379 /* SPDBMappingFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA1993190F9A0E00992379 /* SPDBMappingFactory.m */; };
-		8CAA199A190FAD0E00992379 /* SPDBNearestRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA1999190FAD0E00992379 /* SPDBNearestRequest.m */; };
 		8CAA199E190FAD6F00992379 /* SPDBShortestPathRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA199D190FAD6F00992379 /* SPDBShortestPathRequest.m */; };
 		8CAA19A2190FB1BF00992379 /* SPDBConfigurationProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19A1190FB1BF00992379 /* SPDBConfigurationProvider.m */; };
 		8CAA19A4190FB1EB00992379 /* config.plist in Resources */ = {isa = PBXBuildFile; fileRef = 8CAA19A3190FB1EB00992379 /* config.plist */; };
 		8CAA19A8190FB35B00992379 /* SPDBConfigurationProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19A7190FB35B00992379 /* SPDBConfigurationProviderTests.m */; };
+		8CAA19AC190FB47D00992379 /* SPDBObjectManagerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19AB190FB47D00992379 /* SPDBObjectManagerFactory.m */; };
+		8CAA19B0190FB72F00992379 /* SPDBObjectManagerFactoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -68,14 +69,15 @@
 		8CAA198F190F99AA00992379 /* SPDBMapEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBMapEntry.m; sourceTree = "<group>"; };
 		8CAA1992190F9A0E00992379 /* SPDBMappingFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBMappingFactory.h; sourceTree = "<group>"; };
 		8CAA1993190F9A0E00992379 /* SPDBMappingFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBMappingFactory.m; sourceTree = "<group>"; };
-		8CAA1998190FAD0E00992379 /* SPDBNearestRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBNearestRequest.h; sourceTree = "<group>"; };
-		8CAA1999190FAD0E00992379 /* SPDBNearestRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBNearestRequest.m; sourceTree = "<group>"; };
 		8CAA199C190FAD6F00992379 /* SPDBShortestPathRequest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBShortestPathRequest.h; sourceTree = "<group>"; };
 		8CAA199D190FAD6F00992379 /* SPDBShortestPathRequest.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBShortestPathRequest.m; sourceTree = "<group>"; };
 		8CAA19A0190FB1BF00992379 /* SPDBConfigurationProvider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBConfigurationProvider.h; sourceTree = "<group>"; };
 		8CAA19A1190FB1BF00992379 /* SPDBConfigurationProvider.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBConfigurationProvider.m; sourceTree = "<group>"; };
 		8CAA19A3190FB1EB00992379 /* config.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = config.plist; sourceTree = "<group>"; };
 		8CAA19A7190FB35B00992379 /* SPDBConfigurationProviderTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBConfigurationProviderTests.m; sourceTree = "<group>"; };
+		8CAA19AA190FB47D00992379 /* SPDBObjectManagerFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBObjectManagerFactory.h; sourceTree = "<group>"; };
+		8CAA19AB190FB47D00992379 /* SPDBObjectManagerFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBObjectManagerFactory.m; sourceTree = "<group>"; };
+		8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBObjectManagerFactoryTests.m; sourceTree = "<group>"; };
 		BF32A380C4144B0C963535D0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -168,6 +170,7 @@
 		8C8A8FD8190F8BD50087AE07 /* SPDBClientTests */ = {
 			isa = PBXGroup;
 			children = (
+				8CAA19AD190FB70F00992379 /* Service */,
 				8CAA19A6190FB2EB00992379 /* Configuration */,
 				8CAA19A5190FB2E000992379 /* Mapping */,
 				8CAA198A190F982C00992379 /* Fixtures */,
@@ -214,6 +217,7 @@
 		8CAA1995190FACD000992379 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				8CAA19A9190FB46A00992379 /* ObjectManager */,
 				8CAA1996190FACEE00992379 /* Request */,
 			);
 			name = Service;
@@ -223,18 +227,8 @@
 			isa = PBXGroup;
 			children = (
 				8CAA199B190FAD4000992379 /* ShortestPath */,
-				8CAA1997190FACF600992379 /* Nearest */,
 			);
 			name = Request;
-			sourceTree = "<group>";
-		};
-		8CAA1997190FACF600992379 /* Nearest */ = {
-			isa = PBXGroup;
-			children = (
-				8CAA1998190FAD0E00992379 /* SPDBNearestRequest.h */,
-				8CAA1999190FAD0E00992379 /* SPDBNearestRequest.m */,
-			);
-			name = Nearest;
 			sourceTree = "<group>";
 		};
 		8CAA199B190FAD4000992379 /* ShortestPath */ = {
@@ -270,6 +264,31 @@
 				8CAA19A7190FB35B00992379 /* SPDBConfigurationProviderTests.m */,
 			);
 			name = Configuration;
+			sourceTree = "<group>";
+		};
+		8CAA19A9190FB46A00992379 /* ObjectManager */ = {
+			isa = PBXGroup;
+			children = (
+				8CAA19AA190FB47D00992379 /* SPDBObjectManagerFactory.h */,
+				8CAA19AB190FB47D00992379 /* SPDBObjectManagerFactory.m */,
+			);
+			name = ObjectManager;
+			sourceTree = "<group>";
+		};
+		8CAA19AD190FB70F00992379 /* Service */ = {
+			isa = PBXGroup;
+			children = (
+				8CAA19AE190FB71F00992379 /* ObjectManager */,
+			);
+			name = Service;
+			sourceTree = "<group>";
+		};
+		8CAA19AE190FB71F00992379 /* ObjectManager */ = {
+			isa = PBXGroup;
+			children = (
+				8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */,
+			);
+			name = ObjectManager;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -408,10 +427,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				8C8A8FC0190F8BD50087AE07 /* main.m in Sources */,
+				8CAA19AC190FB47D00992379 /* SPDBObjectManagerFactory.m in Sources */,
 				8C8A8FCA190F8BD50087AE07 /* SPDBViewController.m in Sources */,
 				8CAA19A2190FB1BF00992379 /* SPDBConfigurationProvider.m in Sources */,
 				8CAA1990190F99AA00992379 /* SPDBMapEntry.m in Sources */,
-				8CAA199A190FAD0E00992379 /* SPDBNearestRequest.m in Sources */,
 				8CAA199E190FAD6F00992379 /* SPDBShortestPathRequest.m in Sources */,
 				8CAA1994190F9A0E00992379 /* SPDBMappingFactory.m in Sources */,
 				8C8A8FC4190F8BD50087AE07 /* SPDBAppDelegate.m in Sources */,
@@ -424,6 +443,7 @@
 			files = (
 				8CAA19A8190FB35B00992379 /* SPDBConfigurationProviderTests.m in Sources */,
 				8CAA1989190F978F00992379 /* SPDBServiceMappingTests.m in Sources */,
+				8CAA19B0190FB72F00992379 /* SPDBObjectManagerFactoryTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
