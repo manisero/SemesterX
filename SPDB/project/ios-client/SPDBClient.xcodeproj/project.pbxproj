@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		7D75E7EB4BCA46899A3BDB68 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7DE4A21D7249CBBB8C1526 /* libPods.a */; };
+		8C88BD26190FE8C300A61444 /* SPDBRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */; };
+		8C88BD28190FED1000A61444 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C88BD27190FED1000A61444 /* MapKit.framework */; };
+		8C88BD2C190FF0C700A61444 /* SPDBMapSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C88BD2B190FF0C700A61444 /* SPDBMapSelectionViewController.m */; };
 		8C8A8FB4190F8BD50087AE07 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB3190F8BD50087AE07 /* Foundation.framework */; };
 		8C8A8FB6190F8BD50087AE07 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB5190F8BD50087AE07 /* CoreGraphics.framework */; };
 		8C8A8FB8190F8BD50087AE07 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB7190F8BD50087AE07 /* UIKit.framework */; };
@@ -15,7 +18,6 @@
 		8C8A8FC0190F8BD50087AE07 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C8A8FBF190F8BD50087AE07 /* main.m */; };
 		8C8A8FC4190F8BD50087AE07 /* SPDBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C8A8FC3190F8BD50087AE07 /* SPDBAppDelegate.m */; };
 		8C8A8FC7190F8BD50087AE07 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8C8A8FC5190F8BD50087AE07 /* Main.storyboard */; };
-		8C8A8FCA190F8BD50087AE07 /* SPDBViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C8A8FC9190F8BD50087AE07 /* SPDBViewController.m */; };
 		8C8A8FCC190F8BD50087AE07 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8C8A8FCB190F8BD50087AE07 /* Images.xcassets */; };
 		8C8A8FD3190F8BD50087AE07 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FD2190F8BD50087AE07 /* XCTest.framework */; };
 		8C8A8FD4190F8BD50087AE07 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB3190F8BD50087AE07 /* Foundation.framework */; };
@@ -45,6 +47,12 @@
 
 /* Begin PBXFileReference section */
 		5E7DE4A21D7249CBBB8C1526 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C88BD24190FE8C300A61444 /* SPDBRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBRootViewController.h; sourceTree = "<group>"; };
+		8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBRootViewController.m; sourceTree = "<group>"; };
+		8C88BD27190FED1000A61444 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		8C88BD2A190FF0C700A61444 /* SPDBMapSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBMapSelectionViewController.h; sourceTree = "<group>"; };
+		8C88BD2B190FF0C700A61444 /* SPDBMapSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBMapSelectionViewController.m; sourceTree = "<group>"; };
+		8C88BD311910108900A61444 /* SPDBMapSelectionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPDBMapSelectionDelegate.h; sourceTree = "<group>"; };
 		8C8A8FB0190F8BD50087AE07 /* SPDBClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPDBClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C8A8FB3190F8BD50087AE07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8C8A8FB5190F8BD50087AE07 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -56,8 +64,6 @@
 		8C8A8FC2190F8BD50087AE07 /* SPDBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPDBAppDelegate.h; sourceTree = "<group>"; };
 		8C8A8FC3190F8BD50087AE07 /* SPDBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPDBAppDelegate.m; sourceTree = "<group>"; };
 		8C8A8FC6190F8BD50087AE07 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8C8A8FC8190F8BD50087AE07 /* SPDBViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPDBViewController.h; sourceTree = "<group>"; };
-		8C8A8FC9190F8BD50087AE07 /* SPDBViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SPDBViewController.m; sourceTree = "<group>"; };
 		8C8A8FCB190F8BD50087AE07 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		8C8A8FD1190F8BD50087AE07 /* SPDBClientTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SPDBClientTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C8A8FD2190F8BD50087AE07 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -86,6 +92,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8C88BD28190FED1000A61444 /* MapKit.framework in Frameworks */,
 				8C8A8FB6190F8BD50087AE07 /* CoreGraphics.framework in Frameworks */,
 				8C8A8FB8190F8BD50087AE07 /* UIKit.framework in Frameworks */,
 				8C8A8FB4190F8BD50087AE07 /* Foundation.framework in Frameworks */,
@@ -106,6 +113,26 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		8C88BD23190FE88B00A61444 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8C88BD29190FF09E00A61444 /* MapSelection */,
+				8C88BD24190FE8C300A61444 /* SPDBRootViewController.h */,
+				8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */,
+			);
+			name = View;
+			sourceTree = "<group>";
+		};
+		8C88BD29190FF09E00A61444 /* MapSelection */ = {
+			isa = PBXGroup;
+			children = (
+				8C88BD2A190FF0C700A61444 /* SPDBMapSelectionViewController.h */,
+				8C88BD2B190FF0C700A61444 /* SPDBMapSelectionViewController.m */,
+				8C88BD311910108900A61444 /* SPDBMapSelectionDelegate.h */,
+			);
+			name = MapSelection;
+			sourceTree = "<group>";
+		};
 		8C8A8FA7190F8BD50087AE07 = {
 			isa = PBXGroup;
 			children = (
@@ -129,6 +156,7 @@
 		8C8A8FB2190F8BD50087AE07 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				8C88BD27190FED1000A61444 /* MapKit.framework */,
 				8C8A8FB3190F8BD50087AE07 /* Foundation.framework */,
 				8C8A8FB5190F8BD50087AE07 /* CoreGraphics.framework */,
 				8C8A8FB7190F8BD50087AE07 /* UIKit.framework */,
@@ -141,15 +169,14 @@
 		8C8A8FB9190F8BD50087AE07 /* SPDBClient */ = {
 			isa = PBXGroup;
 			children = (
+				8C88BD23190FE88B00A61444 /* View */,
 				8CAA199F190FB1A900992379 /* Configuration */,
-				8CAA198D190F999500992379 /* Data */,
+				8CAA198D190F999500992379 /* Entity */,
 				8CAA1991190F99F900992379 /* Mapping */,
 				8CAA1995190FACD000992379 /* Service */,
 				8C8A8FC2190F8BD50087AE07 /* SPDBAppDelegate.h */,
 				8C8A8FC3190F8BD50087AE07 /* SPDBAppDelegate.m */,
 				8C8A8FC5190F8BD50087AE07 /* Main.storyboard */,
-				8C8A8FC8190F8BD50087AE07 /* SPDBViewController.h */,
-				8C8A8FC9190F8BD50087AE07 /* SPDBViewController.m */,
 				8C8A8FCB190F8BD50087AE07 /* Images.xcassets */,
 				8C8A8FBA190F8BD50087AE07 /* Supporting Files */,
 			);
@@ -196,13 +223,13 @@
 			name = Fixtures;
 			sourceTree = "<group>";
 		};
-		8CAA198D190F999500992379 /* Data */ = {
+		8CAA198D190F999500992379 /* Entity */ = {
 			isa = PBXGroup;
 			children = (
 				8CAA198E190F99AA00992379 /* SPDBMapEntry.h */,
 				8CAA198F190F99AA00992379 /* SPDBMapEntry.m */,
 			);
-			name = Data;
+			name = Entity;
 			sourceTree = "<group>";
 		};
 		8CAA1991190F99F900992379 /* Mapping */ = {
@@ -428,12 +455,13 @@
 			files = (
 				8C8A8FC0190F8BD50087AE07 /* main.m in Sources */,
 				8CAA19AC190FB47D00992379 /* SPDBObjectManagerFactory.m in Sources */,
-				8C8A8FCA190F8BD50087AE07 /* SPDBViewController.m in Sources */,
 				8CAA19A2190FB1BF00992379 /* SPDBConfigurationProvider.m in Sources */,
 				8CAA1990190F99AA00992379 /* SPDBMapEntry.m in Sources */,
+				8C88BD2C190FF0C700A61444 /* SPDBMapSelectionViewController.m in Sources */,
 				8CAA199E190FAD6F00992379 /* SPDBShortestPathRequest.m in Sources */,
 				8CAA1994190F9A0E00992379 /* SPDBMappingFactory.m in Sources */,
 				8C8A8FC4190F8BD50087AE07 /* SPDBAppDelegate.m in Sources */,
+				8C88BD26190FE8C300A61444 /* SPDBRootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
