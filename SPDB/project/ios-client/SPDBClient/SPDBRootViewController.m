@@ -1,4 +1,6 @@
+#import "SPDBMapEntry.h"
 #import "SPDBMapSelectionViewController.h"
+#import "SPDBObjectManagerFactory.h"
 #import "SPDBRootViewController.h"
 
 @interface SPDBRootViewController ()
@@ -87,9 +89,7 @@
 }
 
 - (void)didSelectPoint:(NSValue *)point atIndex:(NSUInteger)index
-{
-    NSLog(@"KODZINK :-)");
-    
+{    
     if (index == 0)
     {
         self.pointFrom = point;
@@ -100,6 +100,93 @@
     }
     
     [self.tableView reloadData];
+}
+
+- (IBAction)searchButtonPressed:(id)sender
+{
+    if (self.pointFrom == nil || self.pointTo == nil)
+    {
+        [self showValidationFailedAlert];
+        return;
+    }
+    
+    [self downloadRoute];
+}
+
+- (void)showValidationFailedAlert
+{
+    UIAlertView *alert = [[UIAlertView alloc]   initWithTitle:@"Validation failed"
+                                                      message:@"Please select points before searching route."
+                                                     delegate:nil
+                                            cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)downloadRoute
+{
+    [self setUpHud];
+    [self fetchShortestPath];
+}
+
+- (void)setUpHud
+{
+    self.progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    self.progressHud.mode = MBProgressHUDModeAnnularDeterminate;
+    self.progressHud.labelText = @"Loading";
+}
+
+- (void)fetchShortestPath
+{
+    SPDBShortestPathFetcher *shortestPathFetcher = [SPDBShortestPathFetcher new];
+    SPDBMapEntry *entryFrom = [self mapEntryFromPoint:self.pointFrom];
+    SPDBMapEntry *entryTo = [self mapEntryFromPoint:self.pointTo];
+    
+    [shortestPathFetcher fetchShortestPathFromEntry:entryFrom toEntry:entryTo delegate:self];
+}
+
+- (SPDBMapEntry *)mapEntryFromPoint:(NSValue *)point
+{
+    CGPoint pointStructure = [point CGPointValue];
+    
+    return [SPDBMapEntry mapEntryWithLatitude:[NSNumber numberWithDouble:pointStructure.x] andLongitude:[NSNumber numberWithDouble:pointStructure.y]];
+}
+
+- (void)updateProgress:(CGFloat)progress
+{
+    self.progressHud.progress = progress;
+}
+
+- (void)didFetchShortestPath:(NSArray *)shortestPath
+{
+    [self.progressHud hide:YES];
+    [self showRouteFetchSuccessfulAlert];
+}
+
+- (void)showRouteFetchSuccessfulAlert
+{
+    UIAlertView *alert = [[UIAlertView alloc]   initWithTitle:@"Success!"
+                                                      message:@"Fetched path!"
+                                                     delegate:nil
+                                            cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil];
+    [alert show];
+}
+
+- (void)didFailFetchingShortestPath:(NSError *)error
+{
+    [self.progressHud hide:YES];
+    [self showRouteFetchFailedAlert];
+}
+
+- (void)showRouteFetchFailedAlert
+{
+    UIAlertView *alert = [[UIAlertView alloc]   initWithTitle:@"Route fetch failed"
+                                                      message:@"Could not fetch route. Please check your connection."
+                                                     delegate:nil
+                                            cancelButtonTitle:@"OK"
+                                            otherButtonTitles:nil];
+    [alert show];
 }
 
 @end

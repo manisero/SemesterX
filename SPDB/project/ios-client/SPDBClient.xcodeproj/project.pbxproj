@@ -11,6 +11,7 @@
 		8C88BD26190FE8C300A61444 /* SPDBRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */; };
 		8C88BD28190FED1000A61444 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C88BD27190FED1000A61444 /* MapKit.framework */; };
 		8C88BD2C190FF0C700A61444 /* SPDBMapSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C88BD2B190FF0C700A61444 /* SPDBMapSelectionViewController.m */; };
+		8C88BD35191035EA00A61444 /* SPDBMapRouteProjectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C88BD34191035EA00A61444 /* SPDBMapRouteProjectionViewController.m */; };
 		8C8A8FB4190F8BD50087AE07 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB3190F8BD50087AE07 /* Foundation.framework */; };
 		8C8A8FB6190F8BD50087AE07 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB5190F8BD50087AE07 /* CoreGraphics.framework */; };
 		8C8A8FB8190F8BD50087AE07 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB7190F8BD50087AE07 /* UIKit.framework */; };
@@ -23,6 +24,8 @@
 		8C8A8FD4190F8BD50087AE07 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB3190F8BD50087AE07 /* Foundation.framework */; };
 		8C8A8FD5190F8BD50087AE07 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C8A8FB7190F8BD50087AE07 /* UIKit.framework */; };
 		8C8A8FDD190F8BD50087AE07 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8C8A8FDB190F8BD50087AE07 /* InfoPlist.strings */; };
+		8CA9B9F419103AB400A0368A /* SPDBShortestPathFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9B9F319103AB400A0368A /* SPDBShortestPathFetcher.m */; };
+		8CA9B9F819103FA000A0368A /* SPDBShortestPathFetcherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CA9B9F719103FA000A0368A /* SPDBShortestPathFetcherTests.m */; };
 		8CAA1989190F978F00992379 /* SPDBServiceMappingTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA1988190F978F00992379 /* SPDBServiceMappingTests.m */; };
 		8CAA198C190F986A00992379 /* mapentry.json in Resources */ = {isa = PBXBuildFile; fileRef = 8CAA198B190F986A00992379 /* mapentry.json */; };
 		8CAA1990190F99AA00992379 /* SPDBMapEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA198F190F99AA00992379 /* SPDBMapEntry.m */; };
@@ -53,6 +56,8 @@
 		8C88BD2A190FF0C700A61444 /* SPDBMapSelectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBMapSelectionViewController.h; sourceTree = "<group>"; };
 		8C88BD2B190FF0C700A61444 /* SPDBMapSelectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBMapSelectionViewController.m; sourceTree = "<group>"; };
 		8C88BD311910108900A61444 /* SPDBMapSelectionDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPDBMapSelectionDelegate.h; sourceTree = "<group>"; };
+		8C88BD33191035EA00A61444 /* SPDBMapRouteProjectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBMapRouteProjectionViewController.h; sourceTree = "<group>"; };
+		8C88BD34191035EA00A61444 /* SPDBMapRouteProjectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBMapRouteProjectionViewController.m; sourceTree = "<group>"; };
 		8C8A8FB0190F8BD50087AE07 /* SPDBClient.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SPDBClient.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8C8A8FB3190F8BD50087AE07 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		8C8A8FB5190F8BD50087AE07 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -69,6 +74,10 @@
 		8C8A8FD2190F8BD50087AE07 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		8C8A8FDA190F8BD50087AE07 /* SPDBClientTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SPDBClientTests-Info.plist"; sourceTree = "<group>"; };
 		8C8A8FDC190F8BD50087AE07 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		8CA9B9F219103AB400A0368A /* SPDBShortestPathFetcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBShortestPathFetcher.h; sourceTree = "<group>"; };
+		8CA9B9F319103AB400A0368A /* SPDBShortestPathFetcher.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBShortestPathFetcher.m; sourceTree = "<group>"; };
+		8CA9B9F519103ACD00A0368A /* SPDBShortestPathFetcherDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SPDBShortestPathFetcherDelegate.h; sourceTree = "<group>"; };
+		8CA9B9F719103FA000A0368A /* SPDBShortestPathFetcherTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBShortestPathFetcherTests.m; sourceTree = "<group>"; };
 		8CAA1988190F978F00992379 /* SPDBServiceMappingTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBServiceMappingTests.m; sourceTree = "<group>"; };
 		8CAA198B190F986A00992379 /* mapentry.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = mapentry.json; path = Fixtures/mapentry.json; sourceTree = "<group>"; };
 		8CAA198E190F99AA00992379 /* SPDBMapEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBMapEntry.h; sourceTree = "<group>"; };
@@ -116,6 +125,7 @@
 		8C88BD23190FE88B00A61444 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				8C88BD32191035B600A61444 /* MapProjection */,
 				8C88BD29190FF09E00A61444 /* MapSelection */,
 				8C88BD24190FE8C300A61444 /* SPDBRootViewController.h */,
 				8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */,
@@ -131,6 +141,15 @@
 				8C88BD311910108900A61444 /* SPDBMapSelectionDelegate.h */,
 			);
 			name = MapSelection;
+			sourceTree = "<group>";
+		};
+		8C88BD32191035B600A61444 /* MapProjection */ = {
+			isa = PBXGroup;
+			children = (
+				8C88BD33191035EA00A61444 /* SPDBMapRouteProjectionViewController.h */,
+				8C88BD34191035EA00A61444 /* SPDBMapRouteProjectionViewController.m */,
+			);
+			name = MapProjection;
 			sourceTree = "<group>";
 		};
 		8C8A8FA7190F8BD50087AE07 = {
@@ -215,6 +234,24 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		8CA9B9F119103A9D00A0368A /* ShortestPath */ = {
+			isa = PBXGroup;
+			children = (
+				8CA9B9F219103AB400A0368A /* SPDBShortestPathFetcher.h */,
+				8CA9B9F319103AB400A0368A /* SPDBShortestPathFetcher.m */,
+				8CA9B9F519103ACD00A0368A /* SPDBShortestPathFetcherDelegate.h */,
+			);
+			name = ShortestPath;
+			sourceTree = "<group>";
+		};
+		8CA9B9F619103F8800A0368A /* ShortestPath */ = {
+			isa = PBXGroup;
+			children = (
+				8CA9B9F719103FA000A0368A /* SPDBShortestPathFetcherTests.m */,
+			);
+			name = ShortestPath;
+			sourceTree = "<group>";
+		};
 		8CAA198A190F982C00992379 /* Fixtures */ = {
 			isa = PBXGroup;
 			children = (
@@ -244,6 +281,7 @@
 		8CAA1995190FACD000992379 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				8CA9B9F119103A9D00A0368A /* ShortestPath */,
 				8CAA19A9190FB46A00992379 /* ObjectManager */,
 				8CAA1996190FACEE00992379 /* Request */,
 			);
@@ -305,6 +343,7 @@
 		8CAA19AD190FB70F00992379 /* Service */ = {
 			isa = PBXGroup;
 			children = (
+				8CA9B9F619103F8800A0368A /* ShortestPath */,
 				8CAA19AE190FB71F00992379 /* ObjectManager */,
 			);
 			name = Service;
@@ -458,8 +497,10 @@
 				8CAA19A2190FB1BF00992379 /* SPDBConfigurationProvider.m in Sources */,
 				8CAA1990190F99AA00992379 /* SPDBMapEntry.m in Sources */,
 				8C88BD2C190FF0C700A61444 /* SPDBMapSelectionViewController.m in Sources */,
+				8CA9B9F419103AB400A0368A /* SPDBShortestPathFetcher.m in Sources */,
 				8CAA199E190FAD6F00992379 /* SPDBShortestPathRequest.m in Sources */,
 				8CAA1994190F9A0E00992379 /* SPDBMappingFactory.m in Sources */,
+				8C88BD35191035EA00A61444 /* SPDBMapRouteProjectionViewController.m in Sources */,
 				8C8A8FC4190F8BD50087AE07 /* SPDBAppDelegate.m in Sources */,
 				8C88BD26190FE8C300A61444 /* SPDBRootViewController.m in Sources */,
 			);
@@ -472,6 +513,7 @@
 				8CAA19A8190FB35B00992379 /* SPDBConfigurationProviderTests.m in Sources */,
 				8CAA1989190F978F00992379 /* SPDBServiceMappingTests.m in Sources */,
 				8CAA19B0190FB72F00992379 /* SPDBObjectManagerFactoryTests.m in Sources */,
+				8CA9B9F819103FA000A0368A /* SPDBShortestPathFetcherTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
