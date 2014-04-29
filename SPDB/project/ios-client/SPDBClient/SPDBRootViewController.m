@@ -2,6 +2,7 @@
 #import "SPDBMapSelectionViewController.h"
 #import "SPDBObjectManagerFactory.h"
 #import "SPDBRootViewController.h"
+#import "SPDBMapRouteProjectionViewController.h"
 
 @interface SPDBRootViewController ()
 
@@ -86,6 +87,11 @@
         destinationViewController.initialPoint = self.selectedPoint;
         destinationViewController.pointIndex = self.selectedPoint == self.pointFrom ? 0 : 1;
     }
+    else if ([[segue identifier] isEqualToString:@"ShowRoute"])
+    {
+        SPDBMapRouteProjectionViewController *destinationViewController = [segue destinationViewController];
+        destinationViewController.route = self.foundRoute;
+    }
 }
 
 - (void)didSelectPoint:(NSValue *)point atIndex:(NSUInteger)index
@@ -160,17 +166,8 @@
 - (void)didFetchShortestPath:(NSArray *)shortestPath
 {
     [self.progressHud hide:YES];
-    [self showRouteFetchSuccessfulAlert];
-}
-
-- (void)showRouteFetchSuccessfulAlert
-{
-    UIAlertView *alert = [[UIAlertView alloc]   initWithTitle:@"Success!"
-                                                      message:@"Fetched path!"
-                                                     delegate:nil
-                                            cancelButtonTitle:@"OK"
-                                            otherButtonTitles:nil];
-    [alert show];
+    [self setFoundRoute:shortestPath];
+    [self performSegueWithIdentifier:@"ShowRoute" sender:self];
 }
 
 - (void)didFailFetchingShortestPath:(NSError *)error

@@ -11,5 +11,6 @@
 @property (nonatomic, strong) NSValue *pointFrom;
 @property (nonatomic, strong) NSValue *pointTo;
 @property (nonatomic, strong) NSValue *selectedPoint;
+@property (nonatomic, strong) NSArray *foundRoute;
 
 @end
