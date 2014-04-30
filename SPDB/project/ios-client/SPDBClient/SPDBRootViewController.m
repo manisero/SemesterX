@@ -34,7 +34,29 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return section == 0 ? 2 : 1;
+    if (section == 0)
+    {
+        return 3;
+    }
+    else if (section == 1)
+    {
+        return 1;
+    }
+    
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath section] == 0)
+    {
+        if ([indexPath row] == 2)
+        {
+            return 216.0;
+        }
+    }
+         
+    return self.tableView.rowHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -57,6 +79,10 @@
         else if ([indexPath row] == 1)
         {
             return @"PointTo";
+        }
+        else if ([indexPath row] == 2)
+        {
+            return @"ArrivalTime";
         }
     }
     else if ([indexPath section] == 1)
