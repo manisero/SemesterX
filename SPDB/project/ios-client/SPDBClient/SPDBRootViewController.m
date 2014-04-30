@@ -152,6 +152,7 @@
     {
         SPDBMapRouteProjectionViewController *destinationViewController = [segue destinationViewController];
         destinationViewController.route = self.foundRoute;
+        destinationViewController.arrivalTime = self.selectedArrivalTime;
     }
 }
 
@@ -177,6 +178,7 @@
         return;
     }
     
+    [self updateSelectedDate];
     [self downloadRoute];
 }
 
@@ -186,6 +188,20 @@
                             message:@"Please select points before searching route."
                         cancelTitle:@"OK"
                          completion:nil];
+}
+
+- (void)updateSelectedDate
+{
+    UIView *timePickerContentView = [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]] contentView];
+    
+    for (id subview in timePickerContentView.subviews)
+    {
+        if ([subview isKindOfClass:[UIDatePicker class]])
+        {
+            UIDatePicker *datePicker = subview;
+            self.selectedArrivalTime = datePicker.date;
+        }
+    }
 }
 
 - (void)downloadRoute
