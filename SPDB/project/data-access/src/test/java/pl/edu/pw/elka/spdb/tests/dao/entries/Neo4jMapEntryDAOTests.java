@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
+import pl.edu.pw.elka.spdb.model.Route;
 
 import java.time.Duration;
 import java.util.List;
@@ -22,8 +23,11 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @Transactional
 public class Neo4jMapEntryDAOTests extends TestCase {
-    @Autowired private IMapEntryDAO mapEntryDAO;
-    @Autowired private Neo4jTemplate template;
+    @Autowired
+    private IMapEntryDAO mapEntryDAO;
+
+    @Autowired
+    private Neo4jTemplate template;
 
     @Rollback(false)
     @BeforeTransaction
@@ -101,13 +105,15 @@ public class Neo4jMapEntryDAOTests extends TestCase {
         template.save(independenceStreet.addRoute(goldenTerrace, Duration.ofMinutes(5)));
         template.save(goldenTerrace.addRoute(centralUndergroundStation, Duration.ofMinutes(3)));
 
-        List<MapEntry> fastestRoute = mapEntryDAO.findFastestRoute(universityOfTechnology, centralUndergroundStation);
+        List<Route> fastestRoute = mapEntryDAO.findFastestRoute(universityOfTechnology, centralUndergroundStation);
 
-        assertEquals(4, fastestRoute.size());
-        assertEquals(universityOfTechnology.getId(), fastestRoute.get(0).getId());
-        assertEquals(independenceStreet.getId(), fastestRoute.get(1).getId());
-        assertEquals(goldenTerrace.getId(), fastestRoute.get(2).getId());
-        assertEquals(centralUndergroundStation.getId(), fastestRoute.get(3).getId());
+        assertEquals(3, fastestRoute.size());
+        assertEquals(universityOfTechnology.getId(), fastestRoute.get(0).getRouteFrom().getId());
+        assertEquals(independenceStreet.getId(), fastestRoute.get(0).getRouteTo().getId());
+        assertEquals(independenceStreet.getId(), fastestRoute.get(1).getRouteFrom().getId());
+        assertEquals(goldenTerrace.getId(), fastestRoute.get(1).getRouteTo().getId());
+        assertEquals(goldenTerrace.getId(), fastestRoute.get(2).getRouteFrom().getId());
+        assertEquals(centralUndergroundStation.getId(), fastestRoute.get(2).getRouteTo().getId());
     }
 
     @Test
@@ -123,5 +129,32 @@ public class Neo4jMapEntryDAOTests extends TestCase {
 
         assertNotNull(nearestToUniversityOfTechnology);
         assertEquals(subway.getId(), nearestToUniversityOfTechnology.getId());
+    }
+
+    @Test
+    public void testFindRouteBetweenMethod() {
+        MapEntry universityOfTechnology = new MapEntry(new Coordinates(52.2206062, 21.0105747));
+        MapEntry saviourSquare = new MapEntry(new Coordinates(52.219929, 21.017988));
+        universityOfTechnology = mapEntryDAO.insertMapEntry(universityOfTechnology);
+        saviourSquare = mapEntryDAO.insertMapEntry(saviourSquare);
+        Route universityToSaviourSquareRoute = universityOfTechnology.addRoute(saviourSquare, Duration.ofMinutes(3));
+        universityToSaviourSquareRoute = template.save(universityToSaviourSquareRoute);
+
+        Route foundFromUniversityToSaviourSquare = mapEntryDAO.findRouteBetween(universityOfTechnology, saviourSquare);
+        Route foundFromSaviourSquareToUniversity = mapEntryDAO.findRouteBetween(saviourSquare, universityOfTechnology);
+        Route foundFromUniversityToSaviourSquareById = mapEntryDAO.findRouteBetween(universityOfTechnology.getId(),
+                saviourSquare.getId());
+        Route foundFromSaviourSquareToUniversityById = mapEntryDAO.findRouteBetween(saviourSquare.getId(),
+                universityOfTechnology.getId());
+
+        assertNotNull(foundFromUniversityToSaviourSquare);
+        assertEquals(universityToSaviourSquareRoute.getId(), foundFromUniversityToSaviourSquare.getId());
+        assertEquals(universityToSaviourSquareRoute.getDuration(), foundFromUniversityToSaviourSquare.getDuration());
+        assertNull(foundFromSaviourSquareToUniversity);
+        assertNotNull(foundFromUniversityToSaviourSquareById);
+        assertEquals(universityToSaviourSquareRoute.getId(), foundFromUniversityToSaviourSquareById.getId());
+        assertEquals(universityToSaviourSquareRoute.getDuration(),
+                foundFromUniversityToSaviourSquareById.getDuration());
+        assertNull(foundFromSaviourSquareToUniversityById);
     }
 }

@@ -3,10 +3,7 @@ package pl.edu.pw.elka.spdb.dao.entries.impl;
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphalgo.WeightedPath;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.DynamicRelationshipType;
-import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.PathExpanders;
+import org.neo4j.graphdb.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.conversion.EndResult;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
@@ -15,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.elka.spdb.configuration.IConfigurationProvider;
 import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
+import pl.edu.pw.elka.spdb.model.Route;
 import pl.edu.pw.elka.spdb.relationships.MapEntryRelationships;
 import pl.edu.pw.elka.spdb.repositories.IMapEntryRepository;
 
@@ -43,13 +41,14 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
     }
 
     @Override
-    public List<MapEntry> findFastestRoute(MapEntry start, MapEntry end) {
-        List<MapEntry> fastestRoute = new ArrayList<>();
+    public List<Route> findFastestRoute(MapEntry start, MapEntry end) {
+        List<Route> fastestRoute = new ArrayList<>();
 
         WeightedPath shortestPath = getShortestPath(template.getNode(start.getId()), template.getNode(end.getId()));
 
         if (shortestPath != null) {
-            shortestPath.nodes().forEach(node -> fastestRoute.add(findMapEntryById(node.getId())));
+            shortestPath.relationships().forEach(rel -> fastestRoute.add(findRouteBetween(rel.getStartNode().getId(),
+                    rel.getEndNode().getId())));
         }
 
         return fastestRoute;
@@ -75,5 +74,18 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public Route findRouteBetween(MapEntry start, MapEntry end)
+    {
+        return mapEntryRepository.getRelationshipBetween(start, end, Route.class,
+                MapEntryRelationships.ROUTES_TO.getValue());
+    }
+
+    @Override
+    public Route findRouteBetween(Long startId, Long endId)
+    {
+        return findRouteBetween(findMapEntryById(startId), findMapEntryById(endId));
     }
 }
