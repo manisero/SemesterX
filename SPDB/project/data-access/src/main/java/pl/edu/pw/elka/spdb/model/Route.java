@@ -1,34 +1,29 @@
 package pl.edu.pw.elka.spdb.model;
 
-import com.google.gson.annotations.Expose;
 import org.springframework.data.neo4j.annotation.*;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.time.Duration;
 
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
 @RelationshipEntity(type = "ROUTES_TO")
 public class Route {
     @GraphId
-    @Expose
     private Long id;
     @StartNode
-    @Expose
     private MapEntry routeFrom;
     @EndNode
-    @Expose
     private MapEntry routeTo;
     @GraphProperty(propertyType = Long.class)
-    @Expose
     private Duration duration;
 
     public Route() {
     }
 
     public Route(MapEntry routeFrom, MapEntry routeTo, Duration duration) {
+        this(null, routeFrom, routeTo, duration);
+    }
+
+    public Route(Long id, MapEntry routeFrom, MapEntry routeTo, Duration duration) {
+        this.id = id;
         this.routeFrom = routeFrom;
         this.routeTo = routeTo;
         this.duration = duration;

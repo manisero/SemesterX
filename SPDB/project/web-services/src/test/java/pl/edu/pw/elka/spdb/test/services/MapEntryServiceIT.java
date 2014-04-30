@@ -1,22 +1,15 @@
 package pl.edu.pw.elka.spdb.test.services;
 
 import junit.framework.TestCase;
-import org.apache.cxf.jaxrs.JAXRSBindingFactory;
-import org.apache.cxf.jaxrs.JAXRSServerFactoryBean;
-import org.apache.cxf.jaxrs.client.JAXRSClientFactory;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.apache.cxf.jaxrs.client.WebClient;
-import org.apache.cxf.jaxrs.provider.JAXRSDataBinding;
-import org.apache.geronimo.osgi.locator.Activator;
 import org.junit.Test;
-import org.springframework.test.context.ContextConfiguration;
 import pl.edu.pw.elka.spdb.adapters.RouteListAdapter;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.Route;
 import pl.edu.pw.elka.spdb.providers.MapEntryProvider;
 import pl.edu.pw.elka.spdb.providers.RouteListProvider;
 
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import java.util.List;
 

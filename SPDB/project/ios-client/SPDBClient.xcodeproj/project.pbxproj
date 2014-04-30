@@ -36,6 +36,7 @@
 		8CAA19A8190FB35B00992379 /* SPDBConfigurationProviderTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19A7190FB35B00992379 /* SPDBConfigurationProviderTests.m */; };
 		8CAA19AC190FB47D00992379 /* SPDBObjectManagerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19AB190FB47D00992379 /* SPDBObjectManagerFactory.m */; };
 		8CAA19B0190FB72F00992379 /* SPDBObjectManagerFactoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */; };
+		8CDAA3A51911855C0064F858 /* SPDBRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CDAA3A41911855C0064F858 /* SPDBRoute.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -93,6 +94,8 @@
 		8CAA19AA190FB47D00992379 /* SPDBObjectManagerFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBObjectManagerFactory.h; sourceTree = "<group>"; };
 		8CAA19AB190FB47D00992379 /* SPDBObjectManagerFactory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBObjectManagerFactory.m; sourceTree = "<group>"; };
 		8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBObjectManagerFactoryTests.m; sourceTree = "<group>"; };
+		8CDAA3A31911855C0064F858 /* SPDBRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBRoute.h; sourceTree = "<group>"; };
+		8CDAA3A41911855C0064F858 /* SPDBRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBRoute.m; sourceTree = "<group>"; };
 		BF32A380C4144B0C963535D0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -265,6 +268,8 @@
 			children = (
 				8CAA198E190F99AA00992379 /* SPDBMapEntry.h */,
 				8CAA198F190F99AA00992379 /* SPDBMapEntry.m */,
+				8CDAA3A31911855C0064F858 /* SPDBRoute.h */,
+				8CDAA3A41911855C0064F858 /* SPDBRoute.m */,
 			);
 			name = Entity;
 			sourceTree = "<group>";
@@ -502,6 +507,7 @@
 				8CAA1994190F9A0E00992379 /* SPDBMappingFactory.m in Sources */,
 				8C88BD35191035EA00A61444 /* SPDBMapRouteProjectionViewController.m in Sources */,
 				8C8A8FC4190F8BD50087AE07 /* SPDBAppDelegate.m in Sources */,
+				8CDAA3A51911855C0064F858 /* SPDBRoute.m in Sources */,
 				8C88BD26190FE8C300A61444 /* SPDBRootViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

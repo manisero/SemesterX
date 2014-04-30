@@ -1,8 +1,8 @@
 package pl.edu.pw.elka.spdb.providers;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.apache.cxf.helpers.IOUtils;
+import pl.edu.pw.elka.spdb.adapters.MapEntryGsonAdapter;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 
 import javax.ws.rs.Consumes;
@@ -37,10 +37,7 @@ public class MapEntryProvider implements MessageBodyWriter<MapEntry>, MessageBod
     public void writeTo(MapEntry mapEntry, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType,
                         MultivaluedMap<String, Object> stringObjectMultivaluedMap, OutputStream outputStream) throws
             IOException, WebApplicationException {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        String mapEntryAsJson = gson.toJson(mapEntry);
-
-        outputStream.write(mapEntryAsJson.getBytes());
+        outputStream.write(new Gson().toJson(new MapEntryGsonAdapter(mapEntry)).getBytes());
     }
 
     @Override
@@ -53,9 +50,11 @@ public class MapEntryProvider implements MessageBodyWriter<MapEntry>, MessageBod
                              MultivaluedMap<String, String> stringStringMultivaluedMap,
                              InputStream inputStream) throws IOException, WebApplicationException {
         String json = IOUtils.toString(inputStream);
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
-        MapEntry mapEntryFromJson = gson.fromJson(json, MapEntry.class);
+        System.out.println(json);
+        MapEntryGsonAdapter mapEntryAdapter = new Gson().fromJson(json, MapEntryGsonAdapter.class);
 
-        return mapEntryFromJson;
+        System.out.println(mapEntryAdapter == null);
+
+        return mapEntryAdapter.toMapEntry();
     }
 }

@@ -1,12 +1,10 @@
 package pl.edu.pw.elka.spdb.providers;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import org.apache.cxf.helpers.IOUtils;
-import pl.edu.pw.elka.spdb.adapters.DurationTypeAdapter;
+import pl.edu.pw.elka.spdb.adapters.RouteGsonAdapter;
 import pl.edu.pw.elka.spdb.adapters.RouteListAdapter;
-import pl.edu.pw.elka.spdb.model.Route;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -21,8 +19,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import java.time.Duration;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Consumes("application/json")
 @Produces("application/json")
@@ -34,19 +32,21 @@ public class RouteListProvider implements MessageBodyWriter<RouteListAdapter>, M
     }
 
     @Override
-    public long getSize(RouteListAdapter route, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType) {
+    public long getSize(RouteListAdapter route, Class<?> aClass, Type type, Annotation[] annotations,
+                        MediaType mediaType) {
         return -1;
     }
 
     @Override
-    public void writeTo(RouteListAdapter route, Class<?> aClass, Type type, Annotation[] annotations, MediaType mediaType,
+    public void writeTo(RouteListAdapter route, Class<?> aClass, Type type, Annotation[] annotations,
+                        MediaType mediaType,
                         MultivaluedMap<String, Object> stringObjectMultivaluedMap, OutputStream outputStream) throws
             IOException, WebApplicationException {
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(Duration.class,
-                new DurationTypeAdapter()).create();
-        String routeAsJson = gson.toJson(route.getRoutes(), new TypeToken<List<Route>>(){}.getType());
-
-        outputStream.write(routeAsJson.getBytes());
+        List<RouteGsonAdapter> adapterList = route.getRoutes().stream().map(r -> new RouteGsonAdapter(r)).collect
+                (Collectors.toList());
+        String routesAsJson = new Gson().toJson(adapterList, new TypeToken<List<RouteGsonAdapter>>() {
+        }.getType());
+        outputStream.write(routesAsJson.getBytes());
     }
 
     @Override
@@ -60,11 +60,9 @@ public class RouteListProvider implements MessageBodyWriter<RouteListAdapter>, M
                                      MultivaluedMap<String, String> stringStringMultivaluedMap,
                                      InputStream inputStream) throws IOException, WebApplicationException {
         String json = IOUtils.toString(inputStream);
-        Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().registerTypeAdapter(Duration.class,
-                new DurationTypeAdapter()).create();
-        List<Route> routesFromJson = gson.fromJson(json, new TypeToken<List<Route>>() {
-        }.getType());
+        List<RouteGsonAdapter> routesFromJson = new Gson().fromJson(json, new TypeToken<List<RouteGsonAdapter>>() {
+                }.getType());
 
-        return new RouteListAdapter(routesFromJson);
+        return new RouteListAdapter(routesFromJson.stream().map(r -> r.toRoute()).collect(Collectors.toList()));
     }
 }

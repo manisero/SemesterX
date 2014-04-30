@@ -24,7 +24,7 @@ public class MapEntryProviderTests extends TestCase {
             provider.writeTo(mapEntry, null, null, null, null, null, outputStream);
             String mapEntryAsJson = outputStream.toString();
 
-            assertEquals("{\"id\":16,\"wkt\":\"POINT( 52.12340000 21.67890000 )\"}", mapEntryAsJson);
+            assertEquals("{\"id\":16,\"latitude\":52.1234,\"longitude\":21.6789}", mapEntryAsJson);
         } catch (Exception e) {
             e.printStackTrace();
             fail("Exception was thrown");
@@ -33,8 +33,8 @@ public class MapEntryProviderTests extends TestCase {
 
     @Test
     public void testReadFromMethod() {
-        try (InputStream inputStream = new ByteArrayInputStream(("{\"id\":16,\"wkt\":\"POINT( 52.12340000 21.67890000" +
-                " )\"}").getBytes())) {
+        try (InputStream inputStream = new ByteArrayInputStream((
+                "{\"id\":16,\"latitude\":52.1234,\"longitude\":21.6789}").getBytes())) {
             MapEntryProvider provider = new MapEntryProvider();
             MapEntry readEntry = provider.readFrom(MapEntry.class, null, null, null, null, inputStream);
 

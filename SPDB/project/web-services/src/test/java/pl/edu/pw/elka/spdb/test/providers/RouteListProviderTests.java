@@ -33,11 +33,12 @@ public class RouteListProviderTests extends TestCase {
             provider.writeTo(adapter, null, null, null, null, null, outputStream);
             String routeAsJson = outputStream.toString();
 
-            assertEquals("[{\"routeFrom\":{\"id\":16,\"wkt\":\"POINT( 52.12340000 21.67890000 )\"}," +
-                            "\"routeTo\":{\"id\":17,\"wkt\":\"POINT( 52.67890000 21.12340000 )\"},\"duration\":300}," +
-                            "{\"routeFrom\":{\"id\":17,\"wkt\":\"POINT( 52.67890000 21.12340000 )\"}," +
-                            "\"routeTo\":{\"id\":16,\"wkt\":\"POINT( 52.12340000 21.67890000 )\"},\"duration\":300}]",
-                            routeAsJson);
+            assertEquals("[{\"routeFrom\":{\"id\":16,\"latitude\":52.1234,\"longitude\":21.6789}," +
+                            "\"routeTo\":{\"id\":17,\"latitude\":52.6789,\"longitude\":21.1234},\"duration\":300}," +
+                            "{\"routeFrom\":{\"id\":17,\"latitude\":52.6789,\"longitude\":21.1234}," +
+                            "\"routeTo\":{\"id\":16,\"latitude\":52.1234,\"longitude\":21.6789},\"duration\":300}]",
+                    routeAsJson
+            );
         } catch (Exception ex) {
             fail("Exception was thrown");
         }
@@ -45,11 +46,12 @@ public class RouteListProviderTests extends TestCase {
 
     @Test
     public void testReadFromMethod() {
-        try (InputStream inputStream = new ByteArrayInputStream(("[{\"routeFrom\":{\"id\":16,\"wkt\":\"POINT( 52" +
-                ".12340000 21.67890000 )\"}," +
-                "\"routeTo\":{\"id\":17,\"wkt\":\"POINT( 52.67890000 21.12340000 )\"},\"duration\":300}," +
-                "{\"routeFrom\":{\"id\":17,\"wkt\":\"POINT( 52.67890000 21.12340000 )\"}," +
-                "\"routeTo\":{\"id\":16,\"wkt\":\"POINT( 52.12340000 21.67890000 )\"},\"duration\":300}]").getBytes())) {
+        try (InputStream inputStream = new ByteArrayInputStream((
+                "[{\"routeFrom\":{\"id\":16,\"latitude\":52.1234,\"longitude\":21.6789}," +
+                        "\"routeTo\":{\"id\":17,\"latitude\":52.6789,\"longitude\":21.1234},\"duration\":300}," +
+                        "{\"routeFrom\":{\"id\":17,\"latitude\":52.6789,\"longitude\":21.1234}," +
+                        "\"routeTo\":{\"id\":16,\"latitude\":52.1234,\"longitude\":21.6789}," +
+                        "\"duration\":300}]").getBytes())) {
             RouteListProvider provider = new RouteListProvider();
             RouteListAdapter readRoutes = provider.readFrom(RouteListAdapter.class, null, null, null, null,
                     inputStream);
@@ -74,5 +76,4 @@ public class RouteListProviderTests extends TestCase {
             fail("Exception was thrown");
         }
     }
-
 }
