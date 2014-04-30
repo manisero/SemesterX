@@ -1,3 +1,4 @@
+#import <PXAlertView/PXAlertView.h>
 #import "SPDBMapEntry.h"
 #import "SPDBMapSelectionViewController.h"
 #import "SPDBObjectManagerFactory.h"
@@ -121,12 +122,10 @@
 
 - (void)showValidationFailedAlert
 {
-    UIAlertView *alert = [[UIAlertView alloc]   initWithTitle:@"Validation failed"
-                                                      message:@"Please select points before searching route."
-                                                     delegate:nil
-                                            cancelButtonTitle:@"OK"
-                                            otherButtonTitles:nil];
-    [alert show];
+    [PXAlertView showAlertWithTitle:@"Validation failed"
+                            message:@"Please select points before searching route."
+                        cancelTitle:@"OK"
+                         completion:nil];
 }
 
 - (void)downloadRoute
@@ -178,12 +177,10 @@
 
 - (void)showRouteFetchFailedAlert
 {
-    UIAlertView *alert = [[UIAlertView alloc]   initWithTitle:@"Route fetch failed"
-                                                      message:@"Could not fetch route. Please check your connection."
-                                                     delegate:nil
-                                            cancelButtonTitle:@"OK"
-                                            otherButtonTitles:nil];
-    [alert show];
+    [PXAlertView showAlertWithTitle:@"Route fetch failed"
+                            message:@"Could not fetch route. Please check your Internet connection."
+                        cancelTitle:@"OK"
+                         completion:nil];
 }
 
 @end
