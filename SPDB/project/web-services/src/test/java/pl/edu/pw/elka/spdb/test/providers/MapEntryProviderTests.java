@@ -6,7 +6,9 @@ import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.providers.MapEntryProvider;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Duration;
 
@@ -23,7 +25,24 @@ public class MapEntryProviderTests extends TestCase {
             String mapEntryAsJson = outputStream.toString();
 
             assertEquals("{\"id\":16,\"wkt\":\"POINT( 52.12340000 21.67890000 )\"}", mapEntryAsJson);
-        } catch (Exception ex) {
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Exception was thrown");
+        }
+    }
+
+    @Test
+    public void testReadFromMethod() {
+        try (InputStream inputStream = new ByteArrayInputStream(("{\"id\":16,\"wkt\":\"POINT( 52.12340000 21.67890000" +
+                " )\"}").getBytes())) {
+            MapEntryProvider provider = new MapEntryProvider();
+            MapEntry readEntry = provider.readFrom(MapEntry.class, null, null, null, null, inputStream);
+
+            assertEquals(16L, readEntry.getId().longValue());
+            assertEquals(52.1234, readEntry.getCoordinates().getLatitude());
+            assertEquals(21.6789, readEntry.getCoordinates().getLongitude());
+        } catch (Exception e) {
+            e.printStackTrace();
             fail("Exception was thrown");
         }
     }

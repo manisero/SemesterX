@@ -8,7 +8,9 @@ import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.Route;
 import pl.edu.pw.elka.spdb.providers.RouteListProvider;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -40,4 +42,37 @@ public class RouteListProviderTests extends TestCase {
             fail("Exception was thrown");
         }
     }
+
+    @Test
+    public void testReadFromMethod() {
+        try (InputStream inputStream = new ByteArrayInputStream(("[{\"routeFrom\":{\"id\":16,\"wkt\":\"POINT( 52" +
+                ".12340000 21.67890000 )\"}," +
+                "\"routeTo\":{\"id\":17,\"wkt\":\"POINT( 52.67890000 21.12340000 )\"},\"duration\":300}," +
+                "{\"routeFrom\":{\"id\":17,\"wkt\":\"POINT( 52.67890000 21.12340000 )\"}," +
+                "\"routeTo\":{\"id\":16,\"wkt\":\"POINT( 52.12340000 21.67890000 )\"},\"duration\":300}]").getBytes())) {
+            RouteListProvider provider = new RouteListProvider();
+            RouteListAdapter readRoutes = provider.readFrom(RouteListAdapter.class, null, null, null, null,
+                    inputStream);
+
+            assertEquals(2, readRoutes.getRoutes().size());
+            assertEquals(16L, readRoutes.getRoutes().get(0).getRouteFrom().getId().longValue());
+            assertEquals(17L, readRoutes.getRoutes().get(0).getRouteTo().getId().longValue());
+            assertEquals(52.1234, readRoutes.getRoutes().get(0).getRouteFrom().getCoordinates().getLatitude());
+            assertEquals(21.6789, readRoutes.getRoutes().get(0).getRouteFrom().getCoordinates().getLongitude());
+            assertEquals(52.6789, readRoutes.getRoutes().get(0).getRouteTo().getCoordinates().getLatitude());
+            assertEquals(21.1234, readRoutes.getRoutes().get(0).getRouteTo().getCoordinates().getLongitude());
+            assertEquals(300L, readRoutes.getRoutes().get(0).getDuration().getSeconds());
+            assertEquals(17L, readRoutes.getRoutes().get(1).getRouteFrom().getId().longValue());
+            assertEquals(16L, readRoutes.getRoutes().get(1).getRouteTo().getId().longValue());
+            assertEquals(52.6789, readRoutes.getRoutes().get(1).getRouteFrom().getCoordinates().getLatitude());
+            assertEquals(21.1234, readRoutes.getRoutes().get(1).getRouteFrom().getCoordinates().getLongitude());
+            assertEquals(52.1234, readRoutes.getRoutes().get(1).getRouteTo().getCoordinates().getLatitude());
+            assertEquals(21.6789, readRoutes.getRoutes().get(1).getRouteTo().getCoordinates().getLongitude());
+            assertEquals(300L, readRoutes.getRoutes().get(1).getDuration().getSeconds());
+        } catch (Exception e) {
+            e.printStackTrace();
+            fail("Exception was thrown");
+        }
+    }
+
 }
