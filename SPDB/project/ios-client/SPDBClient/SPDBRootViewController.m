@@ -39,16 +39,50 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *identifier = [indexPath section] == 1 ? @"SearchRoute" : [indexPath row] == 0 ? @"PointFrom" : @"PointTo";
+    NSString *identifier = [self fieldIdentifierForIndexPath:indexPath];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+    cell = [self configureCell:cell forPath:indexPath];
     
-    if ([identifier isEqualToString:@"PointFrom"])
+    return cell;
+}
+
+- (NSString *)fieldIdentifierForIndexPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath section] == 0)
     {
-        cell.detailTextLabel.text = [self formatPoint:self.pointFrom];
+        if ([indexPath row] == 0)
+        {
+            return @"PointFrom";
+        }
+        else if ([indexPath row] == 1)
+        {
+            return @"PointTo";
+        }
     }
-    else if ([identifier isEqualToString:@"PointTo"])
+    else if ([indexPath section] == 1)
     {
-        cell.detailTextLabel.text = [self formatPoint:self.pointTo];
+        if ([indexPath row] == 0)
+        {
+            return @"SearchRoute";
+        }
+    }
+    
+    [NSException raise:NSInvalidArgumentException format:@"No identifier for path: %@", indexPath];
+    return nil;
+}
+
+- (UITableViewCell *)configureCell:(UITableViewCell *)cell forPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath section] == 0)
+    {
+        if ([indexPath row] == 0)
+        {
+            cell.detailTextLabel.text = [self formatPoint:self.pointFrom];
+        }
+        else if ([indexPath row] == 1)
+        {
+            cell.detailTextLabel.text = [self formatPoint:self.pointTo];
+        }
     }
     
     return cell;
