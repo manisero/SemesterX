@@ -3,7 +3,10 @@ package pl.edu.pw.elka.spdb.dao.entries.impl;
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphalgo.WeightedPath;
-import org.neo4j.graphdb.*;
+import org.neo4j.graphdb.Direction;
+import org.neo4j.graphdb.DynamicRelationshipType;
+import org.neo4j.graphdb.Node;
+import org.neo4j.graphdb.PathExpanders;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.conversion.EndResult;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
@@ -79,8 +82,15 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
     @Override
     public Route findRouteBetween(MapEntry start, MapEntry end)
     {
-        return mapEntryRepository.getRelationshipBetween(start, end, Route.class,
+        Route route = mapEntryRepository.getRelationshipBetween(start, end, Route.class,
                 MapEntryRelationships.ROUTES_TO.getValue());
+
+        if (route != null) {
+            route.setRouteFrom(start);
+            route.setRouteTo(end);
+        }
+
+        return route;
     }
 
     @Override

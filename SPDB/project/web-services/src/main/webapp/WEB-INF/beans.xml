@@ -48,7 +48,8 @@
             <bean class="pl.edu.pw.elka.spdb.services.MapEntryService"/>
         </jaxrs:serviceBeans>
         <jaxrs:providers>
-            <bean class="org.codehaus.jackson.jaxrs.JacksonJsonProvider"/>
+            <bean class="pl.edu.pw.elka.spdb.providers.MapEntryProvider"/>
+            <bean class="pl.edu.pw.elka.spdb.providers.RouteListProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
 </beans>

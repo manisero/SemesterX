@@ -150,11 +150,15 @@ public class Neo4jMapEntryDAOTests extends TestCase {
         assertNotNull(foundFromUniversityToSaviourSquare);
         assertEquals(universityToSaviourSquareRoute.getId(), foundFromUniversityToSaviourSquare.getId());
         assertEquals(universityToSaviourSquareRoute.getDuration(), foundFromUniversityToSaviourSquare.getDuration());
+        assertEquals(universityOfTechnology.getWkt(), foundFromUniversityToSaviourSquare.getRouteFrom().getWkt());
+        assertEquals(saviourSquare.getWkt(), foundFromUniversityToSaviourSquare.getRouteTo().getWkt());
         assertNull(foundFromSaviourSquareToUniversity);
         assertNotNull(foundFromUniversityToSaviourSquareById);
         assertEquals(universityToSaviourSquareRoute.getId(), foundFromUniversityToSaviourSquareById.getId());
         assertEquals(universityToSaviourSquareRoute.getDuration(),
                 foundFromUniversityToSaviourSquareById.getDuration());
+        assertEquals(universityOfTechnology.getWkt(), foundFromUniversityToSaviourSquareById.getRouteFrom().getWkt());
+        assertEquals(saviourSquare.getWkt(), foundFromUniversityToSaviourSquareById.getRouteTo().getWkt());
         assertNull(foundFromSaviourSquareToUniversityById);
     }
 }

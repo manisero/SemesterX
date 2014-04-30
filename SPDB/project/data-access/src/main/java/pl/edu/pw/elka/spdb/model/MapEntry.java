@@ -1,5 +1,6 @@
 package pl.edu.pw.elka.spdb.model;
 
+import com.google.gson.annotations.Expose;
 import org.springframework.data.neo4j.annotation.GraphId;
 import org.springframework.data.neo4j.annotation.Indexed;
 import org.springframework.data.neo4j.annotation.NodeEntity;
@@ -10,22 +11,22 @@ import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@XmlRootElement(name = "")
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder = {})
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 @NodeEntity
 public class MapEntry {
     @GraphId
+    @Expose
     private Long id;
 
     @Indexed(indexType = IndexType.POINT, indexName = "MapEntryLocation")
+    @Expose
     private String wkt;
 
     @RelatedToVia
