@@ -119,7 +119,7 @@
     if (point != nil)
     {
         CGPoint pointStructure = [point CGPointValue];
-        return [NSString stringWithFormat:@"[%.2f, %.2f]", pointStructure.x, pointStructure.y];
+        return [NSString stringWithFormat:@"[%.3f, %.3f]", pointStructure.x, pointStructure.y];
     }
     
     return @"(undefined)";
