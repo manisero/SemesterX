@@ -19,6 +19,7 @@
     [super viewDidLoad];
     [self setMapRegionToWarsaw];
     [self drawRoute];
+    [self calculateStartDate];
 }
 
 - (void)setMapRegionToWarsaw
@@ -61,6 +62,27 @@
     }
     
     return coordinates;
+}
+
+- (NSDate *)calculateStartDate
+{
+    long travelDurationInSeconds = 0;
+    
+    for (int i = 0; i < [self.route count]; ++i)
+    {
+        SPDBRoute *routeSegment = [self.route objectAtIndex:i];
+        travelDurationInSeconds += [[routeSegment duration] longValue];
+    }
+    
+    NSDateComponents *travelStartOffset = [NSDateComponents new];
+    [travelStartOffset setSecond:-travelDurationInSeconds];
+    
+    NSCalendar *gregorianCalendar = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    NSDate *startDate = [gregorianCalendar dateByAddingComponents:travelStartOffset toDate:self.arrivalTime options:0];
+    
+    NSLog(@"start date: %@", startDate);
+    
+    return nil;
 }
 
 - (CLLocation *)mapEntryToLocation:(SPDBMapEntry *)mapEntry

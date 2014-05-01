@@ -38,6 +38,8 @@
 		8CAA19B0190FB72F00992379 /* SPDBObjectManagerFactoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */; };
 		8CDAA3A51911855C0064F858 /* SPDBRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CDAA3A41911855C0064F858 /* SPDBRoute.m */; };
 		8CDAA3A71911AE580064F858 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 8CDAA3A61911AE580064F858 /* route.json */; };
+		8CDAA3AB1912716A0064F858 /* SPDBDateUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CDAA3AA1912716A0064F858 /* SPDBDateUtilities.m */; };
+		8CDAA3AE1912720A0064F858 /* SPDBDateUtilitiesTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CDAA3AD1912720A0064F858 /* SPDBDateUtilitiesTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -98,6 +100,9 @@
 		8CDAA3A31911855C0064F858 /* SPDBRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBRoute.h; sourceTree = "<group>"; };
 		8CDAA3A41911855C0064F858 /* SPDBRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBRoute.m; sourceTree = "<group>"; };
 		8CDAA3A61911AE580064F858 /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
+		8CDAA3A91912716A0064F858 /* SPDBDateUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBDateUtilities.h; sourceTree = "<group>"; };
+		8CDAA3AA1912716A0064F858 /* SPDBDateUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBDateUtilities.m; sourceTree = "<group>"; };
+		8CDAA3AD1912720A0064F858 /* SPDBDateUtilitiesTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBDateUtilitiesTests.m; sourceTree = "<group>"; };
 		BF32A380C4144B0C963535D0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -193,6 +198,7 @@
 		8C8A8FB9190F8BD50087AE07 /* SPDBClient */ = {
 			isa = PBXGroup;
 			children = (
+				8CDAA3A8191271580064F858 /* Logic */,
 				8C88BD23190FE88B00A61444 /* View */,
 				8CAA199F190FB1A900992379 /* Configuration */,
 				8CAA198D190F999500992379 /* Entity */,
@@ -221,6 +227,7 @@
 		8C8A8FD8190F8BD50087AE07 /* SPDBClientTests */ = {
 			isa = PBXGroup;
 			children = (
+				8CDAA3AC191271E20064F858 /* Logic */,
 				8CAA19AD190FB70F00992379 /* Service */,
 				8CAA19A6190FB2EB00992379 /* Configuration */,
 				8CAA19A5190FB2E000992379 /* Mapping */,
@@ -363,6 +370,23 @@
 				8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */,
 			);
 			name = ObjectManager;
+			sourceTree = "<group>";
+		};
+		8CDAA3A8191271580064F858 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				8CDAA3A91912716A0064F858 /* SPDBDateUtilities.h */,
+				8CDAA3AA1912716A0064F858 /* SPDBDateUtilities.m */,
+			);
+			name = Logic;
+			sourceTree = "<group>";
+		};
+		8CDAA3AC191271E20064F858 /* Logic */ = {
+			isa = PBXGroup;
+			children = (
+				8CDAA3AD1912720A0064F858 /* SPDBDateUtilitiesTests.m */,
+			);
+			name = Logic;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -509,6 +533,7 @@
 				8CA9B9F419103AB400A0368A /* SPDBShortestPathFetcher.m in Sources */,
 				8CAA199E190FAD6F00992379 /* SPDBShortestPathRequest.m in Sources */,
 				8CAA1994190F9A0E00992379 /* SPDBMappingFactory.m in Sources */,
+				8CDAA3AB1912716A0064F858 /* SPDBDateUtilities.m in Sources */,
 				8C88BD35191035EA00A61444 /* SPDBMapRouteProjectionViewController.m in Sources */,
 				8C8A8FC4190F8BD50087AE07 /* SPDBAppDelegate.m in Sources */,
 				8CDAA3A51911855C0064F858 /* SPDBRoute.m in Sources */,
@@ -521,6 +546,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CAA19A8190FB35B00992379 /* SPDBConfigurationProviderTests.m in Sources */,
+				8CDAA3AE1912720A0064F858 /* SPDBDateUtilitiesTests.m in Sources */,
 				8CAA1989190F978F00992379 /* SPDBServiceMappingTests.m in Sources */,
 				8CAA19B0190FB72F00992379 /* SPDBObjectManagerFactoryTests.m in Sources */,
 				8CA9B9F819103FA000A0368A /* SPDBShortestPathFetcherTests.m in Sources */,
