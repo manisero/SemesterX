@@ -19,6 +19,11 @@ public class Route {
     }
 
     public Route(MapEntry routeFrom, MapEntry routeTo, Duration duration) {
+        this(null, routeFrom, routeTo, duration);
+    }
+
+    public Route(Long id, MapEntry routeFrom, MapEntry routeTo, Duration duration) {
+        this.id = id;
         this.routeFrom = routeFrom;
         this.routeTo = routeTo;
         this.duration = duration;

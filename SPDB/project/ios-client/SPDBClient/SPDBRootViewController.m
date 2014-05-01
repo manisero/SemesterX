@@ -1,3 +1,4 @@
+#import <PXAlertView/PXAlertView.h>
 #import "SPDBMapEntry.h"
 #import "SPDBMapSelectionViewController.h"
 #import "SPDBObjectManagerFactory.h"
@@ -33,21 +34,81 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return section == 0 ? 2 : 1;
+    if (section == 0)
+    {
+        return 3;
+    }
+    else if (section == 1)
+    {
+        return 1;
+    }
+    
+    return 0;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath section] == 0)
+    {
+        if ([indexPath row] == 2)
+        {
+            return 216.0;
+        }
+    }
+         
+    return self.tableView.rowHeight;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    NSString *identifier = [indexPath section] == 1 ? @"SearchRoute" : [indexPath row] == 0 ? @"PointFrom" : @"PointTo";
+    NSString *identifier = [self fieldIdentifierForIndexPath:indexPath];
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+    cell = [self configureCell:cell forPath:indexPath];
     
-    if ([identifier isEqualToString:@"PointFrom"])
+    return cell;
+}
+
+- (NSString *)fieldIdentifierForIndexPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath section] == 0)
     {
-        cell.detailTextLabel.text = [self formatPoint:self.pointFrom];
+        if ([indexPath row] == 0)
+        {
+            return @"PointFrom";
+        }
+        else if ([indexPath row] == 1)
+        {
+            return @"PointTo";
+        }
+        else if ([indexPath row] == 2)
+        {
+            return @"ArrivalTime";
+        }
     }
-    else if ([identifier isEqualToString:@"PointTo"])
+    else if ([indexPath section] == 1)
     {
-        cell.detailTextLabel.text = [self formatPoint:self.pointTo];
+        if ([indexPath row] == 0)
+        {
+            return @"SearchRoute";
+        }
+    }
+    
+    [NSException raise:NSInvalidArgumentException format:@"No identifier for path: %@", indexPath];
+    return nil;
+}
+
+- (UITableViewCell *)configureCell:(UITableViewCell *)cell forPath:(NSIndexPath *)indexPath
+{
+    if ([indexPath section] == 0)
+    {
+        if ([indexPath row] == 0)
+        {
+            cell.detailTextLabel.text = [self formatPoint:self.pointFrom];
+        }
+        else if ([indexPath row] == 1)
+        {
+            cell.detailTextLabel.text = [self formatPoint:self.pointTo];
+        }
     }
     
     return cell;
@@ -58,7 +119,7 @@
     if (point != nil)
     {
         CGPoint pointStructure = [point CGPointValue];
-        return [NSString stringWithFormat:@"[%.2f, %.2f]", pointStructure.x, pointStructure.y];
+        return [NSString stringWithFormat:@"[%.3f, %.3f]", pointStructure.x, pointStructure.y];
     }
     
     return @"(undefined)";
@@ -91,6 +152,7 @@
     {
         SPDBMapRouteProjectionViewController *destinationViewController = [segue destinationViewController];
         destinationViewController.route = self.foundRoute;
+        destinationViewController.arrivalTime = self.selectedArrivalTime;
     }
 }
 
@@ -116,17 +178,30 @@
         return;
     }
     
+    [self updateSelectedDate];
     [self downloadRoute];
 }
 
 - (void)showValidationFailedAlert
 {
-    UIAlertView *alert = [[UIAlertView alloc]   initWithTitle:@"Validation failed"
-                                                      message:@"Please select points before searching route."
-                                                     delegate:nil
-                                            cancelButtonTitle:@"OK"
-                                            otherButtonTitles:nil];
-    [alert show];
+    [PXAlertView showAlertWithTitle:@"Validation failed"
+                            message:@"Please select points before searching route."
+                        cancelTitle:@"OK"
+                         completion:nil];
+}
+
+- (void)updateSelectedDate
+{
+    UIView *timePickerContentView = [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]] contentView];
+    
+    for (id subview in timePickerContentView.subviews)
+    {
+        if ([subview isKindOfClass:[UIDatePicker class]])
+        {
+            UIDatePicker *datePicker = subview;
+            self.selectedArrivalTime = datePicker.date;
+        }
+    }
 }
 
 - (void)downloadRoute
@@ -178,12 +253,10 @@
 
 - (void)showRouteFetchFailedAlert
 {
-    UIAlertView *alert = [[UIAlertView alloc]   initWithTitle:@"Route fetch failed"
-                                                      message:@"Could not fetch route. Please check your connection."
-                                                     delegate:nil
-                                            cancelButtonTitle:@"OK"
-                                            otherButtonTitles:nil];
-    [alert show];
+    [PXAlertView showAlertWithTitle:@"Route fetch failed"
+                            message:@"Could not fetch route. Please check your Internet connection."
+                        cancelTitle:@"OK"
+                         completion:nil];
 }
 
 @end

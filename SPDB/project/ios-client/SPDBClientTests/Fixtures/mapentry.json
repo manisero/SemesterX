@@ -1,9 +1,5 @@
 {
     "id": 0,
-    "coordinates":
-    {
-        "latitude": 52.231730,
-        "longitude": 21.005952
-    },
-    "wkt": "POINT( 52.23173000 21.00595200 )"
+    "latitude": 52.231730,
+    "longitude": 21.005952
 }

@@ -12,5 +12,6 @@
 @property (nonatomic, strong) NSValue *pointTo;
 @property (nonatomic, strong) NSValue *selectedPoint;
 @property (nonatomic, strong) NSArray *foundRoute;
+@property (nonatomic, strong) NSDate *selectedArrivalTime;
 
 @end

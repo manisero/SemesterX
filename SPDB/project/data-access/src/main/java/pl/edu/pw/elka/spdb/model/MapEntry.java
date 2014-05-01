@@ -7,19 +7,12 @@ import org.springframework.data.neo4j.annotation.RelatedToVia;
 import org.springframework.data.neo4j.support.index.IndexType;
 import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlType;
 import java.time.Duration;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@XmlRootElement(name = "")
-@XmlAccessorType(XmlAccessType.PROPERTY)
-@XmlType(propOrder = {})
 @NodeEntity
 public class MapEntry {
     @GraphId
@@ -35,6 +28,11 @@ public class MapEntry {
     }
 
     public MapEntry(Coordinates coordinates) {
+        this(null, coordinates);
+    }
+
+    public MapEntry(Long id, Coordinates coordinates) {
+        setId(id);
         setCoordinates(coordinates);
     }
 

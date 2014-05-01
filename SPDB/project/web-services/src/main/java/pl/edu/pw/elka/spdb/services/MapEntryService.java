@@ -1,8 +1,10 @@
 package pl.edu.pw.elka.spdb.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.edu.pw.elka.spdb.adapters.RouteListAdapter;
 import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
+import pl.edu.pw.elka.spdb.model.Route;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -23,7 +25,9 @@ public class MapEntryService {
                                          @PathParam("longitude") double longitude) {
         MapEntry nearestMapEntry = mapEntryDAO.findNearestMapEntry(latitude, longitude);
 
-        return Response.ok().entity(nearestMapEntry).build();
+        Response response = Response.ok().entity(nearestMapEntry).build();
+
+        return response;
     }
 
     @GET
@@ -33,8 +37,10 @@ public class MapEntryService {
                                     @PathParam("finishingNodeId") long finishingNodeId) {
         MapEntry startingNode = mapEntryDAO.findMapEntryById(startingNodeId);
         MapEntry finishingNode = mapEntryDAO.findMapEntryById(finishingNodeId);
-        List<MapEntry> shortestPath = mapEntryDAO.findFastestRoute(startingNode, finishingNode);
+        List<Route> shortestPath = mapEntryDAO.findFastestRoute(startingNode, finishingNode);
 
-        return Response.ok().entity(shortestPath).build();
+        Response response = Response.ok().entity(new RouteListAdapter(shortestPath)).build();
+
+        return response;
     }
 }
