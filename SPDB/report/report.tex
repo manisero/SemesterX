@@ -73,4 +73,10 @@
 		\label{fig:architecture}
 	\end{figure}
 
+	\section*{Budowanie i~uruchamianie aplikacji}
+
+	Moduł serwerowy oraz kliencki aplikacji budowane są osobno. Część serwerowa jest budowana przy użyciu aplikacji Maven (\url{http://maven.apache.org}). Uruchomienie polecenia \textbf{mvn clean install} w~ścieżce projektu spowoduje ściągnięcie wszystkich zależności, uruchomienie testów jednostkowych oraz integracyjnych, a~także wygenerowanie pliku web-archive (\textbf{.war}), który następnie trzeba \emph{zdeployować} na serwer aplikacji Java.
+
+	Budowanie aplikacji klienckiej jest realizowane przy pomocy menadżera zależności CocoaPods (\url{http://cocoapods.org}). Uruchomienie polecenia \textbf{pod install} w~podfolderze z~klientem spowoduje ściągnięcie wszystkich zależności oraz wygenerowanie pliku projektu programu Xcode, za pomocą którego można skompilować i~wyeksportować aplikację.
+
 \end{document}
