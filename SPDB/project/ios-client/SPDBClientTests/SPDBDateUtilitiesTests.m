@@ -43,4 +43,16 @@
     XCTAssertTrue([expectedDate isEqualToDate:calculatedDate]);
 }
 
+- (void)testFormatDateMethod
+{
+    NSDateFormatter *dateFormatter = [NSDateFormatter new];
+    [dateFormatter setDateFormat:@"yyyy-MM-dd HH:mm:ss"];
+    NSDate *date = [dateFormatter dateFromString:@"2014-05-01 22:17:12"];
+    SPDBDateUtilities *dateUtilities = [SPDBDateUtilities new];
+    
+    NSString *formattedDate = [dateUtilities formatDate:date withFormat:@"HH:mm:ss"];
+    
+    XCTAssertEqualObjects(@"22:17:12", formattedDate);
+}
+
 @end

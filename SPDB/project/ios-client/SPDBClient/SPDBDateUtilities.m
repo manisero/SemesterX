@@ -23,4 +23,12 @@
     return calculatedDate;
 }
 
+- (NSString *)formatDate:(NSDate *)date withFormat:(NSString *)format
+{
+    NSDateFormatter *formatter = [NSDateFormatter new];
+    [formatter setDateFormat:format];
+    
+    return [formatter stringFromDate:date];
+}
+
 @end
