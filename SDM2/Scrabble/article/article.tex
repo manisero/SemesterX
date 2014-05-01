@@ -227,7 +227,7 @@ Aby dowieść twierdzenie \ref{thm:optimal_strategy_existence}~należy uprzednio
 Dysponując definicją \ref{def:scrabble_state_space}~można dowieść twierdzenie \ref{thm:optimal_strategy_existence}. Ilustrację dla dowodu \ref{pro:optimal_strategy_existence}~przedstawia rysunek \ref{fig:state_space}.
 
 \begin{pro}
-	Dla ułatwienia analiza rozgrywki zostanie przeprowadzona wychodząc od stanu końcowego. Nie wpływa to na ogólność dowodu. Dla dowolnej rozgrywki prawdziwe jest twierdzenie, że do stanu końcowego można wejść tylko na skończoną liczbę sposobów, które reprezentują legalne zagrania. Przeprowadzając rozumowanie iteracyjne możliwe jest przejście do stanu początkowego. Należy zauważyć, że w~każdej iteracji analizowana liczba wejść do stanu jest zawsze skończona, ponieważ skończona jest liczba kombinacji, na które można wylosować litery oraz liczba zagrań legalnych dla danej kombinacji liter. Podobne rozumowanie można przeprowadzić dla każdego stanu końcowego, budując skończone drzewo przestrzeni stanów. Skoro drzewo przestrzeni stanów jest skończone, można na podstawie jego znajomości w~każdym zagraniu wyznaczyć ruch, który maksymalizuje prawdopodobieństwo wygranej.
+	Dla ułatwienia analiza rozgrywki zostanie przeprowadzona wychodząc od stanu końcowego. Nie wpływa to na ogólność dowodu. Dla dowolnej rozgrywki prawdziwe jest twierdzenie, że do stanu końcowego można wejść tylko na skończoną liczbę sposobów, które reprezentują legalne zagrania. Przeprowadzając rozumowanie iteracyjne możliwe jest przejście do stanu początkowego. Należy zauważyć, że w~każdej iteracji analizowana liczba wejść do stanu jest zawsze skończona, ponieważ skończona jest liczba kombinacji, na które można wylosować litery oraz liczba zagrań legalnych dla danej kombinacji liter. Podobne rozumowanie można przeprowadzić dla każdego stanu końcowego budując skończone drzewo przestrzeni stanów. Skoro drzewo przestrzeni stanów jest skończone, można na podstawie jego znajomości w~każdym zagraniu wyznaczyć ruch, który maksymalizuje prawdopodobieństwo wygranej.
 	\label{pro:optimal_strategy_existence}
 \end{pro}
 
@@ -418,7 +418,7 @@ Niestety, w~praktyce trudno określić kryteria, które pozwalają rozpoznać \e
 
 Kolejnym usprawnieniem algorytmu może być wprowadzenie rozróżnienia na zagrania ofensywne oraz defensywne. Etap oszacowania prawdopodobieństwa wygranej bazuje na nieprecyzyjnych informacjach wejściowych. Zasymulowana pozycja ,,w~przyszłości'' może być nieadekwatna do rzeczywistości, na przykład gdy zostało pominięte możliwe \emph{bingo} przeciwnika. Wprowadzając podział zagrań na defensywne i~ofensywne możliwe jest wprowadzenie dodatkowego elementu algorytmu rozważającego opłacalność zagrania otwierającego planszę. Do rozważania opłacalności można wykorzystać sieć neuronową.
 
-Podział zagrań na defensywne i~ofensywne można przeprowadzić na podstawie wielu kryteriów. Pod uwagę można brać, między innymi, liczbę wykorzystanych podczas zagrania klocków, które znajdowały się na planszy przed rozegraniem. Innym przykładem takiego kryterium jest ilość nowych premii otwartych w~wyniku zagrania.
+Podział zagrań na defensywne i~ofensywne można przeprowadzić na podstawie wielu kryteriów. Pod uwagę można brać między innymi liczbę wykorzystanych podczas zagrania klocków, które znajdowały się na planszy przed rozegraniem. Innym przykładem takiego kryterium jest ilość nowych premii otwartych w~wyniku zagrania.
 
 \section*{End Game}
 
