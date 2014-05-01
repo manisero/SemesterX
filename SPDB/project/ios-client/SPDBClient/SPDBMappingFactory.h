@@ -4,5 +4,6 @@
 @interface SPDBMappingFactory : NSObject
 
 - (RKObjectMapping *)createObjectMappingForMapEntry;
+- (RKObjectMapping *)createObjectMappingForRoute;
 
 @end

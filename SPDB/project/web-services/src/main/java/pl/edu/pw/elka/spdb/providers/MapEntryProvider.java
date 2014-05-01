@@ -50,10 +50,7 @@ public class MapEntryProvider implements MessageBodyWriter<MapEntry>, MessageBod
                              MultivaluedMap<String, String> stringStringMultivaluedMap,
                              InputStream inputStream) throws IOException, WebApplicationException {
         String json = IOUtils.toString(inputStream);
-        System.out.println(json);
         MapEntryGsonAdapter mapEntryAdapter = new Gson().fromJson(json, MapEntryGsonAdapter.class);
-
-        System.out.println(mapEntryAdapter == null);
 
         return mapEntryAdapter.toMapEntry();
     }

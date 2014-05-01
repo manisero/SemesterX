@@ -31,24 +31,87 @@
     return [RKMappingTest testForMapping:mapping sourceObject:parsedJSON destinationObject:nil];
 }
 
-- (void)testIdMapping
+- (void)testMapEntryIdMapping
 {
-    XCTAssertTrue([[self mapEntryMappingTest] evaluateExpectation:[RKPropertyMappingTestExpectation expectationWithSourceKeyPath:@"id" destinationKeyPath:@"id" value:[NSNumber numberWithLong:0]] error:nil], @"Id mapping failed!");
+    RKPropertyMappingTestExpectation *expectation = [RKPropertyMappingTestExpectation
+                                                        expectationWithSourceKeyPath:@"id"
+                                                        destinationKeyPath:@"id"
+                                                        value:[NSNumber numberWithLong:0]];
+    
+    XCTAssertTrue([[self mapEntryMappingTest] evaluateExpectation:expectation error:nil]);
 }
 
-- (void)testWktMapping
+- (void)testMapEntryLatitudeMapping
 {
-    XCTAssertTrue([[self mapEntryMappingTest] evaluateExpectation:[RKPropertyMappingTestExpectation expectationWithSourceKeyPath:@"wkt" destinationKeyPath:@"wkt" value:@"POINT( 52.23173000 21.00595200 )"] error:nil], @"Wkt mapping failed!");
+    RKPropertyMappingTestExpectation *expectation = [RKPropertyMappingTestExpectation
+                                                        expectationWithSourceKeyPath:@"latitude"
+                                                        destinationKeyPath:@"latitude"
+                                                        value:[NSNumber numberWithDouble:52.231730]];
+    
+    XCTAssertTrue([[self mapEntryMappingTest] evaluateExpectation:expectation error:nil]);
 }
 
-- (void)testLatitudeMapping
+- (void)testMapEntryLongitudeMapping
 {
-    XCTAssertTrue([[self mapEntryMappingTest] evaluateExpectation:[RKPropertyMappingTestExpectation expectationWithSourceKeyPath:@"coordinates.latitude" destinationKeyPath:@"latitude" value:[NSNumber numberWithDouble:52.231730]] error:nil], @"Latitude mapping failed!");
+    RKPropertyMappingTestExpectation *expectation = [RKPropertyMappingTestExpectation
+                                                        expectationWithSourceKeyPath:@"longitude"
+                                                        destinationKeyPath:@"longitude"
+                                                        value:[NSNumber numberWithDouble:21.005952]];
+    
+    XCTAssertTrue([[self mapEntryMappingTest] evaluateExpectation:expectation error:nil]);
 }
 
-- (void)testLongitudeMapping
+- (RKMappingTest *)routeMappingTest
 {
-    XCTAssertTrue([[self mapEntryMappingTest] evaluateExpectation:[RKPropertyMappingTestExpectation expectationWithSourceKeyPath:@"coordinates.longitude" destinationKeyPath:@"longitude" value:[NSNumber numberWithDouble:21.005952]] error:nil], @"Longitude mapping failed!");
+    SPDBMappingFactory *mappingFactory = [SPDBMappingFactory new];
+    RKMapping *mapping = [mappingFactory createObjectMappingForRoute];
+    id parsedJSON = [RKTestFixture parsedObjectWithContentsOfFixture:@"route.json"];
+    
+    return [RKMappingTest testForMapping:mapping sourceObject:parsedJSON destinationObject:nil];
+}
+
+- (void)testRouteIdMapping
+{
+    RKPropertyMappingTestExpectation *expectation = [RKPropertyMappingTestExpectation
+                                                        expectationWithSourceKeyPath:@"id"
+                                                        destinationKeyPath:@"id"
+                                                        value:[NSNumber numberWithLong:2]];
+    
+    XCTAssertTrue([[self routeMappingTest] evaluateExpectation:expectation error:nil]);
+}
+
+- (void)testRouteFromMapping
+{
+    SPDBMappingFactory *mappingFactory = [SPDBMappingFactory new];
+    RKMapping *mapEntryMapping = [mappingFactory createObjectMappingForMapEntry];
+    RKPropertyMappingTestExpectation *expectation = [RKPropertyMappingTestExpectation
+                                                        expectationWithSourceKeyPath:@"routeFrom"
+                                                        destinationKeyPath:@"routeFrom"
+                                                        mapping:mapEntryMapping];
+    
+    XCTAssertTrue([[self routeMappingTest] evaluateExpectation:expectation error:nil]);
+}
+
+- (void)testRouteToMapping
+{
+    SPDBMappingFactory *mappingFactory = [SPDBMappingFactory new];
+    RKMapping *mapEntryMapping = [mappingFactory createObjectMappingForMapEntry];
+    RKPropertyMappingTestExpectation *expectation = [RKPropertyMappingTestExpectation
+                                                        expectationWithSourceKeyPath:@"routeTo"
+                                                        destinationKeyPath:@"routeTo"
+                                                        mapping:mapEntryMapping];
+    
+    XCTAssertTrue([[self routeMappingTest] evaluateExpectation:expectation error:nil]);
+}
+
+- (void)testRouteDurationMapping
+{
+    RKPropertyMappingTestExpectation *expectation = [RKPropertyMappingTestExpectation
+                                                        expectationWithSourceKeyPath:@"duration"
+                                                        destinationKeyPath:@"duration"
+                                                        value:[NSNumber numberWithLong:300]];
+    
+    XCTAssertTrue([[self routeMappingTest] evaluateExpectation:expectation error:nil]);
 }
 
 @end

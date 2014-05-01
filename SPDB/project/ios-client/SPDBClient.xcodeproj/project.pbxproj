@@ -37,6 +37,7 @@
 		8CAA19AC190FB47D00992379 /* SPDBObjectManagerFactory.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19AB190FB47D00992379 /* SPDBObjectManagerFactory.m */; };
 		8CAA19B0190FB72F00992379 /* SPDBObjectManagerFactoryTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */; };
 		8CDAA3A51911855C0064F858 /* SPDBRoute.m in Sources */ = {isa = PBXBuildFile; fileRef = 8CDAA3A41911855C0064F858 /* SPDBRoute.m */; };
+		8CDAA3A71911AE580064F858 /* route.json in Resources */ = {isa = PBXBuildFile; fileRef = 8CDAA3A61911AE580064F858 /* route.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,6 +97,7 @@
 		8CAA19AF190FB72F00992379 /* SPDBObjectManagerFactoryTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBObjectManagerFactoryTests.m; sourceTree = "<group>"; };
 		8CDAA3A31911855C0064F858 /* SPDBRoute.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBRoute.h; sourceTree = "<group>"; };
 		8CDAA3A41911855C0064F858 /* SPDBRoute.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBRoute.m; sourceTree = "<group>"; };
+		8CDAA3A61911AE580064F858 /* route.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = route.json; sourceTree = "<group>"; };
 		BF32A380C4144B0C963535D0 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -259,6 +261,7 @@
 			isa = PBXGroup;
 			children = (
 				8CAA198B190F986A00992379 /* mapentry.json */,
+				8CDAA3A61911AE580064F858 /* route.json */,
 			);
 			name = Fixtures;
 			sourceTree = "<group>";
@@ -452,6 +455,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CDAA3A71911AE580064F858 /* route.json in Resources */,
 				8C8A8FDD190F8BD50087AE07 /* InfoPlist.strings in Resources */,
 				8CAA198C190F986A00992379 /* mapentry.json in Resources */,
 			);
