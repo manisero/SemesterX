@@ -2,7 +2,7 @@ module Main where
 import Board
 
 main :: IO ()
-main = putStrLn (show (moves board1 Crosses))
+main = putStrLn (show (score board1 Crosses))
 
 board :: TTTBoard
 board = TTTBoard [
@@ -13,7 +13,7 @@ board = TTTBoard [
 
 board1 :: TTTBoard
 board1 = TTTBoard [
-					[Empty, Circle, Circle],
+					[Cross, Circle, Circle],
 					[Cross, Empty, Circle],
 					[Cross, Cross, Empty]
 				]
