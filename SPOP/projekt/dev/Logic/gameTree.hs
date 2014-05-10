@@ -5,6 +5,7 @@ module Logic.GameTree(
 
 import Logic.TicTacToe
 
+-- GameTree type
 data GameTree = GameTree {
 							board :: Board,
 							score :: Int,
@@ -12,6 +13,7 @@ data GameTree = GameTree {
 						}
 				deriving Show
 
+-- buildGameTree function
 buildGameTree :: Board -> Player -> GameTree
 buildGameTree board player = buildGameTree' board (getMoves board player) player player
 
@@ -28,5 +30,6 @@ buildGameTree' board moves rootPlayer currentPlayer = GameTree board
 
 getChildrenScore :: [GameTree] -> Player -> Player -> Int
 getChildrenScore children rootPlayer currentPlayer = if (currentPlayer == rootPlayer)
-													 then maximum [score child | child <- children]
-													 else minimum [score child | child <- children]
+													 then maximum scores
+													 else minimum scores
+													 where scores = map score children
