@@ -9,4 +9,5 @@ Cabal-Version:       >=1.2
 
 Executable spop
    Main-is:           main.hs
+   other-modules:     Board
    Build-Depends:     base >= 3 && < 5
