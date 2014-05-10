@@ -1,13 +1,10 @@
 Name:                SPOP
 Version:             1.0
 Description:         SPOP project
-License:             GPL
 Author:              Aniserowicz Michal, Turek Jakub
-Maintainer:          Aniserowicz Michal, Turek Jakub
 Build-Type:          Simple
 Cabal-Version:       >=1.2
 
 Executable spop
    Main-is:           main.hs
-   other-modules:     Logic.TicTacToe, Logic.GameTree, Presentation.SaveLoad, Presentation.GameLoop
    Build-Depends:     base >= 3 && < 5
