@@ -1,5 +1,6 @@
 module Main where
-import Board
+import Logic.Board
+import Logic.TicTacToe
 
 main :: IO ()
 main = putStrLn (show (score board1 Crosses))

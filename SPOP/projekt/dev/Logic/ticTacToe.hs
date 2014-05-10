@@ -1,19 +1,5 @@
-module Board where
-
--- generic classes
-class Board tBoard where
-	fields :: tBoard -> [[Field]]
-	size :: tBoard -> Int
-	size board = length (fields board)
-	field :: tBoard -> (Int, Int) -> Field
-	field board (x, y) = ((fields board) !! y) !! x
-	score :: tBoard -> Player -> Int
-	moves :: tBoard -> Player -> [Move]
-
--- tic-tac-toe types
-data Player = Crosses | Circles
-data Field = Empty | Cross | Circle deriving (Eq, Show)
-type Move = (Int, Int)
+module Logic.TicTacToe where
+import Logic.Board
 
 playerOpponent :: Player -> Player
 playerOpponent Crosses = Circles
