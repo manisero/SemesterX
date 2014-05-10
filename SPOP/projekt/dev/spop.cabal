@@ -9,5 +9,5 @@ Cabal-Version:       >=1.2
 
 Executable spop
    Main-is:           main.hs
-   other-modules:     Logic.Board, Logic.GameTree, Logic.TicTacToe
+   other-modules:     Logic.TicTacToe, Logic.GameTree
    Build-Depends:     base >= 3 && < 5

@@ -1,18 +1,17 @@
 module Logic.GameTree where
-import Logic.Board
 import Logic.TicTacToe
 
 data GameTree = GameTree {
-							board :: TTTBoard,
+							board :: Board,
 							score :: Int,
 							children :: [GameTree]
 						}
 				deriving Show
 
-buildGameTree :: TTTBoard -> Player -> GameTree
+buildGameTree :: Board -> Player -> GameTree
 buildGameTree board player = buildGameTree' board (getMoves board player) player player
 
-buildGameTree' :: TTTBoard -> [TTTBoard] -> Player ->  Player -> GameTree
+buildGameTree' :: Board -> [Board] -> Player ->  Player -> GameTree
 buildGameTree' board [] rootPlayer _ = GameTree board (getScore board rootPlayer) []
 buildGameTree' board moves rootPlayer currentPlayer = GameTree board 
 															   (if (rootScore /= 0) then rootScore else childrenScore)
