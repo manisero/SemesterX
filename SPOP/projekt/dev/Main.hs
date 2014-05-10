@@ -1,4 +1,5 @@
 module Main where
+
 import Logic.TicTacToe
 import Logic.GameTree
 

@@ -1,4 +1,5 @@
 module Logic.GameTree where
+
 import Logic.TicTacToe
 
 data GameTree = GameTree {
@@ -18,7 +19,7 @@ buildGameTree' board moves rootPlayer currentPlayer = GameTree board
 															   (if (rootScore /= 0) then [] else children)
 													  where
                                                           rootScore = getScore board rootPlayer
-                                                          opponent = playerOpponent currentPlayer
+                                                          opponent = getPlayerOpponent currentPlayer
                                                           children = [buildGameTree' move (getMoves move opponent) rootPlayer opponent | move <- moves]
                                                           childrenScore = getChildrenScore children rootPlayer currentPlayer
 
