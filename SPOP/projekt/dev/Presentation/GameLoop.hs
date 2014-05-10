@@ -1,6 +1,7 @@
 module Presentation.GameLoop(runGameLoop) where
 
-import Logic.TicTacToe
+import Data.List
+import Logic.Game
 import Presentation.SaveLoad
 
 -- runGameLoop function
@@ -20,18 +21,25 @@ runGameLoop board = do
 
 
 
+-- printState function
 printState :: Board -> IO ()
 printState board = do
 					  putStrLn ""
 					  putStrLn "============="
 					  putStrLn ""
-					  putStrLn (show board)
+					  putStrLn (presentBoard board)
 					  putStrLn ""
 					  putStrLn "0 - 9 - move"
 					  putStrLn "save - save game"
 					  putStrLn "load - load game"
 					  putStrLn "exit - exit"
 					  putStrLn ""
-					  putStrLn "============="
-					  putStrLn ""
 					  putStrLn "command:"
+
+presentBoard :: Board -> String
+presentBoard board = intercalate "\n" [ show [ presentField field | field <- row ] | row <- fields board ]
+
+presentField :: Field -> String
+presentField Empty = "-"
+presentField Cross = "X"
+presentField Circle = "O"

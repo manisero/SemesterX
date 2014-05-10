@@ -1,11 +1,12 @@
-module Main where
+module Main(main) where
 
-import Logic.TicTacToe
+import Logic.Game
 import Logic.GameTree
 import Presentation.GameLoop
 
 main :: IO ()
 main = runGameLoop emptyBoard
+--main = putStrLn (show test)
 
 emptyBoard :: Board
 emptyBoard = Board [
@@ -21,4 +22,6 @@ testBoard = Board [
 					[Empty, Cross, Empty]
 				]
 
-test = buildGameTree emptyBoard Crosses
+--test = buildGameTree testBoard Crosses
+--test = (read "Board {fields = [[Empty,Empty,Empty],[Empty,Empty,Empty],[Empty,Empty,Empty]]}")::Board
+test = testBoard

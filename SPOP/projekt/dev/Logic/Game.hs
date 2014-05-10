@@ -1,10 +1,8 @@
-module Logic.TicTacToe(
+module Logic.Game(
 	Player(Crosses, Circles), getPlayerOpponent,
 	Field(Empty, Cross, Circle),
-	Board(Board), getMoves, getScore)
+	Board(Board, fields), getMoves, getScore)
 	where
-
-import Data.List
 
 -- Player type
 data Player = Crosses | Circles deriving Eq
@@ -16,12 +14,7 @@ getPlayerOpponent Circles = Crosses
 
 
 -- Field type
-data Field = Empty | Cross | Circle deriving Eq	
-
-instance Show Field where
-    show Empty = "-"
-    show Cross = "X"
-    show Circle = "O"
+data Field = Empty | Cross | Circle deriving (Eq, Show, Read)
 
 getPlayerField :: Player -> Field
 getPlayerField Crosses = Cross
@@ -30,9 +23,7 @@ getPlayerField Circles = Circle
 
 
 -- Board type
-data Board = Board { fields :: [[Field]] }
-instance Show Board where
-	show board = intercalate "\n" (map show (fields board))
+data Board = Board { fields :: [[Field]] } deriving (Show, Read)
 
 size :: Board -> Int
 size board = length (fields board)

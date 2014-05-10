@@ -3,7 +3,7 @@ module Logic.GameTree(
 	buildGameTree)
 	where
 
-import Logic.TicTacToe
+import Logic.Game
 
 -- GameTree type
 data GameTree = GameTree {
