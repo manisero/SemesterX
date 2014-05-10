@@ -1,7 +1,6 @@
 module Main(main) where
 
 import Logic.Game
-import Logic.GameTree
 import Presentation.GameLoop
 
 main :: IO ()

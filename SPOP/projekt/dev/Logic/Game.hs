@@ -1,7 +1,7 @@
 module Logic.Game(
 	Player(Crosses, Circles), getPlayerOpponent,
 	Field(Empty, Cross, Circle),
-	Board(Board, fields), getMoves, getScore)
+	Board(Board, fields), getMoves, getScore, applyMove)
 	where
 
 -- Player type
@@ -41,6 +41,9 @@ getEmptyFields :: Board -> [(Int, Int)]
 getEmptyFields board = [(row, col) | row <- axis, col <- axis, getField board (row, col) == Empty]
 						where axis = [0 .. (size board) - 1]
 
+
+
+-- applyMove function
 applyMove :: Field -> (Int, Int) -> Board -> Board
 applyMove field (row, col) board = Board [ [ if (y == row && x == col) then field else getField board (y, x) | x <- axis] | y <- axis ]
 									where axis = [0 .. (size board) - 1]
