@@ -5,7 +5,7 @@ import Logic.GameTree
 import Presentation.GameLoop
 
 main :: IO ()
-main = putStrLn (show test)
+main = runGameLoop emptyBoard
 
 emptyBoard :: Board
 emptyBoard = Board [
