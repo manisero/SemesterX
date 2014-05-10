@@ -1,10 +1,8 @@
-module Logic.TicTacToe
-	where
-
-{-(
+module Logic.TicTacToe(
 	Player(Crosses, Circles), getPlayerOpponent,
 	Field(Empty, Cross, Circle),
-	Board(Board), getMoves, getScore)-}
+	Board(Board), getMoves, getScore)
+	where
 
 import Data.List
 
@@ -40,7 +38,7 @@ size :: Board -> Int
 size board = length (fields board)
 
 getField :: Board -> (Int, Int) -> Field
-getField board (column, row) = ((fields board) !! row) !! column
+getField board (row, column) = ((fields board) !! row) !! column
 
 
 
@@ -49,11 +47,11 @@ getMoves :: Board -> Player -> [Board]
 getMoves board player = [applyMove (getPlayerField player) field board | field <- getEmptyFields board]
 
 getEmptyFields :: Board -> [(Int, Int)]
-getEmptyFields board = [(col, row) | col <- axis, row <- axis, getField board (col, row) == Empty]
+getEmptyFields board = [(row, col) | row <- axis, col <- axis, getField board (row, col) == Empty]
 						where axis = [0 .. (size board) - 1]
 
 applyMove :: Field -> (Int, Int) -> Board -> Board
-applyMove field (col, row) board = Board [ [ if (x == col && y == row) then field else getField board (x, y) | x <- axis] | y <- axis ]
+applyMove field (row, col) board = Board [ [ if (y == row && x == col) then field else getField board (y, x) | x <- axis] | y <- axis ]
 									where axis = [0 .. (size board) - 1]
 
 
@@ -73,10 +71,10 @@ getLineValues :: Board -> [[Field]]
 getLineValues board = [map (\field -> getField board field) line | line <- getBoardLines board]
 
 getBoardLines :: Board -> [[(Int, Int)]]
-getBoardLines board = [ [(col, row) | col <- [0 .. boardSize - 1]] | row <- [0 .. boardSize - 1] ] ++ -- rows
-					  [ [(col, row) | row <- [0 .. boardSize - 1]] | col <- [0 .. boardSize - 1] ] ++ -- columns
+getBoardLines board = [ [(row, col) | col <- axis] | row <- axis ] ++ -- rows
+					  [ [(row, col) | row <- axis] | col <- axis ] ++ -- columns
 					  [
-						[(x, x) | x <- [0 .. boardSize - 1]],                                         -- left-right diagonal
-						[(x, boardSize - x - 1) | x <- [0 .. boardSize - 1]]                          -- right-left diagonal
+						[(x, x) | x <- axis],                         -- left-right diagonal
+						[(x, (size board) - x - 1) | x <- axis]       -- right-left diagonal
 			  		  ]
-			  			where boardSize = size board
+			  			where axis = [0 .. (size board) - 1]

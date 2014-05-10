@@ -20,5 +20,4 @@ board1 = Board [
 				[Empty, Cross, Empty]
 			]
 
--- test = buildGameTree board1 Crosses
-test = getBoardLines board1
+test = buildGameTree board1 Crosses
