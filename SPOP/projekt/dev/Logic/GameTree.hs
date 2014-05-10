@@ -1,5 +1,5 @@
 module Logic.GameTree(
-	GameTree(GameTree),
+	GameTree(GameTree,board,score,children),
 	buildGameTree)
 	where
 
