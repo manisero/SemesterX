@@ -4,7 +4,7 @@ import Logic.TicTacToe
 import Logic.GameTree
 
 main :: IO ()
-main = putStrLn (show (buildGameTree board1 Crosses))
+main = putStrLn (show test)
 
 board :: Board
 board = Board [
@@ -15,7 +15,10 @@ board = Board [
 
 board1 :: Board
 board1 = Board [
-				[Empty, Circle, Empty],
-				[Cross, Cross, Circle],
-				[Circle, Cross, Empty]
+				[Cross, Circle, Circle],
+				[Cross, Empty, Circle],
+				[Empty, Cross, Empty]
 			]
+
+-- test = buildGameTree board1 Crosses
+test = getBoardLines board1

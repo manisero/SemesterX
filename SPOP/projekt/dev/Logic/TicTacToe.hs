@@ -1,8 +1,10 @@
-module Logic.TicTacToe(
+module Logic.TicTacToe
+	where
+
+{-(
 	Player(Crosses, Circles), getPlayerOpponent,
 	Field(Empty, Cross, Circle),
-	Board(Board), getMoves, getScore)
-	where
+	Board(Board), getMoves, getScore)-}
 
 import Data.List
 
@@ -34,47 +36,47 @@ data Board = Board { fields :: [[Field]] }
 instance Show Board where
 	show board = intercalate "\n" (map show (fields board))
 
-field :: Board -> (Int, Int) -> Field
-field board (x, y) = ((fields board) !! y) !! x
-
 size :: Board -> Int
 size board = length (fields board)
+
+getField :: Board -> (Int, Int) -> Field
+getField board (column, row) = ((fields board) !! row) !! column
 
 
 
 -- getMoves function
 getMoves :: Board -> Player -> [Board]
-getMoves board player = [applyMove (getPlayerField player) f board | f <- getEmptyFields board]
+getMoves board player = [applyMove (getPlayerField player) field board | field <- getEmptyFields board]
 
 getEmptyFields :: Board -> [(Int, Int)]
-getEmptyFields board = [(x, y) | x <- [0 .. boardSize - 1], y <- [0 .. boardSize - 1], field board (x, y) == Empty]
-						where boardSize = size board
+getEmptyFields board = [(col, row) | col <- axis, row <- axis, getField board (col, row) == Empty]
+						where axis = [0 .. (size board) - 1]
 
 applyMove :: Field -> (Int, Int) -> Board -> Board
-applyMove f (x, y) board = Board [ [ if (row == x && col == y) then f else field board (row, col) | row <- [0 .. boardSize - 1]] | col <- [0 .. boardSize - 1] ]
-							where boardSize = size board
+applyMove field (col, row) board = Board [ [ if (x == col && y == row) then field else getField board (x, y) | x <- axis] | y <- axis ]
+									where axis = [0 .. (size board) - 1]
 
 
 
 -- getScore function
 getScore :: Board -> Player -> Int
 getScore board player = if (hasWon player board)
-						 	then 1
+							then 1
 						else if (hasWon (getPlayerOpponent player) board)
-						 	then -1
+							then -1
 						else 0
 
 hasWon :: Player -> Board -> Bool
 hasWon player board = any (==True) [all (==(getPlayerField player)) line | line <- (getLineValues board)]
 
 getLineValues :: Board -> [[Field]]
-getLineValues board = [map (\f -> field board f) line | line <- getBoardLines board]
+getLineValues board = [map (\field -> getField board field) line | line <- getBoardLines board]
 
 getBoardLines :: Board -> [[(Int, Int)]]
-getBoardLines board = [
-							[(x, x) | x <- [0 .. boardSize - 1]],                               -- left-right diagonal
-							[(x, boardSize - x - 1) | x <- [0 .. boardSize - 1]]                -- right-left diagonal
-			  			]
-						++ [ [(x, y) | x <- [0 .. boardSize - 1]] | y <- [0 .. boardSize - 1] ] -- rows
-						++ [ [(x, y) | y <- [0 .. boardSize - 1]] | x <- [0 .. boardSize - 1] ] -- columns
+getBoardLines board = [ [(col, row) | col <- [0 .. boardSize - 1]] | row <- [0 .. boardSize - 1] ] ++ -- rows
+					  [ [(col, row) | row <- [0 .. boardSize - 1]] | col <- [0 .. boardSize - 1] ] ++ -- columns
+					  [
+						[(x, x) | x <- [0 .. boardSize - 1]],                                         -- left-right diagonal
+						[(x, boardSize - x - 1) | x <- [0 .. boardSize - 1]]                          -- right-left diagonal
+			  		  ]
 			  			where boardSize = size board

@@ -1,4 +1,7 @@
-module Logic.GameTree where
+module Logic.GameTree(
+	GameTree(GameTree),
+	buildGameTree)
+	where
 
 import Logic.TicTacToe
 
