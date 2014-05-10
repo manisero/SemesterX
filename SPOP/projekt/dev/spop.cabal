@@ -9,5 +9,5 @@ Cabal-Version:       >=1.2
 
 Executable spop
    Main-is:           main.hs
-   other-modules:     Board
+   other-modules:     Board, GameTree
    Build-Depends:     base >= 3 && < 5
