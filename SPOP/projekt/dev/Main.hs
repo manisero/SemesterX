@@ -2,22 +2,23 @@ module Main where
 
 import Logic.TicTacToe
 import Logic.GameTree
+import Presentation.GameLoop
 
 main :: IO ()
 main = putStrLn (show test)
 
-board :: Board
-board = Board [
-				[Empty, Empty, Empty],
-				[Empty, Empty, Empty],
-				[Empty, Empty, Empty]
-			]
+emptyBoard :: Board
+emptyBoard = Board [
+					[Empty, Empty, Empty],
+					[Empty, Empty, Empty],
+					[Empty, Empty, Empty]
+				]
 
-board1 :: Board
-board1 = Board [
-				[Cross, Circle, Circle],
-				[Cross, Empty, Circle],
-				[Empty, Cross, Empty]
-			]
+testBoard :: Board
+testBoard = Board [
+					[Cross, Circle, Circle],
+					[Cross, Empty, Circle],
+					[Empty, Cross, Empty]
+				]
 
-test = buildGameTree board1 Crosses
+test = buildGameTree emptyBoard Crosses
