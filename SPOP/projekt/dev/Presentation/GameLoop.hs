@@ -50,4 +50,11 @@ printState board = do
 
 -- nextTurn function
 nextTurn :: Board -> (Int, Int) -> IO ()
-nextTurn board (row, col) = runGameLoop (aiMove (applyMove (Move Cross (row, col)) board) Circles)
+nextTurn board (row, col) = do
+								move <- return (Move Cross (row, col))
+								if (isMoveAllowed move board)
+									then do 
+											playerResult <- return (applyMove move board)
+											aiResult <- return (aiMove playerResult Circles)
+											runGameLoop aiResult
+									else error "Error: move not allowed"

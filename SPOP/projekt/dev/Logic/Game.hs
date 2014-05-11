@@ -2,7 +2,7 @@ module Logic.Game(
 	Player(Crosses, Circles), getPlayerOpponent,
 	Field(Empty, Cross, Circle),
 	Move(Move),
-	Board(Board, fields), getMoves, getScore, applyMove)
+	Board(Board, fields), getMoves, isMoveAllowed, applyMove, getScore)
 	where
 
 -- Player type
@@ -48,6 +48,10 @@ getEmptyFields board = [(row, col) | row <- axis, col <- axis, getField board (r
 						where axis = [0 .. (size board) - 1]
 
 
+
+-- isMoveAllowed function
+isMoveAllowed :: Move -> Board -> Bool
+isMoveAllowed (Move _ (row, col)) board = (getField board (row, col)) == Empty
 
 -- applyMove function
 applyMove :: Move -> Board -> Board
