@@ -2,7 +2,7 @@ module Presentation.GameLoop(gameLoop) where
 
 import Logic.Game
 import Logic.AI
-import Presentation.Board
+import Presentation.Print
 import Presentation.SaveLoad
 
 -- gameLoop function

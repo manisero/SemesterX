@@ -1,4 +1,4 @@
-module Presentation.Board(printBoard) where
+module Presentation.Print(printBoard) where
 
 import Data.List
 import Logic.Game
