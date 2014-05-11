@@ -51,9 +51,9 @@ test = do
 		before3 <- getCPUTime
 		putStrLn (show (alphaBeta testBoard Crosses Crosses (minBound::Int) (maxBound::Int)))
 		displayTimePassedSince before3
-		putStrLn "Recursive:"
+		putStrLn "minimax:"
 		before2 <- getCPUTime
-		putStrLn (show (getStateScore testBoard Crosses Crosses))
+		putStrLn (show (minimax testBoard Crosses Crosses))
 		displayTimePassedSince before2
 		putStrLn "Game tree:"
 		before1 <- getCPUTime

@@ -9,7 +9,7 @@ aiMove currentBoard player = pick (getMoves currentBoard player) player
 
 pick :: [Board] -> Player -> Board
 pick [move] _ = move
-pick (move1:move2:moves) player = if (getStateScore move1 (getPlayerOpponent player) player >= getStateScore move2 (getPlayerOpponent player) player)
+pick (move1:move2:moves) player = if (minimax move1 (getPlayerOpponent player) player >= minimax move2 (getPlayerOpponent player) player)
 								  then pick (move1:moves) player
 								  else pick (move2:moves) player
 
