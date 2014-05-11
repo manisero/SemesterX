@@ -1,9 +1,13 @@
 module Logic.GameTree(
 	GameTree(GameTree,getBoard,getScore,getChildren),
-	buildGameTree, getStateScore)
+	buildGameTree, getStateScore, minimaxAplha)
 	where
 
 import Logic.Game
+
+---------------------------
+-- Explicit game tree usge:
+---------------------------
 
 -- GameTree type
 data GameTree = GameTree {
@@ -36,6 +40,11 @@ getChildrenScore children rootPlayer currentPlayer = if (currentPlayer == rootPl
 
 
 
+
+--------------------------------
+-- Recursive game tree scanning:
+--------------------------------
+
 -- getStateScore function
 getStateScore :: Board -> Player -> Player -> Int
 getStateScore board currentPlayer rootPlayer = if (currentScore /= 0 || length moves == 0)
@@ -47,3 +56,20 @@ getStateScore board currentPlayer rootPlayer = if (currentScore /= 0 || length m
                                                     currentScore = Logic.Game.getScore board rootPlayer
                                                     moves = getMoves board currentPlayer
                                                     movesScores = map (\move -> getStateScore move (getPlayerOpponent currentPlayer) rootPlayer) moves
+
+
+
+------------------------
+-- Alhpa-Beta algorithm:
+------------------------
+
+minimaxAplha :: Board -> Player -> Player -> Int -> Int -> Int
+minimaxAplha board currentPlayer rootPlayer alpha beta = if (currentScore /= 0 || length moves == 0)
+													     then currentScore
+													     else if (currentPlayer == rootPlayer)
+															then maximum movesScores
+															else minimum movesScores
+															where
+			                                                    currentScore = Logic.Game.getScore board rootPlayer
+			                                                    moves = getMoves board currentPlayer
+			                                                    movesScores = map (\move -> getStateScore move (getPlayerOpponent currentPlayer) rootPlayer) moves

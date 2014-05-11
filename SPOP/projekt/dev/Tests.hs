@@ -44,12 +44,20 @@ testBoard = Board [
 --test = (read "Board {fields = [[Empty,Empty,Empty],[Empty,Empty,Empty],[Empty,Empty,Empty]]}")::Board
 --test = getStateScore emptyBoard Crosses Crosses
 test = do
-		before1 <- getCPUTime
-		putStrLn (show (Logic.GameTree.getScore (buildGameTree emptyBoard Crosses)))
-		displayTimePassedSince before1
+		putStrLn "Alpha-Beta:"
+		before3 <- getCPUTime
+		putStrLn (show (minimaxAplha emptyBoard Crosses Crosses 0 0))
+		displayTimePassedSince before3
+		putStrLn "Recursive:"
 		before2 <- getCPUTime
 		putStrLn (show (getStateScore emptyBoard Crosses Crosses))
 		displayTimePassedSince before2
+		putStrLn "Game tree:"
+		before1 <- getCPUTime
+		putStrLn (show (Logic.GameTree.getScore (buildGameTree emptyBoard Crosses)))
+		displayTimePassedSince before1
+
+
 
 displayTimePassedSince timeStamp = do
 									now <- getCPUTime
