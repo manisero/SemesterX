@@ -2,7 +2,7 @@ module Logic.Game(
 	Player(Crosses, Circles), getPlayerOpponent,
 	Field(Empty, Cross, Circle),
 	Move(Move),
-	Board(Board, fields), getMoves, isMoveAllowed, applyMove, getScore)
+	Board(Board, getFields), getMoves, isMoveAllowed, applyMove, getScore)
 	where
 
 -- Player type
@@ -29,13 +29,13 @@ data Move = Move Field (Int, Int)
 
 
 -- Board type
-data Board = Board { fields :: [[Field]] } deriving (Show, Read)
+data Board = Board { getFields :: [[Field]] } deriving (Show, Read)
 
-size :: Board -> Int
-size board = length (fields board)
+getSize :: Board -> Int
+getSize board = length (getFields board)
 
 getField :: Board -> (Int, Int) -> Field
-getField board (row, column) = ((fields board) !! row) !! column
+getField board (row, column) = ((getFields board) !! row) !! column
 
 
 
@@ -45,7 +45,7 @@ getMoves board player = [applyMove (Move (getPlayerField player) field) board | 
 
 getEmptyFields :: Board -> [(Int, Int)]
 getEmptyFields board = [(row, col) | row <- axis, col <- axis, getField board (row, col) == Empty]
-						where axis = [0 .. (size board) - 1]
+						where axis = [0 .. (getSize board) - 1]
 
 
 
@@ -56,7 +56,7 @@ isMoveAllowed (Move _ (row, col)) board = (getField board (row, col)) == Empty
 -- applyMove function
 applyMove :: Move -> Board -> Board
 applyMove (Move field (row, col)) board = Board [ [ if (y == row && x == col) then field else getField board (y, x) | x <- axis] | y <- axis ]
-											where axis = [0 .. (size board) - 1]
+											where axis = [0 .. (getSize board) - 1]
 
 
 
@@ -79,6 +79,6 @@ getBoardLines board = [ [(row, col) | col <- axis] | row <- axis ] ++ -- rows
 					  [ [(row, col) | row <- axis] | col <- axis ] ++ -- columns
 					  [
 						[(x, x) | x <- axis],                         -- left-right diagonal
-						[(x, (size board) - x - 1) | x <- axis]       -- right-left diagonal
+						[(x, (getSize board) - x - 1) | x <- axis]    -- right-left diagonal
 			  		  ]
-			  			where axis = [0 .. (size board) - 1]
+			  			where axis = [0 .. (getSize board) - 1]

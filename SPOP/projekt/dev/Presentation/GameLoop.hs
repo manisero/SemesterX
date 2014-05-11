@@ -24,8 +24,8 @@ runGameLoop board = do
 			   						 saveGame board
 			   						 runGameLoop board
 					   	"load" -> do
-			   						 board <- loadGame
-			   						 runGameLoop board
+			   						 loadedBoard <- loadGame
+			   						 runGameLoop loadedBoard
 					   	"exit" -> return ()
 					   	_      -> runGameLoop board
 
