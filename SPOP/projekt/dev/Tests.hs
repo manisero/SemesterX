@@ -46,7 +46,7 @@ testBoard = Board [
 test = do
 		putStrLn "Alpha-Beta:"
 		before3 <- getCPUTime
-		putStrLn (show (minimaxAplha emptyBoard Crosses Crosses 0 0))
+		putStrLn (show (minimaxAplha emptyBoard Crosses Crosses (minBound::Int) (maxBound::Int)))
 		displayTimePassedSince before3
 		putStrLn "Recursive:"
 		before2 <- getCPUTime

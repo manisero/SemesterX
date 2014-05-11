@@ -67,9 +67,13 @@ minimaxAplha :: Board -> Player -> Player -> Int -> Int -> Int
 minimaxAplha board currentPlayer rootPlayer alpha beta = if (currentScore /= 0 || length moves == 0)
 													     then currentScore
 													     else if (currentPlayer == rootPlayer)
-															then maximum movesScores
-															else minimum movesScores
+															then maximum (alpha:movesScores) --if (maximum (alpha:movesScores) >= beta)
+																 --then alpha
+																 --else beta
+															else minimum (beta:movesScores) --if (minimum (beta:movesScores) <= alpha)
+																 --then beta
+																 --else alpha
 															where
 			                                                    currentScore = Logic.Game.getScore board rootPlayer
 			                                                    moves = getMoves board currentPlayer
-			                                                    movesScores = map (\move -> getStateScore move (getPlayerOpponent currentPlayer) rootPlayer) moves
+			                                                    movesScores = map (\move -> minimaxAplha move (getPlayerOpponent currentPlayer) rootPlayer alpha beta) moves
