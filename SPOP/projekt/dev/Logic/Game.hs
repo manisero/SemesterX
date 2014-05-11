@@ -1,9 +1,13 @@
 module Logic.Game(
+	GameResult(Unsettled, Victory, Defeat, Draw),
 	Player(Crosses, Circles), getPlayerOpponent,
 	Field(Empty, Cross, Circle),
 	Move(Move),
-	Board(Board, getFields), getMoves, isMoveAllowed, applyMove, getScore)
+	Board(Board, getFields), getMoves, isMoveAllowed, applyMove, getScore, getResult)
 	where
+
+-- GameResult type
+data GameResult = Unsettled | Victory | Defeat | Draw deriving Eq
 
 -- Player type
 data Player = Crosses | Circles deriving Eq
@@ -60,13 +64,23 @@ applyMove (Move field (row, col)) board = Board [ [ if (y == row && x == col) th
 
 
 
--- getScore function
+-- getScore and getResult functions
 getScore :: Board -> Player -> Int
 getScore board player = if (hasWon player board)
 							then 1
 						else if (hasWon (getPlayerOpponent player) board)
 							then -1
 						else 0
+
+
+getResult :: Board -> Player -> GameResult
+getResult board player = case getScore board player of
+							1  -> Victory
+							-1 -> Defeat
+							_  -> if (length (getMoves board player) == 0)
+						 		  then Draw
+						 		  else Unsettled
+
 
 hasWon :: Player -> Board -> Bool
 hasWon player board = any (==True) [all (==(getPlayerField player)) line | line <- (getLineValues board)]
