@@ -2,7 +2,9 @@ module Main where
 
 import System.CPUTime
 import Logic.Game
-import Logic.GameTree
+import Logic.AI.GameTree
+import Logic.AI.Minimax
+import Logic.AI.AlphaBeta
 
 main :: IO ()
 main = test
@@ -57,7 +59,7 @@ test = do
 		displayTimePassedSince before2
 		putStrLn "Game tree:"
 		before1 <- getCPUTime
-		putStrLn (show (Logic.GameTree.getScore (buildGameTree testBoard Crosses)))
+		putStrLn (show (Logic.AI.GameTree.getScore (buildGameTree testBoard Crosses)))
 		displayTimePassedSince before1
 
 

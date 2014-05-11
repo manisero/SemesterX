@@ -1,7 +1,7 @@
 module Presentation.GameLoop(startGame) where
 
 import Logic.Game
-import Logic.AI
+import Logic.AI.AlphaBeta
 import Presentation.Print
 import Presentation.SaveLoad
 
