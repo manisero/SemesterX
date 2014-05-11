@@ -5,6 +5,10 @@ Author:              Aniserowicz Michal, Turek Jakub
 Build-Type:          Simple
 Cabal-Version:       >=1.2
 
-Executable spop
-   Main-is:           main.hs
-   Build-Depends:     base >= 3 && < 5
+executable spop
+   Main-is:          Main.hs
+   Build-Depends:    base >= 3 && < 5
+
+executable tests
+   Main-is:          Tests.hs
+   Build-Depends:    base >= 3 && < 5
