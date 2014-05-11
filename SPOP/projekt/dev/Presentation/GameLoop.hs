@@ -55,18 +55,23 @@ nextTurn board (row, col) = do
 								if (isMoveAllowed move board)
 									then do
 											afterPlayerMove <- return (applyMove move board)
-											result <- return (getResult afterPlayerMove Crosses)
-											if (result == Unsettled)
+											continueAfterPlayer <- handleResult (getResult afterPlayerMove Crosses)
+											if (continueAfterPlayer)
 												then do
 														afterAiMove <- return (aiMove afterPlayerMove Circles)
-														result <- return (getResult afterAiMove Crosses)
-														if (result == Unsettled)
-															then do
-																	runGameLoop afterAiMove
-															else if (result == Defeat)
-																	 then error "You lost"
-																	 else error "Draw"
-												else if (result == Victory) 
-														 then error "You won"
-														 else error "Draw"
+														continueAfterAi <- handleResult (getResult afterAiMove Crosses)
+														if (continueAfterAi)
+															then runGameLoop afterAiMove
+															else return ()
+												else return ()
 									else error "Error: move not allowed"
+
+
+
+-- handleResult function
+handleResult :: GameResult -> IO Bool
+handleResult result = case result of
+						Unsettled -> return True
+						x         -> do
+										putStrLn (show x ++ "!")
+										return False
