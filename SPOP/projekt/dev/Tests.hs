@@ -49,7 +49,7 @@ testBoard = emptyBoard
 test = do
 		putStrLn "Alpha-Beta:"
 		before3 <- getCPUTime
-		putStrLn (show (alphaBeta testBoard Crosses Crosses (minBound::Int) (maxBound::Int)))
+		putStrLn (show (alphaBeta testBoard Crosses Crosses))
 		displayTimePassedSince before3
 		putStrLn "minimax:"
 		before2 <- getCPUTime

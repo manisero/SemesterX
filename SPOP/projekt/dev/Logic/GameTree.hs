@@ -11,8 +11,11 @@ import Logic.Game
 ------------------------
 
 -- alphaBeta function
-alphaBeta :: Board -> Player -> Player -> Int -> Int -> Int
-alphaBeta board currentPlayer rootPlayer alpha beta = if (currentScore /= 0 || length moves == 0)
+alphaBeta :: Board -> Player -> Player -> Int
+alphaBeta board currentPlayer rootPlayer = alphaBeta' board currentPlayer rootPlayer (minBound::Int) (maxBound::Int)
+
+alphaBeta' :: Board -> Player -> Player -> Int -> Int -> Int
+alphaBeta' board currentPlayer rootPlayer alpha beta = if (currentScore /= 0 || length moves == 0)
 													     then currentScore
 													     else if (currentPlayer == rootPlayer)
 															then alphaLoop moves currentPlayer rootPlayer alpha beta
@@ -27,7 +30,7 @@ alphaLoop [] _ _ alpha _ = alpha
 alphaLoop (move:moves) currentPlayer rootPlayer alpha beta = if (newAlpha >= beta)
 															 then newAlpha
 															 else alphaLoop moves currentPlayer rootPlayer newAlpha beta
-																where newAlpha = max alpha (alphaBeta move (getPlayerOpponent currentPlayer) rootPlayer alpha beta)
+																where newAlpha = max alpha (alphaBeta' move (getPlayerOpponent currentPlayer) rootPlayer alpha beta)
 
 -- betaLoop function
 betaLoop :: [Board] -> Player -> Player -> Int -> Int -> Int
@@ -35,7 +38,7 @@ betaLoop [] _ _ _ beta = beta
 betaLoop (move:moves) currentPlayer rootPlayer alpha beta = if (newBeta <= alpha)
 															then newBeta
 															else betaLoop moves currentPlayer rootPlayer alpha newBeta
-																where newBeta = min beta (alphaBeta move (getPlayerOpponent currentPlayer) rootPlayer alpha beta)
+																where newBeta = min beta (alphaBeta' move (getPlayerOpponent currentPlayer) rootPlayer alpha beta)
 
 
 
