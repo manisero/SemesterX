@@ -8,10 +8,11 @@ import Presentation.SaveLoad
 -- gameLoop function
 gameLoop :: Board -> Player -> Player -> IO ()
 gameLoop board currentPlayer humanPlayer = do
+											printNewTurn board
 											let result = getResult board humanPlayer
 											if (result == Unsettled)
 												then do
-													printNewTurn currentPlayer board
+													putStrLn ("Turn of " ++ show currentPlayer)
 													if (currentPlayer == humanPlayer) 
 														then do
 															printOptions
@@ -19,22 +20,20 @@ gameLoop board currentPlayer humanPlayer = do
 															processHumanInput input board currentPlayer
 														else do
 															let afterAiMove = aiMove board currentPlayer
-															gameLoop afterAiMove opponent humanPlayer
+															gameLoop afterAiMove (getPlayerOpponent currentPlayer) humanPlayer
 												else putStrLn (show result ++ "!")
-											where opponent = getPlayerOpponent currentPlayer
 
 
 
 -- printNewTurn function
-printNewTurn :: Player -> Board -> IO ()
-printNewTurn player board = do
-								putStrLn ""
-								putStrLn "============="
-								putStrLn ""
-								putStrLn ("Turn of " ++ show player)
-								putStrLn ""
-								printBoard board
-
+printNewTurn :: Board -> IO ()
+printNewTurn board = do
+						putStrLn ""
+						putStrLn "================"
+						putStrLn ""
+						printBoard board
+						putStrLn ""
+								
 
 
 -- printOptions function
