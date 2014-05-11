@@ -52,15 +52,6 @@ printOptions = do
 -- processHumanInput function
 processHumanInput :: String -> Board -> Player -> IO ()
 processHumanInput input board player = case input of
-										"1"    -> applyHumanMove player board (0, 0)
-										"2"    -> applyHumanMove player board (0, 1)
-										"3"    -> applyHumanMove player board (0, 2)
-										"4"    -> applyHumanMove player board (1, 0)
-										"5"    -> applyHumanMove player board (1, 1)
-										"6"    -> applyHumanMove player board (1, 2)
-										"7"    -> applyHumanMove player board (2, 0)
-										"8"    -> applyHumanMove player board (2, 1)
-										"9"    -> applyHumanMove player board (2, 2)
 										"save" -> do
 													saveGame board
 													gameLoop board player player
@@ -68,16 +59,30 @@ processHumanInput input board player = case input of
 													loadedBoard <- loadGame
 													gameLoop loadedBoard player player
 										"exit" -> return ()
-										_      -> error "Invalid command"
+										_      -> gameLoop (processMoveCommand input board player) (getPlayerOpponent player) player
+
+
+
+-- processMoveCommand function
+processMoveCommand :: String -> Board -> Player -> Board
+processMoveCommand command board player = case command of
+											"1"    -> applyHumanMove player board (0, 0)
+											"2"    -> applyHumanMove player board (0, 1)
+											"3"    -> applyHumanMove player board (0, 2)
+											"4"    -> applyHumanMove player board (1, 0)
+											"5"    -> applyHumanMove player board (1, 1)
+											"6"    -> applyHumanMove player board (1, 2)
+											"7"    -> applyHumanMove player board (2, 0)
+											"8"    -> applyHumanMove player board (2, 1)
+											"9"    -> applyHumanMove player board (2, 2)
+											_      -> error "Invalid command"
 
 
 
 -- applyHumanMove function
-applyHumanMove :: Player -> Board -> (Int, Int) -> IO ()
+applyHumanMove :: Player -> Board -> (Int, Int) -> Board
 applyHumanMove player board field = do
 										let move = Move (getPlayerField player) field
 										if (isMoveAllowed move board)
-											then do 
-												let afterMove = applyMove move board
-												gameLoop afterMove (getPlayerOpponent player) player
+											then applyMove move board
 											else error "Move not allowed"
