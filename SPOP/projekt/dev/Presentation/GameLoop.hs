@@ -11,15 +11,15 @@ runGameLoop board = do
 					   printState board
 					   input <- getLine
 					   case input of
-					   	"1"    -> move board (0, 0)
-					   	"2"    -> move board (0, 1)
-					   	"3"    -> move board (0, 2)
-					   	"4"    -> move board (1, 0)
-					   	"5"    -> move board (1, 1)
-					   	"6"    -> move board (1, 2)
-					   	"7"    -> move board (2, 0)
-					   	"8"    -> move board (2, 1)
-					   	"9"    -> move board (2, 2)
+					   	"1"    -> nextTurn board (0, 0)
+					   	"2"    -> nextTurn board (0, 1)
+					   	"3"    -> nextTurn board (0, 2)
+					   	"4"    -> nextTurn board (1, 0)
+					   	"5"    -> nextTurn board (1, 1)
+					   	"6"    -> nextTurn board (1, 2)
+					   	"7"    -> nextTurn board (2, 0)
+					   	"8"    -> nextTurn board (2, 1)
+					   	"9"    -> nextTurn board (2, 2)
 					   	"save" -> do
 			   						 saveGame board
 			   						 runGameLoop board
@@ -48,6 +48,6 @@ printState board = do
 
 
 
--- move function
-move :: Board -> (Int, Int) -> IO ()
-move board field = runGameLoop (aiMove (applyMove Cross field board) Circles)
+-- nextTurn function
+nextTurn :: Board -> (Int, Int) -> IO ()
+nextTurn board (row, col) = runGameLoop (aiMove (applyMove (Move Cross (row, col)) board) Circles)
