@@ -1,11 +1,11 @@
-module Logic.AI where
+module Logic.AI(aiMove) where
 
 import Logic.Game
 import Logic.GameTree
 
--- pickMove function
-pickMove :: Board -> Player -> Board
-pickMove currentBoard player = board (pickChild (children (buildGameTree currentBoard player)))
+-- aiMove function
+aiMove :: Board -> Player -> Board
+aiMove currentBoard player = board (pickChild (children (buildGameTree currentBoard player)))
 
 pickChild :: [GameTree] => GameTree
 pickChild [tree] = tree

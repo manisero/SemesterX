@@ -1,8 +1,8 @@
 module Presentation.GameLoop(runGameLoop) where
 
-import Data.List
 import Logic.Game
 import Logic.AI
+import Presentation.Board
 import Presentation.SaveLoad
 
 -- runGameLoop function
@@ -46,16 +46,8 @@ printState board = do
 					  putStrLn ""
 					  putStrLn "command:"
 
-printBoard :: Board -> String
-printBoard board = intercalate "\n" [ show [ printField field | field <- row ] | row <- fields board ]
-
-printField :: Field -> String
-printField Empty = "-"
-printField Cross = "X"
-printField Circle = "O"
-
 
 
 -- move function
 move :: Board -> (Int, Int) -> IO ()
-move board field = runGameLoop (pickMove (applyMove Cross field board) Circles)
+move board field = runGameLoop (aiMove (applyMove Cross field board) Circles)

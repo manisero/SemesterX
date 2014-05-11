@@ -14,6 +14,15 @@ emptyBoard = Board [
 					[Empty, Empty, Empty]
 				]
 
+emptyBoard55 :: Board
+emptyBoard55 = Board [
+					[Empty, Empty, Empty, Empty, Empty],
+					[Empty, Empty, Empty, Empty, Empty],
+					[Empty, Empty, Empty, Empty, Empty],
+					[Empty, Empty, Empty, Empty, Empty],
+					[Empty, Empty, Empty, Empty, Empty]
+				]
+
 testBoard :: Board
 testBoard = Board [
 					[Cross, Circle, Circle],
