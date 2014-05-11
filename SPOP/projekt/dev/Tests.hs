@@ -31,12 +31,15 @@ emptyBoard55 = Board [
 					[Empty, Empty, Empty, Empty, Empty]
 				]
 
-testBoard :: Board
-testBoard = Board [
+filledBoard :: Board
+filledBoard = Board [
 					[Cross, Circle, Circle],
-					[Cross, Empty, Circle],
+					[Empty, Empty, Circle],
 					[Empty, Cross, Empty]
 				]
+
+testBoard :: Board
+testBoard = emptyBoard
 
 
 
@@ -46,15 +49,15 @@ testBoard = Board [
 test = do
 		putStrLn "Alpha-Beta:"
 		before3 <- getCPUTime
-		putStrLn (show (minimaxAplha emptyBoard Crosses Crosses (minBound::Int) (maxBound::Int)))
+		putStrLn (show (alphaBeta testBoard Crosses Crosses (minBound::Int) (maxBound::Int)))
 		displayTimePassedSince before3
 		putStrLn "Recursive:"
 		before2 <- getCPUTime
-		putStrLn (show (getStateScore emptyBoard Crosses Crosses))
+		putStrLn (show (getStateScore testBoard Crosses Crosses))
 		displayTimePassedSince before2
 		putStrLn "Game tree:"
 		before1 <- getCPUTime
-		putStrLn (show (Logic.GameTree.getScore (buildGameTree emptyBoard Crosses)))
+		putStrLn (show (Logic.GameTree.getScore (buildGameTree testBoard Crosses)))
 		displayTimePassedSince before1
 
 

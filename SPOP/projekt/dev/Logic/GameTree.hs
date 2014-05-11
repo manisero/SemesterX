@@ -1,6 +1,6 @@
 module Logic.GameTree(
 	GameTree(GameTree,getBoard,getScore,getChildren),
-	buildGameTree, getStateScore, minimaxAplha)
+	buildGameTree, getStateScore, alphaBeta)
 	where
 
 import Logic.Game
@@ -55,7 +55,7 @@ getStateScore board currentPlayer rootPlayer = if (currentScore /= 0 || length m
 												where
                                                     currentScore = Logic.Game.getScore board rootPlayer
                                                     moves = getMoves board currentPlayer
-                                                    movesScores = map (\move -> getStateScore move (getPlayerOpponent currentPlayer) rootPlayer) moves
+                                                    movesScores = (map (\move -> getStateScore move (getPlayerOpponent currentPlayer) rootPlayer) moves)
 
 
 
@@ -63,17 +63,26 @@ getStateScore board currentPlayer rootPlayer = if (currentScore /= 0 || length m
 -- Alhpa-Beta algorithm:
 ------------------------
 
-minimaxAplha :: Board -> Player -> Player -> Int -> Int -> Int
-minimaxAplha board currentPlayer rootPlayer alpha beta = if (currentScore /= 0 || length moves == 0)
+alphaBeta :: Board -> Player -> Player -> Int -> Int -> Int
+alphaBeta board currentPlayer rootPlayer alpha beta = if (currentScore /= 0 || length moves == 0)
 													     then currentScore
 													     else if (currentPlayer == rootPlayer)
-															then maximum (alpha:movesScores) --if (maximum (alpha:movesScores) >= beta)
-																 --then alpha
-																 --else beta
-															else minimum (beta:movesScores) --if (minimum (beta:movesScores) <= alpha)
-																 --then beta
-																 --else alpha
+															then alphaLoop moves currentPlayer rootPlayer alpha beta
+															else betaLoop moves currentPlayer rootPlayer alpha beta
 															where
 			                                                    currentScore = Logic.Game.getScore board rootPlayer
 			                                                    moves = getMoves board currentPlayer
-			                                                    movesScores = map (\move -> minimaxAplha move (getPlayerOpponent currentPlayer) rootPlayer alpha beta) moves
+
+alphaLoop :: [Board] -> Player -> Player -> Int -> Int -> Int
+alphaLoop [] _ _ alpha _ = alpha
+alphaLoop (move:moves) currentPlayer rootPlayer alpha beta = if (newAlpha >= beta)
+															 then newAlpha
+															 else alphaLoop moves currentPlayer rootPlayer newAlpha beta
+																where newAlpha = max alpha (alphaBeta move (getPlayerOpponent currentPlayer) rootPlayer alpha beta)
+
+betaLoop :: [Board] -> Player -> Player -> Int -> Int -> Int
+betaLoop [] _ _ _ beta = beta
+betaLoop (move:moves) currentPlayer rootPlayer alpha beta = if (newBeta <= alpha)
+															then newBeta
+															else betaLoop moves currentPlayer rootPlayer alpha newBeta
+																where newBeta = min beta (alphaBeta move (getPlayerOpponent currentPlayer) rootPlayer alpha beta)
