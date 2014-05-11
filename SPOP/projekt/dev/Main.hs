@@ -1,13 +1,14 @@
 module Main(main) where
 
+import System.CPUTime
 import Logic.Game
 import Logic.GameTree
 import Presentation.GameLoop
 
 main :: IO ()
-main = startGame emptyBoard Crosses
+--main = startGame emptyBoard Crosses
 --main = putStrLn (show test)
---main = test
+main = test
 
 emptyBoard :: Board
 emptyBoard = Board [
@@ -46,5 +47,13 @@ testBoard = Board [
 --test = (read "Board {fields = [[Empty,Empty,Empty],[Empty,Empty,Empty],[Empty,Empty,Empty]]}")::Board
 --test = getStateScore emptyBoard Crosses Crosses
 test = do
-		putStrLn (show (Logic.GameTree.getScore (buildGameTree emptyBoard44 Crosses)))
-		putStrLn (show (getStateScore emptyBoard44 Crosses Crosses))
+		before1 <- getCPUTime
+		putStrLn (show (Logic.GameTree.getScore (buildGameTree emptyBoard Crosses)))
+		displayTimePassedSince before1
+		before2 <- getCPUTime
+		putStrLn (show (getStateScore emptyBoard Crosses Crosses))
+		displayTimePassedSince before2
+
+displayTimePassedSince timeStamp = do
+									now <- getCPUTime
+									putStrLn (show ((fromInteger (now - timeStamp)::Float) / 10^12))
