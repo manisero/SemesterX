@@ -4,7 +4,7 @@ import Logic.Game
 import Presentation.GameLoop
 
 main :: IO ()
-main = gameLoop emptyBoard Crosses Crosses
+main = startGame emptyBoard Crosses
 --main = putStrLn (show test)
 
 emptyBoard :: Board

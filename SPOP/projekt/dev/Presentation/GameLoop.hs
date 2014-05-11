@@ -1,27 +1,43 @@
-module Presentation.GameLoop(gameLoop) where
+module Presentation.GameLoop(startGame) where
 
 import Logic.Game
 import Logic.AI
 import Presentation.Print
 import Presentation.SaveLoad
 
+-- startGame function
+startGame :: Board -> Player -> IO ()
+startGame emptyBoard humanPlayer = gameLoop emptyBoard humanPlayer humanPlayer emptyBoard
+
+
+
 -- gameLoop function
-gameLoop :: Board -> Player -> Player -> IO ()
-gameLoop board currentPlayer humanPlayer = do
-											printNewTurn board
-											let result = getResult board humanPlayer
-											if (result == Unsettled)
-												then do
-													putStrLn ("Turn of " ++ show currentPlayer)
-													if (currentPlayer == humanPlayer) 
-														then do
-															printOptions
-															input <- getLine
-															processHumanInput input board currentPlayer
-														else do
-															let afterAiMove = aiMove board currentPlayer
-															gameLoop afterAiMove (getPlayerOpponent currentPlayer) humanPlayer
-												else putStrLn (show result ++ "!")
+gameLoop :: Board -> Player -> Player -> Board -> IO ()
+gameLoop board currentPlayer humanPlayer emptyBoard = do
+														printNewTurn board
+														let result = getResult board humanPlayer
+														if (result == Unsettled)
+															then do
+																putStrLn ("Turn of " ++ show currentPlayer)
+																if (currentPlayer == humanPlayer) 
+																	then do
+																		printOptions
+																		input <- getLine
+																		case input of
+																			"save"    -> do
+																							saveGame board
+																							gameLoop board currentPlayer humanPlayer emptyBoard
+																			"load"    -> do
+																							loadedBoard <- loadGame
+																							gameLoop loadedBoard humanPlayer humanPlayer emptyBoard
+																			"restart" -> startGame emptyBoard humanPlayer
+																			"exit"    -> return ()
+																			_         -> gameLoop (processMoveCommand input board currentPlayer) opponent humanPlayer emptyBoard
+																	else do
+																		let afterAiMove = aiMove board currentPlayer
+																		gameLoop afterAiMove opponent humanPlayer emptyBoard
+															else putStrLn (show result ++ "!")
+														where opponent = getPlayerOpponent currentPlayer
 
 
 
@@ -43,23 +59,10 @@ printOptions = do
 				  putStrLn "1 - 9 - move"
 				  putStrLn "save - save game"
 				  putStrLn "load - load game"
+				  putStrLn "restart - restart game"
 				  putStrLn "exit - exit"
 				  putStrLn ""
 				  putStrLn "command:"
-
-
-
--- processHumanInput function
-processHumanInput :: String -> Board -> Player -> IO ()
-processHumanInput input board player = case input of
-										"save" -> do
-													saveGame board
-													gameLoop board player player
-										"load" -> do
-													loadedBoard <- loadGame
-													gameLoop loadedBoard player player
-										"exit" -> return ()
-										_      -> gameLoop (processMoveCommand input board player) (getPlayerOpponent player) player
 
 
 
