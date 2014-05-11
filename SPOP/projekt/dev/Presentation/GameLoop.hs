@@ -1,77 +1,84 @@
-module Presentation.GameLoop(runGameLoop) where
+module Presentation.GameLoop(gameLoop) where
 
 import Logic.Game
 import Logic.AI
 import Presentation.Board
 import Presentation.SaveLoad
 
--- runGameLoop function
-runGameLoop :: Board -> IO ()
-runGameLoop board = do
-					   printState board
-					   input <- getLine
-					   case input of
-					   	"1"    -> nextTurn board (0, 0)
-					   	"2"    -> nextTurn board (0, 1)
-					   	"3"    -> nextTurn board (0, 2)
-					   	"4"    -> nextTurn board (1, 0)
-					   	"5"    -> nextTurn board (1, 1)
-					   	"6"    -> nextTurn board (1, 2)
-					   	"7"    -> nextTurn board (2, 0)
-					   	"8"    -> nextTurn board (2, 1)
-					   	"9"    -> nextTurn board (2, 2)
-					   	"save" -> do
-			   						 saveGame board
-			   						 runGameLoop board
-					   	"load" -> do
-			   						 loadedBoard <- loadGame
-			   						 runGameLoop loadedBoard
-					   	"exit" -> return ()
-					   	_      -> runGameLoop board
-
-
-
--- printState function
-printState :: Board -> IO ()
-printState board = do
-					  putStrLn ""
-					  putStrLn "============="
-					  putStrLn ""
-					  putStrLn (printBoard board)
-					  putStrLn ""
-					  putStrLn "1 - 9 - move"
-					  putStrLn "save - save game"
-					  putStrLn "load - load game"
-					  putStrLn "exit - exit"
-					  putStrLn ""
-					  putStrLn "command:"
-
-
-
--- nextTurn function
-nextTurn :: Board -> (Int, Int) -> IO ()
-nextTurn board (row, col) = do
-								move <- return (Move Cross (row, col))
-								if (isMoveAllowed move board)
-									then do
-											afterPlayerMove <- return (applyMove move board)
-											continueAfterPlayer <- handleResult (getResult afterPlayerMove Crosses)
-											if (continueAfterPlayer)
+-- gameLoop function
+gameLoop :: Board -> Player -> Player -> IO ()
+gameLoop board currentPlayer humanPlayer = do
+											let result = getResult board humanPlayer
+											if (result == Unsettled)
 												then do
-														afterAiMove <- return (aiMove afterPlayerMove Circles)
-														continueAfterAi <- handleResult (getResult afterAiMove Crosses)
-														if (continueAfterAi)
-															then runGameLoop afterAiMove
-															else return ()
-												else return ()
-									else error "Error: move not allowed"
+													printNewTurn currentPlayer board
+													if (currentPlayer == humanPlayer) 
+														then do
+															printOptions
+															input <- getLine
+															processHumanInput input board currentPlayer
+														else do
+															let afterAiMove = aiMove board currentPlayer
+															gameLoop afterAiMove opponent humanPlayer
+												else putStrLn (show result ++ "!")
+											where opponent = getPlayerOpponent currentPlayer
 
 
 
--- handleResult function
-handleResult :: GameResult -> IO Bool
-handleResult result = case result of
-						Unsettled -> return True
-						x         -> do
-										putStrLn (show x ++ "!")
-										return False
+-- printNewTurn function
+printNewTurn :: Player -> Board -> IO ()
+printNewTurn player board = do
+								putStrLn ""
+								putStrLn "============="
+								putStrLn ""
+								putStrLn ("Turn of " ++ show player)
+								putStrLn ""
+								printBoard board
+
+
+
+-- printOptions function
+printOptions :: IO ()
+printOptions = do
+				  putStrLn ""
+				  putStrLn "1 - 9 - move"
+				  putStrLn "save - save game"
+				  putStrLn "load - load game"
+				  putStrLn "exit - exit"
+				  putStrLn ""
+				  putStrLn "command:"
+
+
+
+-- processHumanInput function
+processHumanInput :: String -> Board -> Player -> IO ()
+processHumanInput input board player = case input of
+										"1"    -> applyHumanMove player board (0, 0)
+										"2"    -> applyHumanMove player board (0, 1)
+										"3"    -> applyHumanMove player board (0, 2)
+										"4"    -> applyHumanMove player board (1, 0)
+										"5"    -> applyHumanMove player board (1, 1)
+										"6"    -> applyHumanMove player board (1, 2)
+										"7"    -> applyHumanMove player board (2, 0)
+										"8"    -> applyHumanMove player board (2, 1)
+										"9"    -> applyHumanMove player board (2, 2)
+										"save" -> do
+													saveGame board
+													gameLoop board player player
+										"load" -> do
+													loadedBoard <- loadGame
+													gameLoop loadedBoard player player
+										"exit" -> return ()
+										_      -> error "Invalid command"
+
+
+
+-- applyHumanMove function
+applyHumanMove :: Player -> Board -> (Int, Int) -> IO ()
+applyHumanMove player board field = do
+										let move = Move (getPlayerField player) field
+										if (isMoveAllowed move board)
+											then do 
+												let afterMove = applyMove move board
+												gameLoop afterMove (getPlayerOpponent player) player
+											else error "Move not allowed"

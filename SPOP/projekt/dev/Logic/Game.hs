@@ -1,7 +1,7 @@
 module Logic.Game(
 	GameResult(Unsettled, Victory, Defeat, Draw),
 	Player(Crosses, Circles), getPlayerOpponent,
-	Field(Empty, Cross, Circle),
+	Field(Empty, Cross, Circle),getPlayerField,
 	Move(Move),
 	Board(Board, getFields), getMoves, isMoveAllowed, applyMove, getScore, getResult)
 	where
@@ -10,7 +10,7 @@ module Logic.Game(
 data GameResult = Unsettled | Victory | Defeat | Draw deriving (Eq, Show)
 
 -- Player type
-data Player = Crosses | Circles deriving Eq
+data Player = Crosses | Circles deriving (Eq, Show)
 
 getPlayerOpponent :: Player -> Player
 getPlayerOpponent Crosses = Circles
