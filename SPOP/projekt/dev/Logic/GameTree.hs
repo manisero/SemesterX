@@ -1,6 +1,6 @@
 module Logic.GameTree(
 	GameTree(GameTree,getBoard,getScore,getChildren),
-	buildGameTree)
+	buildGameTree, getStateScore)
 	where
 
 import Logic.Game
@@ -33,3 +33,17 @@ getChildrenScore children rootPlayer currentPlayer = if (currentPlayer == rootPl
 													 then maximum scores
 													 else minimum scores
 													 where scores = map Logic.GameTree.getScore children
+
+
+
+-- getStateScore function
+getStateScore :: Board -> Player -> Player -> Int
+getStateScore board currentPlayer rootPlayer = if (currentScore /= 0 || length moves == 0)
+											   then currentScore
+											   else if (currentPlayer == rootPlayer)
+													then maximum movesScores
+													else minimum movesScores
+												where
+                                                    currentScore = Logic.Game.getScore board rootPlayer
+                                                    moves = getMoves board currentPlayer
+                                                    movesScores = map (\move -> getStateScore move (getPlayerOpponent currentPlayer) rootPlayer) moves
