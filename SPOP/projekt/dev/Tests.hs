@@ -5,6 +5,7 @@ import Logic.Game
 import Logic.AI.GameTree
 import Logic.AI.Minimax
 import Logic.AI.AlphaBeta
+import Logic.AI.Heuristic
 
 main :: IO ()
 main = test
@@ -49,6 +50,10 @@ testBoard = emptyBoard
 --test = (read "Board {fields = [[Empty,Empty,Empty],[Empty,Empty,Empty],[Empty,Empty,Empty]]}")::Board
 --test = getStateScore emptyBoard Crosses Crosses
 test = do
+		putStrLn "Heuristic:"
+		before4 <- getCPUTime
+		putStrLn (show (alphaBetaHeuristic testBoard Crosses Crosses))
+		displayTimePassedSince before4
 		putStrLn "Alpha-Beta:"
 		before3 <- getCPUTime
 		putStrLn (show (alphaBeta testBoard Crosses Crosses))
