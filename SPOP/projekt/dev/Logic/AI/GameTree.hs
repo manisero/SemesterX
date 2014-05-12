@@ -31,11 +31,8 @@ buildGameTree board player = buildGameTree' board (getMoves board player) player
 
 buildGameTree' :: Board -> [Board] -> Player ->  Player -> GameTree
 buildGameTree' board [] rootPlayer _ = GameTree board (Logic.Game.getScore board rootPlayer) []
-buildGameTree' board moves rootPlayer currentPlayer = GameTree board 
-															   (if (rootScore /= 0) then rootScore else childrenScore)
-															   (if (rootScore /= 0) then [] else children)
+buildGameTree' board moves rootPlayer currentPlayer = GameTree board childrenScore children
 													  where
-                                                          rootScore = Logic.Game.getScore board rootPlayer
                                                           opponent = getPlayerOpponent currentPlayer
                                                           children = [buildGameTree' move (getMoves move opponent) rootPlayer opponent | move <- moves]
                                                           childrenScore = getChildrenScore children rootPlayer currentPlayer

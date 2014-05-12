@@ -19,12 +19,11 @@ pickChild (move1:move2:moves) player = if (minimax move1 (getPlayerOpponent play
 
 -- minimax function
 minimax :: Board -> Player -> Player -> Int
-minimax board currentPlayer rootPlayer = if (currentScore /= 0 || length moves == 0)
-									     then currentScore
+minimax board currentPlayer rootPlayer = if (length moves == 0)
+									     then Logic.Game.getScore board rootPlayer
 									     else if (currentPlayer == rootPlayer)
 											then maximum movesScores
 											else minimum movesScores
 										 where
-                                            currentScore = Logic.Game.getScore board rootPlayer
                                             moves = getMoves board currentPlayer
                                             movesScores = (map (\move -> minimax move (getPlayerOpponent currentPlayer) rootPlayer) moves)

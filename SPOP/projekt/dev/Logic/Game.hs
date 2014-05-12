@@ -45,17 +45,20 @@ getField board (row, column) = ((getFields board) !! row) !! column
 
 -- getMoves function
 getMoves :: Board -> Player -> [Board]
-getMoves board player = [applyMove (Move (getPlayerField player) field) board | field <- getEmptyFields board]
+getMoves board player = if (hasWon player board || hasWon (getPlayerOpponent player) board)
+						then []
+						else [applyMove (Move (getPlayerField player) field) board | field <- getEmptyFields board]
+						
 
 getEmptyFields :: Board -> [(Int, Int)]
 getEmptyFields board = [(row, col) | row <- axis, col <- axis, getField board (row, col) == Empty]
 						where axis = [0 .. (getSize board) - 1]
 
 
-
 -- isMoveAllowed function
 isMoveAllowed :: Move -> Board -> Bool
 isMoveAllowed (Move _ (row, col)) board = (getField board (row, col)) == Empty
+
 
 -- applyMove function
 applyMove :: Move -> Board -> Board

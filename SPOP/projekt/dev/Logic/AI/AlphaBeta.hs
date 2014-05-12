@@ -22,13 +22,12 @@ alphaBeta :: Board -> Player -> Player -> Int
 alphaBeta board currentPlayer rootPlayer = alphaBeta' board currentPlayer rootPlayer (minBound::Int) (maxBound::Int)
 
 alphaBeta' :: Board -> Player -> Player -> Int -> Int -> Int
-alphaBeta' board currentPlayer rootPlayer alpha beta = if (currentScore /= 0 || length moves == 0)
-													     then currentScore
+alphaBeta' board currentPlayer rootPlayer alpha beta = if (length moves == 0)
+													     then Logic.Game.getScore board rootPlayer
 													     else if (currentPlayer == rootPlayer)
 															then alphaLoop moves currentPlayer rootPlayer alpha beta
 															else betaLoop moves currentPlayer rootPlayer alpha beta
 															where
-			                                                    currentScore = Logic.Game.getScore board rootPlayer
 			                                                    moves = getMoves board currentPlayer
 
 alphaLoop :: [Board] -> Player -> Player -> Int -> Int -> Int
