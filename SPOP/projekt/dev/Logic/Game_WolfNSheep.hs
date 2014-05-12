@@ -102,6 +102,17 @@ getMoves board Sheep = concat [ (if (isMoveAllowed (bottomLeft sheep)  board) th
 
 
 
+-- applyMove function
+applyMove :: Move -> Board -> Board
+applyMove (MoveWolf field) (Board size _ sheepPositions) = Board size field sheepPositions
+applyMove (MoveSheep from to) (Board size wolfPosition sheepPositions) = Board size wolfPosition (replaceSheep from to sheepPositions)
+
+replaceSheep :: Field -> Field -> [Field] -> [Field]
+replaceSheep old new (field:fields) | field == old = new:fields
+									| otherwise    = field:(replaceSheep old new fields)
+
+
+
 -- hasWon function
 hasWon :: Player -> Board -> Bool
 hasWon Wolf board = getRow (getWolfPosition board) == 0 -- || length (getMoves board Sheep) == 0

@@ -9,7 +9,7 @@ main = putStrLn (show test)
 testBoard :: Board
 testBoard = Board 8 (7, 0) [ (0, 1), (0, 3), (0, 5), (0, 7) ]
 
-test = getMoves testBoard Sheep
+test = applyMove (MoveSheep (0, 3) (3,3)) testBoard
 
 
 {-
