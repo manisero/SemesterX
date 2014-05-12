@@ -26,6 +26,18 @@ getColumn (_, column) = column
 translate :: Field -> Int -> Int -> Field
 translate (row, column) rowDelta columnDelta = (row + rowDelta, column + columnDelta)
 
+topLeftOf :: Field -> Field
+topLeftOf field = translate field (-1) (-1)
+
+topRightOf :: Field -> Field
+topRightOf field = translate field (-1) 1
+
+bottomLeftOf :: Field -> Field
+bottomLeftOf field = translate field 1 (-1)
+
+bottomRightOf :: Field -> Field
+bottomRightOf field = translate field 1 1
+
 
 
 -- Move type
@@ -44,10 +56,27 @@ data Board = Board {
 
 -- isMoveAllowed
 isMoveAllowed :: Move -> Board -> Bool
-isMoveAllowed (MoveWolf (row, column)) board = row    >= 0 && row    < boardSize &&
-											   column >= 0 && column < boardSize &&
-											   not (elem (row, column) (getSheepPositions board))
-											   where boardSize = getSize board
+isMoveAllowed (MoveWolf (row, col)) board = (row == wolfRow - 1 || row == wolfRow + 1) &&
+											(col == wolfCol - 1 || col == wolfCol + 1) &&
+											row >= 0 && row < boardSize &&
+											col >= 0 && col < boardSize &&
+											not (elem (row, col) (getSheepPositions board))
+												where
+													wolfPosition = getWolfPosition board
+													wolfRow = getRow wolfPosition
+													wolfCol = getColumn wolfPosition
+													boardSize = getSize board
+
+isMoveAllowed (MoveSheep (fromRow, fromCol) (toRow, toCol)) board = toRow == fromRow + 1 &&
+																	(toCol == fromCol - 1 || toCol == fromCol + 1) &&
+																	toRow < boardSize &&
+																	toCol >= 0 && toCol < boardSize &&
+																	destination /= (getWolfPosition board) &&
+													 				not (elem destination (getSheepPositions board))
+																		where
+																			boardSize = getSize board
+																			destination = (toRow, toCol)
+
 
 
 
@@ -59,10 +88,17 @@ getMoves board Wolf = (if (isMoveAllowed topLeft     board) then [ topLeft ] els
 					  (if (isMoveAllowed bottomRight board) then [ bottomRight ] else [])
 						where
 							wolfPosition = getWolfPosition board
-							topLeft = MoveWolf (translate wolfPosition (-1) (-1))
-							topRight = MoveWolf (translate wolfPosition (-1) 1)
-							bottomLeft = MoveWolf (translate wolfPosition 1 (-1))
-							bottomRight = MoveWolf (translate wolfPosition 1 1)
+							topLeft = MoveWolf (topLeftOf wolfPosition)
+							topRight = MoveWolf (topRightOf wolfPosition)
+							bottomLeft = MoveWolf (bottomLeftOf wolfPosition)
+							bottomRight = MoveWolf (bottomRightOf wolfPosition)
+
+getMoves board Sheep = concat [ (if (isMoveAllowed (bottomLeft sheep)  board) then [ bottomLeft sheep ]  else []) ++
+					  	 		(if (isMoveAllowed (bottomRight sheep) board) then [ bottomRight sheep ] else [])
+					  	 		| sheep <- getSheepPositions board ]
+							where
+								bottomLeft from = MoveSheep from (bottomLeftOf from)
+								bottomRight from = MoveSheep from (bottomRightOf from)
 
 
 
