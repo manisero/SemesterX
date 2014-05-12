@@ -42,33 +42,27 @@ data Board = Board {
 
 
 
+-- isMoveAllowed
+isMoveAllowed :: Move -> Board -> Bool
+isMoveAllowed (MoveWolf (row, column)) board = row    >= 0 && row    < boardSize &&
+											   column >= 0 && column < boardSize &&
+											   not (elem (row, column) (getSheepPositions board))
+											   where boardSize = getSize board
+
+
+
 -- getMoves function
 getMoves :: Board -> Player -> [Move]
-getMoves board Wolf = validateWolfMove wolfPosition (-1) (-1) boardSize sheepPositions ++
-					  validateWolfMove wolfPosition (-1)   1  boardSize sheepPositions ++
-					  validateWolfMove wolfPosition   1  (-1) boardSize sheepPositions ++
-					  validateWolfMove wolfPosition   1    1  boardSize sheepPositions
-					where
-						boardSize = getSize board
-						wolfPosition = getWolfPosition board
-						wolfRow = getRow wolfPosition
-						wolfColumn = getColumn wolfPosition
-						wolfTopLeft = translate wolfPosition (-1) (-1)
-						wolfTopRight = translate wolfPosition (-1) 1
-						wolfBottomLeft = translate wolfPosition 1 (-1)
-						wolfBottomRight = translate wolfPosition 1 1
-						sheepPositions = getSheepPositions board
-
-validateWolfMove :: Field -> Int -> Int -> Int -> [Field] -> [Move]
-validateWolfMove position deltaRow deltaCol boardSize sheepPositions = if (destRow >= 0 && destRow < boardSize &&
-																		   destCol >= 0 && destCol < boardSize &&
-																		   not (elem destination sheepPositions))
-																	   then [ MoveWolf (destination) ]
-																	   else []
-																		where
-																			destination = translate position deltaRow deltaCol
-																			destRow = getRow destination
-																			destCol = getColumn destination
+getMoves board Wolf = (if (isMoveAllowed topLeft     board) then [ topLeft ] else []) ++
+					  (if (isMoveAllowed topRight    board) then [ topRight ] else []) ++
+					  (if (isMoveAllowed bottomLeft  board) then [ bottomLeft ] else []) ++
+					  (if (isMoveAllowed bottomRight board) then [ bottomRight ] else [])
+						where
+							wolfPosition = getWolfPosition board
+							topLeft = MoveWolf (translate wolfPosition (-1) (-1))
+							topRight = MoveWolf (translate wolfPosition (-1) 1)
+							bottomLeft = MoveWolf (translate wolfPosition 1 (-1))
+							bottomRight = MoveWolf (translate wolfPosition 1 1)
 
 
 
