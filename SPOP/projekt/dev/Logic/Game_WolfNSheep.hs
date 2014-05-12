@@ -1,7 +1,7 @@
 module Logic.Game_WolfNSheep where
 
 -- GameResult type
-data GameResult = Unsettled | Victory | Defeat | Draw deriving (Eq, Show)
+data GameResult = Unsettled | Victory | Defeat deriving (Eq, Show)
 
 
 
@@ -117,3 +117,13 @@ replaceSheep old new (field:fields) | field == old = new:fields
 hasWon :: Player -> Board -> Bool
 hasWon Wolf board = getRow (getWolfPosition board) == 0 -- || length (getMoves board Sheep) == 0
 hasWon Sheep board = length (getMoves board Wolf) == 0
+
+
+
+-- getResult function
+getResult :: Board -> Player -> GameResult
+getResult board player = if (hasWon player board)
+						 then Victory
+						 else if (hasWon (getPlayerOpponent player) board) 
+						 	then Defeat
+						 	else Unsettled
