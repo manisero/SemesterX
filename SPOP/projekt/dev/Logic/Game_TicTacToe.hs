@@ -1,4 +1,4 @@
-module Logic.Game(
+module Logic.Game_TicTacToe(
 	GameResult(Unsettled, Victory, Defeat, Draw),
 	Player(Crosses, Circles), getPlayerOpponent,
 	Field(Empty, Cross, Circle),getPlayerField,

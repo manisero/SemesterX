@@ -1,7 +1,7 @@
 module Main where
 
 import System.CPUTime
-import Logic.Game
+import Logic.Game_TicTacToe
 import Logic.AI.GameTree
 import Logic.AI.Minimax
 import Logic.AI.AlphaBeta

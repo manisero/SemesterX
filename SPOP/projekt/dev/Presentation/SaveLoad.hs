@@ -1,6 +1,6 @@
 module Presentation.SaveLoad where
 
-import Logic.Game
+import Logic.Game_TicTacToe
 
 -- saveGame function
 saveGame :: Board -> IO ()

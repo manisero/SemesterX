@@ -3,7 +3,7 @@ module Logic.AI.Heuristic(
 	alphaBetaHeuristic)
 	where
 
-import Logic.Game
+import Logic.Game_TicTacToe
 
 -- alphaBetaHeuristicDepth constant
 alphaBetaHeuristicDepth :: Int
@@ -27,7 +27,7 @@ alphaBetaHeuristic board currentPlayer rootPlayer depth = alphaBetaHeuristic' bo
 
 alphaBetaHeuristic' :: Board -> Player -> Player -> Int -> Int -> Int -> Int
 alphaBetaHeuristic' board currentPlayer rootPlayer alpha beta depth = if (depth == 0 || length moves == 0)
-																	  then Logic.Game.getScore board rootPlayer
+																	  then Logic.Game_TicTacToe.getScore board rootPlayer
 																	  else if (currentPlayer == rootPlayer)
 																		then alphaLoop moves currentPlayer rootPlayer alpha beta depth
 																		else betaLoop moves currentPlayer rootPlayer alpha beta depth

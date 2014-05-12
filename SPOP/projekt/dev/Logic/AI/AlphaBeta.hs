@@ -3,7 +3,7 @@ module Logic.AI.AlphaBeta(
 	alphaBeta)
 	where
 
-import Logic.Game
+import Logic.Game_TicTacToe
 
 -- aiMove function
 aiMove :: Board -> Player -> Board
@@ -23,7 +23,7 @@ alphaBeta board currentPlayer rootPlayer = alphaBeta' board currentPlayer rootPl
 
 alphaBeta' :: Board -> Player -> Player -> Int -> Int -> Int
 alphaBeta' board currentPlayer rootPlayer alpha beta = if (length moves == 0)
-													     then Logic.Game.getScore board rootPlayer
+													     then Logic.Game_TicTacToe.getScore board rootPlayer
 													     else if (currentPlayer == rootPlayer)
 															then alphaLoop moves currentPlayer rootPlayer alpha beta
 															else betaLoop moves currentPlayer rootPlayer alpha beta

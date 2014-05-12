@@ -1,14 +1,13 @@
 module Presentation.GameLoop(startGame) where
 
-import Logic.Game
+import Logic.Game_TicTacToe
 import Logic.AI.Heuristic
-import Presentation.Print
+import Presentation.GameLoop_TicTacToe
 import Presentation.SaveLoad
 
 -- startGame function
 startGame :: Board -> Player -> IO ()
 startGame emptyBoard humanPlayer = gameLoop emptyBoard humanPlayer humanPlayer emptyBoard
-
 
 
 -- gameLoop function
@@ -40,7 +39,6 @@ gameLoop board currentPlayer humanPlayer emptyBoard = do
 														where opponent = getPlayerOpponent currentPlayer
 
 
-
 -- printNewTurn function
 printNewTurn :: Board -> IO ()
 printNewTurn board = do
@@ -51,41 +49,14 @@ printNewTurn board = do
 						putStrLn ""
 								
 
-
 -- printOptions function
 printOptions :: IO ()
 printOptions = do
 				  putStrLn ""
-				  putStrLn "1 - 9 - move"
+				  printMoveOptions
 				  putStrLn "save - save game"
 				  putStrLn "load - load game"
 				  putStrLn "restart - restart game"
 				  putStrLn "exit - exit"
 				  putStrLn ""
 				  putStrLn "command:"
-
-
-
--- processMoveCommand function
-processMoveCommand :: String -> Board -> Player -> Board
-processMoveCommand command board player = case command of
-											"1"    -> applyHumanMove player board (0, 0)
-											"2"    -> applyHumanMove player board (0, 1)
-											"3"    -> applyHumanMove player board (0, 2)
-											"4"    -> applyHumanMove player board (1, 0)
-											"5"    -> applyHumanMove player board (1, 1)
-											"6"    -> applyHumanMove player board (1, 2)
-											"7"    -> applyHumanMove player board (2, 0)
-											"8"    -> applyHumanMove player board (2, 1)
-											"9"    -> applyHumanMove player board (2, 2)
-											_      -> error "Invalid command"
-
-
-
--- applyHumanMove function
-applyHumanMove :: Player -> Board -> (Int, Int) -> Board
-applyHumanMove player board field = do
-										let move = Move (getPlayerField player) field
-										if (isMoveAllowed move board)
-											then applyMove move board
-											else error "Move not allowed"

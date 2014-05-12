@@ -3,7 +3,7 @@ module Logic.AI.GameTree(
 	GameTree(getScore),buildGameTree)
 	where
 
-import Logic.Game
+import Logic.Game_TicTacToe
 
 -- aiMove function
 aiMove :: Board -> Player -> Board
@@ -30,7 +30,7 @@ buildGameTree :: Board -> Player -> GameTree
 buildGameTree board player = buildGameTree' board (getMoves board player) player player
 
 buildGameTree' :: Board -> [Board] -> Player ->  Player -> GameTree
-buildGameTree' board [] rootPlayer _ = GameTree board (Logic.Game.getScore board rootPlayer) []
+buildGameTree' board [] rootPlayer _ = GameTree board (Logic.Game_TicTacToe.getScore board rootPlayer) []
 buildGameTree' board moves rootPlayer currentPlayer = GameTree board childrenScore children
 													  where
                                                           opponent = getPlayerOpponent currentPlayer

@@ -3,7 +3,7 @@ module Logic.AI.Minimax(
 	minimax)
 	where
 
-import Logic.Game
+import Logic.Game_TicTacToe
 
 -- aiMove function
 aiMove :: Board -> Player -> Board
@@ -20,7 +20,7 @@ pickChild (move1:move2:moves) player = if (minimax move1 (getPlayerOpponent play
 -- minimax function
 minimax :: Board -> Player -> Player -> Int
 minimax board currentPlayer rootPlayer = if (length moves == 0)
-									     then Logic.Game.getScore board rootPlayer
+									     then Logic.Game_TicTacToe.getScore board rootPlayer
 									     else if (currentPlayer == rootPlayer)
 											then maximum movesScores
 											else minimum movesScores

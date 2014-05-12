@@ -1,6 +1,6 @@
 module Main(main) where
 
-import Logic.Game
+import Logic.Game_TicTacToe
 import Presentation.GameLoop
 
 main :: IO ()
