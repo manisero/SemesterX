@@ -7,9 +7,9 @@ main :: IO ()
 main = putStrLn (show test)
 
 testBoard :: Board
-testBoard = Board 8 (7, 0) [ (0, 1), (0, 3), (0, 5), (0, 7) ]
+testBoard = Board 8 (7, 0) [ (0, 1), (0, 3), (0, 1), (0, 7) ]
 
-test = hasWon Wolf testBoard
+test = getMoves testBoard Wolf
 
 
 {-
