@@ -1,54 +1,18 @@
 module Main where
 
-import System.CPUTime
-import Logic.Game_TicTacToe
-import Logic.AI.GameTree
-import Logic.AI.Minimax
-import Logic.AI.AlphaBeta
-import Logic.AI.Heuristic
+--import System.CPUTime
+import Logic.Game_WolfNSheep
 
 main :: IO ()
-main = test
-
-emptyBoard :: Board
-emptyBoard = Board [
-					[Empty, Empty, Empty],
-					[Empty, Empty, Empty],
-					[Empty, Empty, Empty]
-				]
-
-emptyBoard44 :: Board
-emptyBoard44 = Board [
-					[Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty]
-				]
-
-emptyBoard55 :: Board
-emptyBoard55 = Board [
-					[Empty, Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty, Empty]
-				]
-
-filledBoard :: Board
-filledBoard = Board [
-					[Cross, Circle, Circle],
-					[Empty, Empty, Circle],
-					[Empty, Cross, Empty]
-				]
+main = putStrLn (show test)
 
 testBoard :: Board
-testBoard = emptyBoard44
+testBoard = Board 8 (7, 0) [ (0, 1), (0, 3), (0, 5), (0, 7) ]
+
+test = hasWon Wolf testBoard
 
 
-
---test = buildGameTree testBoard Crosses
---test = (read "Board {fields = [[Empty,Empty,Empty],[Empty,Empty,Empty],[Empty,Empty,Empty]]}")::Board
---test = getStateScore emptyBoard Crosses Crosses
+{-
 test = do
 		putStrLn "Heuristic:"
 		before4 <- getCPUTime
@@ -67,8 +31,7 @@ test = do
 		putStrLn (show (Logic.AI.GameTree.getScore (buildGameTree testBoard Crosses)))
 		displayTimePassedSince before1
 
-
-
 displayTimePassedSince timeStamp = do
 									now <- getCPUTime
 									putStrLn (show ((fromInteger (now - timeStamp)::Float) / 10^12))
+-}
