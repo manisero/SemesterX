@@ -115,7 +115,7 @@ replaceSheep old new (field:fields) | field == old = new:fields
 
 -- hasWon function
 hasWon :: Player -> Board -> Bool
-hasWon Wolf board = getRow (getWolfPosition board) == 0 -- || length (getMoves board Sheep) == 0
+hasWon Wolf board = getRow (getWolfPosition board) == 0
 hasWon Sheep board = length (getMoves board Wolf) == 0
 
 

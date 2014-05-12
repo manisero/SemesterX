@@ -9,6 +9,8 @@ module Logic.Game_TicTacToe(
 -- GameResult type
 data GameResult = Unsettled | Victory | Defeat | Draw deriving (Eq, Show)
 
+
+
 -- Player type
 data Player = Crosses | Circles deriving (Eq, Show)
 
