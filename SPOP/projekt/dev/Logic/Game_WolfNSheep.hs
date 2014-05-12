@@ -44,12 +44,12 @@ data Board = Board {
 
 -- getMoves function
 getMoves :: Board -> Player -> [Move]
-getMoves board Wolf = (if (wolfRow > 0           && wolfColumn > 0           && not (elem wolfTopLeft     sheepPositions)) then [ MoveWolf (wolfTopLeft )    ] else []) ++
-					  (if (wolfRow > 0           && wolfColumn < boardBorder && not (elem wolfTopRight    sheepPositions)) then [ MoveWolf (wolfTopRight)    ] else []) ++
-					  (if (wolfRow < boardBorder && wolfColumn > 0           && not (elem wolfBottomLeft  sheepPositions)) then [ MoveWolf (wolfBottomLeft)  ] else []) ++
-					  (if (wolfRow < boardBorder && wolfColumn < boardBorder && not (elem wolfBottomRight sheepPositions)) then [ MoveWolf (wolfBottomRight) ] else [])
+getMoves board Wolf = validateWolfMove wolfPosition (-1) (-1) boardSize sheepPositions ++
+					  validateWolfMove wolfPosition (-1)   1  boardSize sheepPositions ++
+					  validateWolfMove wolfPosition   1  (-1) boardSize sheepPositions ++
+					  validateWolfMove wolfPosition   1    1  boardSize sheepPositions
 					where
-						boardBorder = (getSize board) - 1
+						boardSize = getSize board
 						wolfPosition = getWolfPosition board
 						wolfRow = getRow wolfPosition
 						wolfColumn = getColumn wolfPosition
@@ -58,6 +58,17 @@ getMoves board Wolf = (if (wolfRow > 0           && wolfColumn > 0           && 
 						wolfBottomLeft = translate wolfPosition 1 (-1)
 						wolfBottomRight = translate wolfPosition 1 1
 						sheepPositions = getSheepPositions board
+
+validateWolfMove :: Field -> Int -> Int -> Int -> [Field] -> [Move]
+validateWolfMove position deltaRow deltaCol boardSize sheepPositions = if (destRow >= 0 && destRow < boardSize &&
+																		   destCol >= 0 && destCol < boardSize &&
+																		   not (elem destination sheepPositions))
+																	   then [ MoveWolf (destination) ]
+																	   else []
+																		where
+																			destination = translate position deltaRow deltaCol
+																			destRow = getRow destination
+																			destCol = getColumn destination
 
 
 
