@@ -1,6 +1,23 @@
-module Logic.AI.Heuristic where
+module Logic.AI.Heuristic(
+	aiMove,
+	alphaBetaHeuristic)
+	where
 
 import Logic.Game
+
+-- alphaBetaHeuristicDepth constant
+alphaBetaHeuristicDepth :: Int
+alphaBetaHeuristicDepth = 8
+
+-- aiMove function
+aiMove :: Board -> Player -> Board
+aiMove currentBoard player = pickChild (getMoves currentBoard player) player alphaBetaHeuristicDepth
+
+pickChild :: [Board] -> Player -> Int -> Board
+pickChild [move] _ _ = move
+pickChild (move1:move2:moves) player depth = if (alphaBetaHeuristic move1 (getPlayerOpponent player) player depth >= alphaBetaHeuristic move2 (getPlayerOpponent player) player depth)
+											 then pickChild (move1:moves) player depth
+											 else pickChild (move2:moves) player depth
 
 
 

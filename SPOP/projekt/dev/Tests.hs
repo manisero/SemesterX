@@ -19,9 +19,9 @@ emptyBoard = Board [
 
 emptyBoard44 :: Board
 emptyBoard44 = Board [
-					[Empty, Circle, Circle,Circle],
-					[Empty, Cross, Empty, Empty],
-					[Empty, Empty, Cross, Empty],
+					[Empty, Empty, Empty, Empty],
+					[Empty, Empty, Empty, Empty],
+					[Empty, Empty, Empty, Empty],
 					[Empty, Empty, Empty, Empty]
 				]
 
@@ -42,7 +42,7 @@ filledBoard = Board [
 				]
 
 testBoard :: Board
-testBoard = emptyBoard
+testBoard = emptyBoard44
 
 
 
@@ -52,7 +52,7 @@ testBoard = emptyBoard
 test = do
 		putStrLn "Heuristic:"
 		before4 <- getCPUTime
-		putStrLn (show (alphaBetaHeuristic testBoard Crosses Crosses 80))
+		putStrLn (show (alphaBetaHeuristic testBoard Crosses Crosses 8))
 		displayTimePassedSince before4
 		putStrLn "Alpha-Beta:"
 		before3 <- getCPUTime

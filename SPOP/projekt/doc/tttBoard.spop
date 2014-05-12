@@ -1,0 +1,6 @@
+Board { getFields = [
+						[Cross, Circle, Circle],
+						[Cross, Empty, Circle],
+						[Empty, Cross, Empty]
+					]
+	}
