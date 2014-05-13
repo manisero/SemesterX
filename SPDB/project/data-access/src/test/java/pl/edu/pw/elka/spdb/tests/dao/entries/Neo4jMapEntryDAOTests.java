@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
+import pl.edu.pw.elka.spdb.model.PublicTransportRoute;
 import pl.edu.pw.elka.spdb.model.Route;
 
 import java.time.Duration;
@@ -160,5 +161,48 @@ public class Neo4jMapEntryDAOTests extends TestCase {
         assertEquals(universityOfTechnology.getWkt(), foundFromUniversityToSaviourSquareById.getRouteFrom().getWkt());
         assertEquals(saviourSquare.getWkt(), foundFromUniversityToSaviourSquareById.getRouteTo().getWkt());
         assertNull(foundFromSaviourSquareToUniversityById);
+    }
+
+    @Test
+    public void testFindNearestPublicTransportStopMethod() {
+        MapEntry saviourSquare = new MapEntry(new Coordinates(52.219929, 21.017988), true);
+        MapEntry subway = new MapEntry(new Coordinates(52.2190664, 21.0153627), false);
+        MapEntry mlocinyUndergroundStation = new MapEntry(new Coordinates(52.290513, 20.930355), true);
+        saviourSquare = mapEntryDAO.insertMapEntry(saviourSquare);
+        mapEntryDAO.insertMapEntry(subway);
+        mapEntryDAO.insertMapEntry(mlocinyUndergroundStation);
+
+        MapEntry nearestStopToUniversityOfTechnology =
+                mapEntryDAO.findNearestPublicTransportStop(52.2206062, 21.0105747);
+
+        assertNotNull(nearestStopToUniversityOfTechnology);
+        assertEquals(saviourSquare.getId(), nearestStopToUniversityOfTechnology.getId());
+    }
+
+    @Test
+    public void testFindPublicTransportRouteBetween() {
+        MapEntry universitySquare = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.2200113, 21.0120177),
+                true));
+        MapEntry saviourSquare = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.219929, 21.017988), true));
+        MapEntry constitutionSquare = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.222285, 21.016180),
+                true));
+        PublicTransportRoute universityToSaviourSquareRoute = new PublicTransportRoute(15,
+                universitySquare.addRoute(saviourSquare, Duration.ofMinutes(3)));
+        template.save(universityToSaviourSquareRoute);
+
+        PublicTransportRoute foundRouteFromUniversityToSaviourSquare = mapEntryDAO.findPublicTransportRouteBetween
+                (universitySquare, saviourSquare);
+        PublicTransportRoute foundRouteFromSaviourToUniversitySquare = mapEntryDAO.findPublicTransportRouteBetween
+                (saviourSquare, universitySquare);
+        PublicTransportRoute foundRouteFromConstitutionToUniversitySquare = mapEntryDAO
+                .findPublicTransportRouteBetween(constitutionSquare, universitySquare);
+
+        assertNotNull(foundRouteFromUniversityToSaviourSquare);
+        assertEquals(universitySquare, foundRouteFromUniversityToSaviourSquare.getRouteFrom());
+        assertEquals(saviourSquare, foundRouteFromUniversityToSaviourSquare.getRouteTo());
+        assertEquals(Duration.ofMinutes(3), foundRouteFromUniversityToSaviourSquare.getDuration());
+        assertEquals(15, foundRouteFromUniversityToSaviourSquare.getLine());
+        assertNull(foundRouteFromSaviourToUniversitySquare);
+        assertNull(foundRouteFromConstitutionToUniversitySquare);
     }
 }
