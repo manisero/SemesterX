@@ -1,4 +1,5 @@
 module Presentation.GameLoop_WolfNSheep(
+	initializeBoard,
 	printMoveOptions,
 	printBoard,
 	processMoveCommand)
@@ -6,6 +7,18 @@ module Presentation.GameLoop_WolfNSheep(
 
 import Data.List
 import Logic.Game_WolfNSheep
+
+-- initializeBoard function
+initializeBoard :: Board -> IO Board
+initializeBoard (Board size _ sheepPositions) = do
+													putStrLn "================"
+													putStrLn ""
+													putStrLn ("Choose Wolf position (" ++ intercalate ", " [ show column | column <- [0 .. size - 1], even column ] ++ "):")
+													input <- getLine
+													-- TODO: Process input
+													return (Board size (7, 4) sheepPositions)
+
+
 
 -- printMoveOptions function
 printMoveOptions :: IO ()

@@ -8,7 +8,9 @@ import Presentation.SaveLoad
 
 -- startGame function
 startGame :: Board -> Player -> IO ()
-startGame emptyBoard humanPlayer = gameLoop emptyBoard humanPlayer humanPlayer emptyBoard
+startGame emptyBoard humanPlayer = do
+									board <- initializeBoard emptyBoard
+									gameLoop board humanPlayer humanPlayer emptyBoard
 
 
 
@@ -31,7 +33,9 @@ gameLoop board currentPlayer humanPlayer emptyBoard = do
 																			"load"    -> do
 																							loadedBoard <- loadGame
 																							gameLoop loadedBoard humanPlayer humanPlayer emptyBoard
-																			"restart" -> startGame emptyBoard humanPlayer
+																			"restart" -> do
+																							putStrLn ""
+																							startGame emptyBoard humanPlayer
 																			"exit"    -> return ()
 																			_         -> gameLoop (processMoveCommand input board) opponent humanPlayer emptyBoard
 																	else do
