@@ -1,0 +1,14 @@
+Name:                SPOP
+Version:             1.0
+Description:         SPOP project
+Author:              Aniserowicz Michal, Turek Jakub
+Build-Type:          Simple
+Cabal-Version:       >=1.2
+
+executable spop
+   Main-is:          Main.hs
+   Build-Depends:    base >= 3 && < 5
+
+executable tests
+   Main-is:          Tests.hs
+   Build-Depends:    base >= 3 && < 5
