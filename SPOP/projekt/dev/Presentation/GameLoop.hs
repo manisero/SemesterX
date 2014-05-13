@@ -31,12 +31,13 @@ gameLoop board currentPlayer humanPlayer emptyBoard = do
 																							gameLoop loadedBoard humanPlayer humanPlayer emptyBoard
 																			"restart" -> startGame emptyBoard humanPlayer
 																			"exit"    -> return ()
-																			_         -> gameLoop (processMoveCommand input board currentPlayer) opponent humanPlayer emptyBoard
+																			_         -> gameLoop (processMoveCommand input board) opponent humanPlayer emptyBoard
 																	else do
 																		let afterAiMove = aiMove board currentPlayer
 																		gameLoop afterAiMove opponent humanPlayer emptyBoard
 															else putStrLn (show result ++ "!")
 														where opponent = getPlayerOpponent currentPlayer
+
 
 
 -- printNewTurn function
@@ -47,6 +48,7 @@ printNewTurn board = do
 						putStrLn ""
 						printBoard board
 						putStrLn ""
+
 								
 
 -- printOptions function

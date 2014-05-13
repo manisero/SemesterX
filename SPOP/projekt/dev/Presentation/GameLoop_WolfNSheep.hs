@@ -9,7 +9,11 @@ import Logic.Game_WolfNSheep
 
 -- printMoveOptions function
 printMoveOptions :: IO ()
-printMoveOptions = putStrLn "[move options]"
+printMoveOptions = do
+					putStrLn "q - move top left"
+					putStrLn "w - move top right"
+					putStrLn "a - move bottom left"
+					putStrLn "s - move bottom right"
 
 
 
@@ -32,26 +36,18 @@ showBoard board = intercalate "\n" [ [ if ((row, column) == getWolfPosition boar
 
 
 -- processMoveCommand function
-processMoveCommand :: String -> Board -> Player -> Board
-processMoveCommand command board player = case command of
-											{-
-											"1"    -> applyHumanMove player board (0, 0)
-											"2"    -> applyHumanMove player board (0, 1)
-											"3"    -> applyHumanMove player board (0, 2)
-											"4"    -> applyHumanMove player board (1, 0)
-											"5"    -> applyHumanMove player board (1, 1)
-											"6"    -> applyHumanMove player board (1, 2)
-											"7"    -> applyHumanMove player board (2, 0)
-											"8"    -> applyHumanMove player board (2, 1)
-											"9"    -> applyHumanMove player board (2, 2)
-											-}
+processMoveCommand :: String -> Board -> Board
+processMoveCommand command board = case command of
+											"q"    -> applyHumanMove topLeftOf board
+											"w"    -> applyHumanMove topRightOf board
+											"a"    -> applyHumanMove bottomLeftOf board
+											"s"    -> applyHumanMove bottomRightOf board
 											_      -> error "Invalid command"
 
-{-
-applyHumanMove :: Player -> Board -> (Int, Int) -> Board
-applyHumanMove player board field = do
-										let move = Move (getPlayerField player) field
-										if (isMoveAllowed move board)
-											then applyMove move board
-											else error "Move not allowed"
--}
+
+applyHumanMove :: (Field -> Field) -> Board -> Board
+applyHumanMove transition board  = do
+									let move = MoveWolf (transition (getWolfPosition board))
+									if (isMoveAllowed move board)
+										then applyMove move board
+										else error "Move not allowed"
