@@ -1,5 +1,6 @@
 module Presentation.GameLoop(startGame) where
 
+import Data.Maybe
 import Logic.Game_WolfNSheep
 import Logic.AI.Heuristic
 import Presentation.GameLoop_WolfNSheep
@@ -8,6 +9,7 @@ import Presentation.SaveLoad
 -- startGame function
 startGame :: Board -> Player -> IO ()
 startGame emptyBoard humanPlayer = gameLoop emptyBoard humanPlayer humanPlayer emptyBoard
+
 
 
 -- gameLoop function
@@ -34,7 +36,12 @@ gameLoop board currentPlayer humanPlayer emptyBoard = do
 																			_         -> gameLoop (processMoveCommand input board) opponent humanPlayer emptyBoard
 																	else do
 																		let afterAiMove = aiMove board currentPlayer
-																		gameLoop afterAiMove opponent humanPlayer emptyBoard
+																		if (isJust afterAiMove)
+																			then gameLoop (fromJust afterAiMove) opponent humanPlayer emptyBoard
+																			else do
+																					putStrLn ""
+																					putStrLn (show currentPlayer ++ " cannot move")
+																					gameLoop board opponent humanPlayer emptyBoard
 															else putStrLn (show result ++ "!")
 														where opponent = getPlayerOpponent currentPlayer
 

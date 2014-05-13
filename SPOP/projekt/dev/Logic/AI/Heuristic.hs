@@ -7,16 +7,17 @@ import Logic.Game_WolfNSheep
 
 -- alphaBetaHeuristicDepth constant
 alphaBetaHeuristicDepth :: Int
-alphaBetaHeuristicDepth = 8
+alphaBetaHeuristicDepth = 12
 
 
 
 -- aiMove function
-aiMove :: Board -> Player -> Board
+aiMove :: Board -> Player -> Maybe Board
 aiMove currentBoard player = pickChild (getChildren currentBoard player) player alphaBetaHeuristicDepth
 
-pickChild :: [Board] -> Player -> Int -> Board
-pickChild [child] _ _ = child
+pickChild :: [Board] -> Player -> Int -> Maybe Board
+pickChild [] _ _ = Nothing
+pickChild [child] _ _ = Just child
 pickChild (child1:child2:children) player depth = if (alphaBetaHeuristic child1 (getPlayerOpponent player) player depth >= alphaBetaHeuristic child2 (getPlayerOpponent player) player depth)
 												  then pickChild (child1:children) player depth
 												  else pickChild (child2:children) player depth

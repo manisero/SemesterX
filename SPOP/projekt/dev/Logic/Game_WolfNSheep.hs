@@ -132,4 +132,8 @@ getResult board player = if (hasWon player board)
 
 -- getScore function
 getScore :: Board -> Player -> Int
-getScore board player = 0
+getScore board player = if (hasWon player board)
+						then 1
+						else if (hasWon (getPlayerOpponent player) board)
+							 then -1
+							 else 0
