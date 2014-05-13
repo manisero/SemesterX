@@ -3,15 +3,23 @@ module Logic.AI.Heuristic(
 	alphaBetaHeuristic)
 	where
 
-import Logic.Game_TicTacToe
+import Logic.Game_WolfNSheep
 
 -- alphaBetaHeuristicDepth constant
 alphaBetaHeuristicDepth :: Int
 alphaBetaHeuristicDepth = 8
 
+
+
+-- getChildren function
+getChildren :: Board -> Player -> [Board]
+getChildren board player = map (\move -> applyMove move board) (getMoves board player)
+
+
+
 -- aiMove function
 aiMove :: Board -> Player -> Board
-aiMove currentBoard player = pickChild (getMoves currentBoard player) player alphaBetaHeuristicDepth
+aiMove currentBoard player = pickChild (getChildren currentBoard player) player alphaBetaHeuristicDepth
 
 pickChild :: [Board] -> Player -> Int -> Board
 pickChild [move] _ _ = move
@@ -27,12 +35,12 @@ alphaBetaHeuristic board currentPlayer rootPlayer depth = alphaBetaHeuristic' bo
 
 alphaBetaHeuristic' :: Board -> Player -> Player -> Int -> Int -> Int -> Int
 alphaBetaHeuristic' board currentPlayer rootPlayer alpha beta depth = if (depth == 0 || length moves == 0)
-																	  then Logic.Game_TicTacToe.getScore board rootPlayer
+																	  then Logic.Game_WolfNSheep.getScore board rootPlayer
 																	  else if (currentPlayer == rootPlayer)
 																		then alphaLoop moves currentPlayer rootPlayer alpha beta depth
 																		else betaLoop moves currentPlayer rootPlayer alpha beta depth
 																		where
-																			moves = getMoves board currentPlayer
+																			moves = getChildren board currentPlayer
 
 alphaLoop :: [Board] -> Player -> Player -> Int -> Int -> Int -> Int
 alphaLoop [] _ _ alpha _ _ = alpha

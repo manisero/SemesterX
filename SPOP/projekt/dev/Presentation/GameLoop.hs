@@ -1,8 +1,8 @@
 module Presentation.GameLoop(startGame) where
 
-import Logic.Game_TicTacToe
+import Logic.Game_WolfNSheep
 import Logic.AI.Heuristic
-import Presentation.GameLoop_TicTacToe
+import Presentation.GameLoop_WolfNSheep
 import Presentation.SaveLoad
 
 -- startGame function

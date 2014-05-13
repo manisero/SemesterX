@@ -127,3 +127,9 @@ getResult board player = if (hasWon player board)
 						 else if (hasWon (getPlayerOpponent player) board) 
 						 	then Defeat
 						 	else Unsettled
+
+
+
+-- getScore function
+getScore :: Board -> Player -> Int
+getScore board player = 0
