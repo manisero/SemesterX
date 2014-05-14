@@ -39,7 +39,7 @@ public class PublicTransportCostEvaluator implements CostEvaluator<Double> {
             }
         }
 
-        Double cost = (Double) relationship.getProperty("duration");
+        Double cost = ((Long) relationship.getProperty("duration")).doubleValue();
 
         if (needChange) {
             cost += timeNeededToChange.getSeconds();

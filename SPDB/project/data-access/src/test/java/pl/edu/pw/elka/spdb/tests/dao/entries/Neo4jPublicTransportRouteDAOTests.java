@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.dao.entry.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.dao.publictransportroute.IPublicTransportRouteDAO;
-import pl.edu.pw.elka.spdb.dao.route.IRouteDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.PublicTransportRoute;
 
