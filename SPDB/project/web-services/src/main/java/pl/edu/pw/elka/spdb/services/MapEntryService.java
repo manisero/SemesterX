@@ -2,7 +2,7 @@ package pl.edu.pw.elka.spdb.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import pl.edu.pw.elka.spdb.adapters.RouteListAdapter;
-import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
+import pl.edu.pw.elka.spdb.dao.entry.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.Route;
 
