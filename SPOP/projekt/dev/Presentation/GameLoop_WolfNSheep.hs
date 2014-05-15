@@ -8,7 +8,7 @@ module Presentation.GameLoop_WolfNSheep(
 import Data.Maybe
 import Data.List
 import Text.Read
-import Logic.Game_WolfNSheep
+import Logic.Game
 
 -- initializeBoard function
 initializeBoard :: Board -> IO (Maybe Board)

@@ -1,9 +1,8 @@
-module Logic.AI.Heuristic(
-	aiMove, aiMove_customDepth,
-	alphaBetaHeuristic)
+module Logic.AI(
+	aiMove, aiMove_customDepth)
 	where
 
-import Logic.Game_WolfNSheep
+import Logic.Game
 
 -- defaultAlphaBetaHeuristicDepth constant
 defaultAlphaBetaHeuristicDepth :: Int

@@ -1,4 +1,12 @@
-module Logic.Game_WolfNSheep where
+module Logic.Game(
+	GameResult(Unsettled, Victory, Defeat),
+	Player(Wolf, Sheep), getPlayerOpponent,
+	Field, getRow, getColumn, translate, topLeftOf, topRightOf, bottomLeftOf, bottomRightOf,
+	Move(MoveWolf, MoveSheep),
+	Board(Board), getSize, getWolfPosition, getSheepPositions,
+	isMoveAllowed, getMoves, applyMove,
+	hasWon, getResult, getScore)
+	where
 
 -- GameResult type
 data GameResult = Unsettled | Victory | Defeat deriving (Eq, Show)

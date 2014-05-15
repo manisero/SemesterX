@@ -2,8 +2,8 @@ module Main where
 
 import System.CPUTime
 import Data.Maybe
-import Logic.Game_WolfNSheep
-import Logic.AI.Heuristic
+import Logic.Game
+import Logic.AI
 import Presentation.GameLoop_WolfNSheep
 
 main :: IO ()

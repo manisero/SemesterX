@@ -1,6 +1,9 @@
-module Presentation.SaveLoad where
+module Presentation.SaveLoad(
+	saveGame,
+	loadGame)
+	where
 
-import Logic.Game_WolfNSheep
+import Logic.Game
 
 -- saveGame function
 saveGame :: Board -> IO ()

@@ -1,8 +1,8 @@
 module Presentation.GameLoop(startGame) where
 
 import Data.Maybe
-import Logic.Game_WolfNSheep
-import Logic.AI.Heuristic
+import Logic.Game
+import Logic.AI
 import Presentation.GameLoop_WolfNSheep
 import Presentation.SaveLoad
 

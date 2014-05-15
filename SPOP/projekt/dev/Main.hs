@@ -1,6 +1,6 @@
 module Main(main) where
 
-import Logic.Game_WolfNSheep
+import Logic.Game
 import Presentation.GameLoop
 
 main :: IO ()
