@@ -23,7 +23,7 @@ alphaBeta board currentPlayer rootPlayer = alphaBeta' board currentPlayer rootPl
 
 alphaBeta' :: Board -> Player -> Player -> Int -> Int -> Int
 alphaBeta' board currentPlayer rootPlayer alpha beta = if (length moves == 0)
-													     then Logic.Game_TicTacToe.getScore board rootPlayer
+													     then getScore board rootPlayer
 													     else if (currentPlayer == rootPlayer)
 															then alphaLoop moves currentPlayer rootPlayer alpha beta
 															else betaLoop moves currentPlayer rootPlayer alpha beta

@@ -36,12 +36,13 @@ alphaBetaHeuristic board currentPlayer rootPlayer depth = alphaBetaHeuristic' bo
 
 alphaBetaHeuristic' :: Board -> Player -> Player -> Int -> Int -> Int -> Int
 alphaBetaHeuristic' board currentPlayer rootPlayer alpha beta depth = if (depth == 0 || getResult board rootPlayer /= Unsettled)
-																	  then Logic.Game_WolfNSheep.getScore board rootPlayer
+																	  then getScore board rootPlayer
 																	  else if (currentPlayer == rootPlayer)
 																		then alphaLoop children currentPlayer rootPlayer alpha beta depth
 																		else betaLoop children currentPlayer rootPlayer alpha beta depth
 																		where
 																			children = getChildren board currentPlayer
+
 
 alphaLoop :: [Board] -> Player -> Player -> Int -> Int -> Int -> Int
 alphaLoop [] _ _ alpha _ _ = alpha
