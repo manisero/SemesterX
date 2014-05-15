@@ -7,7 +7,7 @@ import Logic.Game_WolfNSheep
 
 -- alphaBetaHeuristicDepth constant
 alphaBetaHeuristicDepth :: Int
-alphaBetaHeuristicDepth = 9
+alphaBetaHeuristicDepth = 10
 
 
 

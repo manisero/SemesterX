@@ -133,9 +133,15 @@ getResult board player = if (hasWon player board)
 -- getScore function
 getScore :: Board -> Player -> Int
 getScore board Sheep = if (hasWon Sheep board)
-					   then 3
+					   then 16
 					   else if (hasWon Wolf board)
-							then -3
-							else 4 - (length (getMoves board Wolf))
+							then -16
+							else (getHeuristicScore board) - 15
 
 getScore board Wolf = -(getScore board Sheep)
+
+
+getHeuristicScore :: Board -> Int
+getHeuristicScore board = (4 - (length (getMoves board Wolf))) * 4 + -- Wolf's moves factor
+						  (getRow (getWolfPosition board)) + -- Wolf's row factor
+						  (((getSize board) - 1) - (minimum (map getRow (getSheepPositions board)))) -- Sheep's minimum row factor
