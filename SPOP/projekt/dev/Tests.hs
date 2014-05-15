@@ -4,7 +4,7 @@ import System.CPUTime
 import Data.Maybe
 import Logic.Game
 import Logic.AI
-import Presentation.GameLoop_WolfNSheep
+import Presentation.GameSpecific
 
 main :: IO ()
 main = testAiMovesPerformance

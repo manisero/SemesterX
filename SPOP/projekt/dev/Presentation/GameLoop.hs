@@ -3,7 +3,7 @@ module Presentation.GameLoop(startGame) where
 import Data.Maybe
 import Logic.Game
 import Logic.AI
-import Presentation.GameLoop_WolfNSheep
+import Presentation.GameSpecific
 import Presentation.SaveLoad
 
 -- startGame function

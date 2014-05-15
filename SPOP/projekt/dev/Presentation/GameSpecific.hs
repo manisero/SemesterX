@@ -1,4 +1,4 @@
-module Presentation.GameLoop_WolfNSheep(
+module Presentation.GameSpecific(
 	initializeBoard,
 	printMoveOptions,
 	printBoard,
