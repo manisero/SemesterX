@@ -132,8 +132,10 @@ getResult board player = if (hasWon player board)
 
 -- getScore function
 getScore :: Board -> Player -> Int
-getScore board player = if (hasWon player board)
-						then 1
-						else if (hasWon (getPlayerOpponent player) board)
-							 then -1
-							 else 0
+getScore board Sheep = if (hasWon Sheep board)
+					   then 3
+					   else if (hasWon Wolf board)
+							then -3
+							else 4 - (length (getMoves board Wolf))
+
+getScore board Wolf = -(getScore board Sheep)

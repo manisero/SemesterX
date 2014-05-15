@@ -1,38 +1,40 @@
 module Main where
 
---import System.CPUTime
+import System.CPUTime
+import Data.Maybe
 import Logic.Game_WolfNSheep
+import Logic.AI.Heuristic
 
 main :: IO ()
-main = putStrLn (show test)
+main = test
+--main = putStrLn (show test)
 
 testBoard :: Board
-testBoard = Board 8 (7, 0) [ (0, 1), (0, 3), (0, 5), (0, 7) ]
+testBoard = Board 8 (6, 3) [ (0, 1), (0, 3), (0, 5), (0, 7) ]
 
-test :: Board
-test = applyMove (MoveSheep (0, 3) (3,3)) testBoard
+--test :: Board
+--test = applyMove (MoveSheep (0, 3) (3,3)) testBoard
 
 
-{-
+test :: IO ()
 test = do
-		putStrLn "Heuristic:"
-		before4 <- getCPUTime
-		putStrLn (show (alphaBetaHeuristic testBoard Crosses Crosses 8))
-		displayTimePassedSince before4
-		putStrLn "Alpha-Beta:"
-		before3 <- getCPUTime
-		putStrLn (show (alphaBeta testBoard Crosses Crosses))
-		displayTimePassedSince before3
-		putStrLn "minimax:"
-		before2 <- getCPUTime
-		putStrLn (show (minimax testBoard Crosses Crosses))
-		displayTimePassedSince before2
-		putStrLn "Game tree:"
-		before1 <- getCPUTime
-		putStrLn (show (Logic.AI.GameTree.getScore (buildGameTree testBoard Crosses)))
-		displayTimePassedSince before1
+		testMoves 8
+		testMoves 9
+		testMoves 10
+		testMoves 12
 
+
+
+testMoves :: Int -> IO ()
+testMoves moves = do
+					putStrLn ((show moves) ++ " moves:")
+					before <- getCPUTime
+					putStrLn (show (fromJust (aiMove_customDepth testBoard Sheep moves)))
+					displayTimePassedSince before
+					putStrLn ""
+
+
+displayTimePassedSince :: Integer -> IO ()
 displayTimePassedSince timeStamp = do
 									now <- getCPUTime
-									putStrLn (show ((fromInteger (now - timeStamp)::Float) / 10^12))
--}
+									putStrLn (show ((fromInteger (now - timeStamp)::Float) / 10 ^ (12::Integer)))
