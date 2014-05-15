@@ -4,12 +4,13 @@ import System.CPUTime
 import Data.Maybe
 import Logic.Game_WolfNSheep
 import Logic.AI.Heuristic
+import Presentation.GameLoop_WolfNSheep
 
 main :: IO ()
 main = testAiMovesPerformance
 
 testBoard :: Board
-testBoard = Board 8 (7, 0) [ (0, 1), (0, 3), (0, 5), (0, 7) ]
+testBoard = Board 8 (6, 3) [ (0, 1), (0, 3), (0, 5), (0, 7) ]
 
 
 
@@ -29,18 +30,22 @@ testGetScore = do
 
 testAiMovesPerformance :: IO ()
 testAiMovesPerformance = do
-		testAiMovePerformance 8
 		testAiMovePerformance 9
 		testAiMovePerformance 10
 		testAiMovePerformance 11
 		testAiMovePerformance 12
+		testAiMovePerformance 13
 
 testAiMovePerformance :: Int -> IO ()
 testAiMovePerformance moves = do
 								putStrLn ((show moves) ++ " moves:")
+								putStrLn ""
 								before <- getCPUTime
-								putStrLn (show (fromJust (aiMove_customDepth testBoard Sheep moves)))
+								printBoard (fromJust (aiMove_customDepth testBoard Sheep moves))
+								putStrLn ""
 								displayTimePassedSince before
+								putStrLn ""
+								putStrLn ""
 								putStrLn ""
 
 displayTimePassedSince :: Integer -> IO ()
