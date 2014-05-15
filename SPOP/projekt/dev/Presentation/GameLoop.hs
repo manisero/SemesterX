@@ -10,7 +10,13 @@ import Presentation.SaveLoad
 startGame :: Board -> Player -> IO ()
 startGame emptyBoard humanPlayer = do
 									board <- initializeBoard emptyBoard
-									gameLoop board humanPlayer humanPlayer emptyBoard
+									if (isJust (board))
+										then gameLoop (fromJust board) humanPlayer humanPlayer emptyBoard
+										else do
+											putStrLn ""
+											putStrLn "Invalid command"
+											putStrLn ""
+											startGame emptyBoard humanPlayer
 
 
 
@@ -37,7 +43,12 @@ gameLoop board currentPlayer humanPlayer emptyBoard = do
 																							putStrLn ""
 																							startGame emptyBoard humanPlayer
 																			"exit"    -> return ()
-																			_         -> gameLoop (processMoveCommand input board) opponent humanPlayer emptyBoard
+																			_         -> case processMoveCommand input board of
+																							Just afterHumanMove -> gameLoop afterHumanMove opponent humanPlayer emptyBoard
+																							Nothing             -> do
+																													putStrLn ""
+																													putStrLn "Invalid command"
+																													gameLoop board currentPlayer humanPlayer emptyBoard
 																	else do
 																		let afterAiMove = aiMove board currentPlayer
 																		if (isJust afterAiMove)

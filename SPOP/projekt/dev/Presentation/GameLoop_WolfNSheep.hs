@@ -11,7 +11,7 @@ import Text.Read
 import Logic.Game_WolfNSheep
 
 -- initializeBoard function
-initializeBoard :: Board -> IO Board
+initializeBoard :: Board -> IO (Maybe Board)
 initializeBoard (Board size _ sheepPositions) = do
 													putStrLn "================"
 													putStrLn ""
@@ -21,10 +21,10 @@ initializeBoard (Board size _ sheepPositions) = do
 													return (getInitializedBoard column size sheepPositions)
 
 
-getInitializedBoard :: Maybe Int -> Int -> [Field] -> Board
+getInitializedBoard :: Maybe Int -> Int -> [Field] -> Maybe Board
 getInitializedBoard wolfColumn boardSize sheepPositions = if (isJust wolfColumn && column >= 0 && column < boardSize && even column)
-														  then Board boardSize (boardSize - 1, column) sheepPositions
-														  else error "Invalid command"
+														  then Just (Board boardSize (boardSize - 1, column) sheepPositions)
+														  else Nothing
 															where column = fromJust wolfColumn
 
 
@@ -58,18 +58,18 @@ showBoard board = intercalate "\n" [ [ if ((row, column) == getWolfPosition boar
 
 
 -- processMoveCommand function
-processMoveCommand :: String -> Board -> Board
+processMoveCommand :: String -> Board -> Maybe Board
 processMoveCommand command board = case command of
 											"q"    -> applyHumanMove topLeftOf board
 											"w"    -> applyHumanMove topRightOf board
 											"a"    -> applyHumanMove bottomLeftOf board
 											"s"    -> applyHumanMove bottomRightOf board
-											_      -> error "Invalid command"
+											_      -> Nothing
 
 
-applyHumanMove :: (Field -> Field) -> Board -> Board
+applyHumanMove :: (Field -> Field) -> Board -> Maybe Board
 applyHumanMove transition board  = do
 									let move = MoveWolf (transition (getWolfPosition board))
 									if (isMoveAllowed move board)
-										then applyMove move board
-										else error "Move not allowed"
+										then Just (applyMove move board)
+										else Nothing
