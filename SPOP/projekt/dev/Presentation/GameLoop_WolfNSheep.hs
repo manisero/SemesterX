@@ -5,7 +5,9 @@ module Presentation.GameLoop_WolfNSheep(
 	processMoveCommand)
 	where
 
+import Data.Maybe
 import Data.List
+import Text.Read
 import Logic.Game_WolfNSheep
 
 -- initializeBoard function
@@ -15,8 +17,15 @@ initializeBoard (Board size _ sheepPositions) = do
 													putStrLn ""
 													putStrLn ("Choose Wolf position (" ++ intercalate ", " [ show column | column <- [0 .. size - 1], even column ] ++ "):")
 													input <- getLine
-													-- TODO: Process input
-													return (Board size (7, 4) sheepPositions)
+													let column = readMaybe input::Maybe Int
+													return (getInitializedBoard column size sheepPositions)
+
+
+getInitializedBoard :: Maybe Int -> Int -> [Field] -> Board
+getInitializedBoard wolfColumn boardSize sheepPositions = if (isJust wolfColumn && column >= 0 && column < boardSize && even column)
+														  then Board boardSize (boardSize - 1, column) sheepPositions
+														  else error "Invalid command"
+															where column = fromJust wolfColumn
 
 
 
