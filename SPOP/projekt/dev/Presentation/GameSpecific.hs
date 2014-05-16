@@ -15,7 +15,7 @@ initializeBoard :: Board -> IO (Maybe Board)
 initializeBoard (Board size _ sheepPositions) = do
 													putStrLn "================"
 													putStrLn ""
-													putStrLn ("Choose Wolf position (" ++ intercalate ", " [ show column | column <- [0 .. size - 1], even column ] ++ "):")
+													putStrLn ("Choose Wolf position (" ++ intercalate ", " [ show (column + 1) | column <- [0 .. size - 1], even column ] ++ "):")
 													input <- getLine
 													let column = readMaybe input::Maybe Int
 													return (getInitializedBoard column size sheepPositions)
@@ -25,7 +25,7 @@ getInitializedBoard :: Maybe Int -> Int -> [Field] -> Maybe Board
 getInitializedBoard wolfColumn boardSize sheepPositions = if (isJust wolfColumn && column >= 0 && column < boardSize && even column)
 														  then Just (Board boardSize (boardSize - 1, column) sheepPositions)
 														  else Nothing
-															where column = fromJust wolfColumn
+															where column = (fromJust wolfColumn) - 1
 
 
 
