@@ -37,10 +37,12 @@ loadGame = do
 				then do
 					let board = readBoard (fromJust content)
 					if (isJust board)
-						then do
-							putStrLn ""
-							putStrLn ("Game loaded from: " ++ path)
-							return board
+						then if (isValid (fromJust board))
+							then do
+								putStrLn ""
+								putStrLn ("Game loaded from: " ++ path)
+								return board
+							else handleError "Invalid Wolf or Sheep positioning" Nothing
 						else handleError "Invalid file content" Nothing
 				else return Nothing
 

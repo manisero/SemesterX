@@ -3,7 +3,7 @@ module Logic.Game(
 	Player(Wolf, Sheep), getPlayerOpponent,
 	Field, getRow, getColumn, translate, topLeftOf, topRightOf, bottomLeftOf, bottomRightOf,
 	Move(MoveWolf, MoveSheep),
-	Board(Board), getSize, getWolfPosition, getSheepPositions,
+	Board(Board), getSize, getWolfPosition, getSheepPositions, isValid,
 	isMoveAllowed, getMoves, applyMove,
 	hasWon, getResult, getScore)
 	where
@@ -59,6 +59,12 @@ data Board = Board {
 					getWolfPosition :: Field,
 					getSheepPositions :: [Field]
 				   } deriving (Show, Read)
+
+
+
+-- isValid function
+isValid :: Board -> Bool
+isValid (Board size wolfPosition sheepPositions) = not (elem wolfPosition sheepPositions)
 
 
 
