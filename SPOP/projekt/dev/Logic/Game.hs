@@ -64,7 +64,11 @@ data Board = Board {
 
 -- isValid function
 isValid :: Board -> Bool
-isValid (Board size wolfPosition sheepPositions) = not (elem wolfPosition sheepPositions)
+isValid (Board size wolfPosition sheepPositions) = all checkPosition allPositions &&
+												   length ([ True | pos1 <- allPositions, pos2 <- allPositions, pos1 == pos2 ]) == length allPositions
+													where
+														checkPosition (row, col) = row >= 0 && row < size && col >= 0 && col < size && odd (row + col)
+														allPositions = wolfPosition : sheepPositions
 
 
 
