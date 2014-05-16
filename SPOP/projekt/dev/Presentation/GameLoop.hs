@@ -1,7 +1,5 @@
 module Presentation.GameLoop(startGame) where
 
-import System.IO.Error
-import Control.Exception
 import Data.Maybe
 import Logic.Game
 import Logic.AI
@@ -36,11 +34,14 @@ gameLoop board currentPlayer humanPlayer emptyBoard = do
 																		input <- getLine
 																		case input of
 																			"save"    -> do
-																							catch (saveGame board) handleSaveLoadError
+																							saveGame board
 																							gameLoop board currentPlayer humanPlayer emptyBoard
 																			"load"    -> do
 																							loadedBoard <- loadGame
-																							gameLoop loadedBoard humanPlayer humanPlayer emptyBoard
+																							if (isJust loadedBoard)
+																								then gameLoop (fromJust loadedBoard) humanPlayer humanPlayer emptyBoard
+																								else gameLoop board humanPlayer humanPlayer emptyBoard
+																							
 																			"restart" -> do
 																							putStrLn ""
 																							startGame emptyBoard humanPlayer
@@ -86,11 +87,3 @@ printOptions = do
 				  putStrLn "exit - exit"
 				  putStrLn ""
 				  putStrLn "command:"
-
-
-
--- handleSaveLoadError function
-handleSaveLoadError :: IOError -> IO ()
-handleSaveLoadError e = do
-							putStrLn ""
-							putStrLn ("Error: " ++ (ioeGetErrorString e))
