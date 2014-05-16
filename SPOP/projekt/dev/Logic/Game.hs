@@ -1,98 +1,165 @@
 module Logic.Game(
-	GameResult(Unsettled, Victory, Defeat, Draw),
-	Player(Crosses, Circles), getPlayerOpponent,
-	Field(Empty, Cross, Circle),getPlayerField,
-	Move(Move),
-	Board(Board, getFields), getMoves, isMoveAllowed, applyMove, getScore, getResult)
+	GameResult(Unsettled, Victory, Defeat),
+	Player(Wolf, Sheep), getPlayerOpponent,
+	Field, getRow, getColumn, translate, topLeftOf, topRightOf, bottomLeftOf, bottomRightOf,
+	Move(MoveWolf, MoveSheep),
+	Board(Board), getSize, getWolfPosition, getSheepPositions, isValid,
+	isMoveAllowed, getMoves, applyMove,
+	hasWon, getResult, getScore)
 	where
 
 -- GameResult type
-data GameResult = Unsettled | Victory | Defeat | Draw deriving (Eq, Show)
+data GameResult = Unsettled | Victory | Defeat deriving (Eq, Show)
+
+
 
 -- Player type
-data Player = Crosses | Circles deriving (Eq, Show)
+data Player = Wolf | Sheep deriving (Eq, Show)
 
 getPlayerOpponent :: Player -> Player
-getPlayerOpponent Crosses = Circles
-getPlayerOpponent Circles = Crosses
+getPlayerOpponent Wolf = Sheep
+getPlayerOpponent Sheep = Wolf
 
 
 
 -- Field type
-data Field = Empty | Cross | Circle deriving (Eq, Show, Read)
+type Field = (Int, Int)
 
-getPlayerField :: Player -> Field
-getPlayerField Crosses = Cross
-getPlayerField Circles = Circle
+getRow :: Field -> Int
+getRow (row, _) = row
+
+getColumn :: Field -> Int
+getColumn (_, column) = column
+
+translate :: Field -> Int -> Int -> Field
+translate (row, column) rowDelta columnDelta = (row + rowDelta, column + columnDelta)
+
+topLeftOf :: Field -> Field
+topLeftOf field = translate field (-1) (-1)
+
+topRightOf :: Field -> Field
+topRightOf field = translate field (-1) 1
+
+bottomLeftOf :: Field -> Field
+bottomLeftOf field = translate field 1 (-1)
+
+bottomRightOf :: Field -> Field
+bottomRightOf field = translate field 1 1
 
 
 
 -- Move type
-data Move = Move Field (Int, Int)
+data Move = MoveWolf Field | MoveSheep Field Field deriving (Show)
 
 
 
 -- Board type
-data Board = Board { getFields :: [[Field]] } deriving (Show, Read)
+data Board = Board {
+					getSize :: Int,
+					getWolfPosition :: Field,
+					getSheepPositions :: [Field]
+				   } deriving (Show, Read)
 
-getSize :: Board -> Int
-getSize board = length (getFields board)
 
-getField :: Board -> (Int, Int) -> Field
-getField board (row, column) = ((getFields board) !! row) !! column
+
+-- isValid function
+isValid :: Board -> Bool
+isValid (Board size wolfPosition sheepPositions) = all checkPosition allPositions &&
+												   length ([ True | pos1 <- allPositions, pos2 <- allPositions, pos1 == pos2 ]) == length allPositions
+													where
+														checkPosition (row, col) = row >= 0 && row < size && col >= 0 && col < size && odd (row + col)
+														allPositions = wolfPosition : sheepPositions
+
+
+
+-- isMoveAllowed
+isMoveAllowed :: Move -> Board -> Bool
+isMoveAllowed (MoveWolf (row, col)) board = (row == wolfRow - 1 || row == wolfRow + 1) &&
+											(col == wolfCol - 1 || col == wolfCol + 1) &&
+											row >= 0 && row < boardSize &&
+											col >= 0 && col < boardSize &&
+											not (elem (row, col) (getSheepPositions board))
+												where
+													wolfPosition = getWolfPosition board
+													wolfRow = getRow wolfPosition
+													wolfCol = getColumn wolfPosition
+													boardSize = getSize board
+
+isMoveAllowed (MoveSheep (fromRow, fromCol) (toRow, toCol)) board = toRow == fromRow + 1 &&
+																	(toCol == fromCol - 1 || toCol == fromCol + 1) &&
+																	toRow < boardSize &&
+																	toCol >= 0 && toCol < boardSize &&
+																	destination /= (getWolfPosition board) &&
+													 				not (elem destination (getSheepPositions board))
+																		where
+																			boardSize = getSize board
+																			destination = (toRow, toCol)
+
 
 
 
 -- getMoves function
-getMoves :: Board -> Player -> [Board]
-getMoves board player = [applyMove (Move (getPlayerField player) field) board | field <- getEmptyFields board]
+getMoves :: Board -> Player -> [Move]
+getMoves board Wolf = (if (isMoveAllowed topLeft     board) then [ topLeft ] else []) ++
+					  (if (isMoveAllowed topRight    board) then [ topRight ] else []) ++
+					  (if (isMoveAllowed bottomLeft  board) then [ bottomLeft ] else []) ++
+					  (if (isMoveAllowed bottomRight board) then [ bottomRight ] else [])
+						where
+							wolfPosition = getWolfPosition board
+							topLeft = MoveWolf (topLeftOf wolfPosition)
+							topRight = MoveWolf (topRightOf wolfPosition)
+							bottomLeft = MoveWolf (bottomLeftOf wolfPosition)
+							bottomRight = MoveWolf (bottomRightOf wolfPosition)
 
-getEmptyFields :: Board -> [(Int, Int)]
-getEmptyFields board = [(row, col) | row <- axis, col <- axis, getField board (row, col) == Empty]
-						where axis = [0 .. (getSize board) - 1]
+getMoves board Sheep = concat [ (if (isMoveAllowed (bottomLeft sheep)  board) then [ bottomLeft sheep ]  else []) ++
+					  	 		(if (isMoveAllowed (bottomRight sheep) board) then [ bottomRight sheep ] else [])
+					  	 		| sheep <- getSheepPositions board ]
+							where
+								bottomLeft from = MoveSheep from (bottomLeftOf from)
+								bottomRight from = MoveSheep from (bottomRightOf from)
 
 
-
--- isMoveAllowed function
-isMoveAllowed :: Move -> Board -> Bool
-isMoveAllowed (Move _ (row, col)) board = (getField board (row, col)) == Empty
 
 -- applyMove function
 applyMove :: Move -> Board -> Board
-applyMove (Move field (row, col)) board = Board [ [ if (y == row && x == col) then field else getField board (y, x) | x <- axis] | y <- axis ]
-											where axis = [0 .. (getSize board) - 1]
+applyMove (MoveWolf field) (Board size _ sheepPositions) = Board size field sheepPositions
+applyMove (MoveSheep from to) (Board size wolfPosition sheepPositions) = Board size wolfPosition (replaceSheep from to sheepPositions)
+
+replaceSheep :: Field -> Field -> [Field] -> [Field]
+replaceSheep old new (field:fields) | field == old = new:fields
+									| otherwise    = field:(replaceSheep old new fields)
 
 
 
--- getScore and getResult functions
-getScore :: Board -> Player -> Int
-getScore board player = if (hasWon player board)
-							then 1
-						else if (hasWon (getPlayerOpponent player) board)
-							then -1
-						else 0
-
-
-getResult :: Board -> Player -> GameResult
-getResult board player = case getScore board player of
-							1  -> Victory
-							-1 -> Defeat
-							_  -> if (length (getMoves board player) == 0)
-						 		  then Draw
-						 		  else Unsettled
-
-
+-- hasWon function
 hasWon :: Player -> Board -> Bool
-hasWon player board = any (==True) [all (==(getPlayerField player)) line | line <- (getLineValues board)]
+hasWon Wolf board = getRow (getWolfPosition board) == 0
+hasWon Sheep board = length (getMoves board Wolf) == 0
 
-getLineValues :: Board -> [[Field]]
-getLineValues board = [map (\field -> getField board field) line | line <- getBoardLines board]
 
-getBoardLines :: Board -> [[(Int, Int)]]
-getBoardLines board = [ [(row, col) | col <- axis] | row <- axis ] ++ -- rows
-					  [ [(row, col) | row <- axis] | col <- axis ] ++ -- columns
-					  [
-						[(x, x) | x <- axis],                         -- left-right diagonal
-						[(x, (getSize board) - x - 1) | x <- axis]    -- right-left diagonal
-			  		  ]
-			  			where axis = [0 .. (getSize board) - 1]
+
+-- getResult function
+getResult :: Board -> Player -> GameResult
+getResult board player = if (hasWon player board)
+						 then Victory
+						 else if (hasWon (getPlayerOpponent player) board) 
+						 	then Defeat
+						 	else Unsettled
+
+
+
+-- getScore function
+getScore :: Board -> Player -> Int
+getScore board Sheep = if (hasWon Sheep board)
+					   then 14
+					   else if (hasWon Wolf board)
+							then -14
+							else (getHeuristicScore board) - 13
+
+getScore board Wolf = -(getScore board Sheep)
+
+
+getHeuristicScore :: Board -> Int
+getHeuristicScore board = (4 - (length (getMoves board Wolf))) * 3 +                               -- Wolf's moves factor
+						  getRow (getWolfPosition board) +                                         -- Wolf's row factor
+						  ((getSize board) - 1) - (minimum (map getRow (getSheepPositions board))) -- Sheep's minimum row factor

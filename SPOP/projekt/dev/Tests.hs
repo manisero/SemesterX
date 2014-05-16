@@ -1,69 +1,54 @@
 module Main where
 
 import System.CPUTime
+import Data.Maybe
 import Logic.Game
-import Logic.AI.GameTree
-import Logic.AI.Minimax
-import Logic.AI.AlphaBeta
+import Logic.AI
+import Presentation.GameSpecific
 
 main :: IO ()
-main = test
-
-emptyBoard :: Board
-emptyBoard = Board [
-					[Empty, Empty, Empty],
-					[Empty, Empty, Empty],
-					[Empty, Empty, Empty]
-				]
-
-emptyBoard44 :: Board
-emptyBoard44 = Board [
-					[Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty]
-				]
-
-emptyBoard55 :: Board
-emptyBoard55 = Board [
-					[Empty, Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty, Empty],
-					[Empty, Empty, Empty, Empty, Empty]
-				]
-
-filledBoard :: Board
-filledBoard = Board [
-					[Cross, Circle, Circle],
-					[Empty, Empty, Circle],
-					[Empty, Cross, Empty]
-				]
+main = testAiMovesPerformance
 
 testBoard :: Board
-testBoard = emptyBoard
+testBoard = Board 8 (6, 3) [ (0, 1), (0, 3), (0, 5), (0, 7) ]
 
 
 
---test = buildGameTree testBoard Crosses
---test = (read "Board {fields = [[Empty,Empty,Empty],[Empty,Empty,Empty],[Empty,Empty,Empty]]}")::Board
---test = getStateScore emptyBoard Crosses Crosses
-test = do
-		putStrLn "Alpha-Beta:"
-		before3 <- getCPUTime
-		putStrLn (show (alphaBeta testBoard Crosses Crosses))
-		displayTimePassedSince before3
-		putStrLn "minimax:"
-		before2 <- getCPUTime
-		putStrLn (show (minimax testBoard Crosses Crosses))
-		displayTimePassedSince before2
-		putStrLn "Game tree:"
-		before1 <- getCPUTime
-		putStrLn (show (Logic.AI.GameTree.getScore (buildGameTree testBoard Crosses)))
-		displayTimePassedSince before1
+----------------
+-- getScore test
+----------------
+
+testGetScore :: IO ()
+testGetScore = do
+				putStrLn (show (getScore testBoard Sheep))
 
 
 
+--------------------------
+-- aiMove performance test
+--------------------------
+
+testAiMovesPerformance :: IO ()
+testAiMovesPerformance = do
+		testAiMovePerformance 9
+		testAiMovePerformance 10
+		testAiMovePerformance 11
+		testAiMovePerformance 12
+		testAiMovePerformance 13
+
+testAiMovePerformance :: Int -> IO ()
+testAiMovePerformance moves = do
+								putStrLn ((show moves) ++ " moves:")
+								putStrLn ""
+								before <- getCPUTime
+								printBoard (fromJust (aiMove_customDepth testBoard Sheep moves))
+								putStrLn ""
+								displayTimePassedSince before
+								putStrLn ""
+								putStrLn ""
+								putStrLn ""
+
+displayTimePassedSince :: Integer -> IO ()
 displayTimePassedSince timeStamp = do
 									now <- getCPUTime
-									putStrLn (show ((fromInteger (now - timeStamp)::Float) / 10^12))
+									putStrLn (show ((fromInteger (now - timeStamp)::Float) / 10 ^ (12::Integer)))

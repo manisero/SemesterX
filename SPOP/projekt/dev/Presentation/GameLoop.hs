@@ -1,13 +1,22 @@
 module Presentation.GameLoop(startGame) where
 
+import Data.Maybe
 import Logic.Game
-import Logic.AI.AlphaBeta
-import Presentation.Print
+import Logic.AI
+import Presentation.GameSpecific
 import Presentation.SaveLoad
 
 -- startGame function
 startGame :: Board -> Player -> IO ()
-startGame emptyBoard humanPlayer = gameLoop emptyBoard humanPlayer humanPlayer emptyBoard
+startGame emptyBoard humanPlayer = do
+									board <- initializeBoard emptyBoard
+									if (isJust (board))
+										then gameLoop (fromJust board) humanPlayer humanPlayer emptyBoard
+										else do
+											putStrLn ""
+											putStrLn "Invalid command"
+											putStrLn ""
+											startGame emptyBoard humanPlayer
 
 
 
@@ -29,13 +38,28 @@ gameLoop board currentPlayer humanPlayer emptyBoard = do
 																							gameLoop board currentPlayer humanPlayer emptyBoard
 																			"load"    -> do
 																							loadedBoard <- loadGame
-																							gameLoop loadedBoard humanPlayer humanPlayer emptyBoard
-																			"restart" -> startGame emptyBoard humanPlayer
+																							if (isJust loadedBoard)
+																								then gameLoop (fromJust loadedBoard) humanPlayer humanPlayer emptyBoard
+																								else gameLoop board humanPlayer humanPlayer emptyBoard
+																							
+																			"restart" -> do
+																							putStrLn ""
+																							startGame emptyBoard humanPlayer
 																			"exit"    -> return ()
-																			_         -> gameLoop (processMoveCommand input board currentPlayer) opponent humanPlayer emptyBoard
+																			_         -> case processMoveCommand input board of
+																							Just afterHumanMove -> gameLoop afterHumanMove opponent humanPlayer emptyBoard
+																							Nothing             -> do
+																													putStrLn ""
+																													putStrLn "Invalid command"
+																													gameLoop board currentPlayer humanPlayer emptyBoard
 																	else do
 																		let afterAiMove = aiMove board currentPlayer
-																		gameLoop afterAiMove opponent humanPlayer emptyBoard
+																		if (isJust afterAiMove)
+																			then gameLoop (fromJust afterAiMove) opponent humanPlayer emptyBoard
+																			else do
+																					putStrLn ""
+																					putStrLn (show currentPlayer ++ " cannot move")
+																					gameLoop board opponent humanPlayer emptyBoard
 															else putStrLn (show result ++ "!")
 														where opponent = getPlayerOpponent currentPlayer
 
@@ -49,43 +73,17 @@ printNewTurn board = do
 						putStrLn ""
 						printBoard board
 						putStrLn ""
-								
 
+								
 
 -- printOptions function
 printOptions :: IO ()
 printOptions = do
 				  putStrLn ""
-				  putStrLn "1 - 9 - move"
+				  printMoveOptions
 				  putStrLn "save - save game"
 				  putStrLn "load - load game"
 				  putStrLn "restart - restart game"
 				  putStrLn "exit - exit"
 				  putStrLn ""
 				  putStrLn "command:"
-
-
-
--- processMoveCommand function
-processMoveCommand :: String -> Board -> Player -> Board
-processMoveCommand command board player = case command of
-											"1"    -> applyHumanMove player board (0, 0)
-											"2"    -> applyHumanMove player board (0, 1)
-											"3"    -> applyHumanMove player board (0, 2)
-											"4"    -> applyHumanMove player board (1, 0)
-											"5"    -> applyHumanMove player board (1, 1)
-											"6"    -> applyHumanMove player board (1, 2)
-											"7"    -> applyHumanMove player board (2, 0)
-											"8"    -> applyHumanMove player board (2, 1)
-											"9"    -> applyHumanMove player board (2, 2)
-											_      -> error "Invalid command"
-
-
-
--- applyHumanMove function
-applyHumanMove :: Player -> Board -> (Int, Int) -> Board
-applyHumanMove player board field = do
-										let move = Move (getPlayerField player) field
-										if (isMoveAllowed move board)
-											then applyMove move board
-											else error "Move not allowed"
