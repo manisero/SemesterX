@@ -76,6 +76,7 @@
     if ([self.route count] > 0)
     {
         [self annotateRouteStart];
+        [self annotateChanges];
         [self annotateRouteEnd];
     }
 }
@@ -90,12 +91,40 @@
     [pointAnnotation setTitle:@"Route start"];
 
     SPDBDateUtilities *dateUtilities = [SPDBDateUtilities new];
-    NSString *subtitle = [NSString stringWithFormat:@"Set off time: %@", [dateUtilities formatDate:[self calculateSetOffTime] withFormat:@"HH:mm:ss"]];
+    NSString *subtitle = [NSString stringWithFormat:@"Set off time: %@.", [dateUtilities formatDate:[self calculateSetOffTime] withFormat:@"HH:mm:ss"]];
+    
+    if (firstSegment.line != nil)
+    {
+        subtitle = [NSString stringWithFormat:@"%@ Enter line: %@.", subtitle, firstSegment.line];
+    }
                           
     [pointAnnotation setSubtitle:subtitle];
     
     [self.mapView addAnnotation:pointAnnotation];
     [self.mapView selectAnnotation:pointAnnotation animated:YES];
+}
+
+- (void)annotateChanges
+{
+    NSNumber *previousLine = [[self.route firstObject] line];
+    
+    for (int i = 1; i < [self.route count]; ++i)
+    {
+        SPDBRoute *routeSegment = [self.route objectAtIndex:i];
+        SPDBMapEntry *segmentStart = routeSegment.routeFrom;
+        
+        if (routeSegment.line != nil && previousLine != nil && [previousLine longValue] != [routeSegment.line longValue])
+        {
+            MKPointAnnotation *pointAnnotation = [MKPointAnnotation new];
+            [pointAnnotation setCoordinate:CLLocationCoordinate2DMake([segmentStart.latitude doubleValue], [segmentStart.longitude doubleValue])];
+            [pointAnnotation setTitle:@"Change"];
+            [pointAnnotation setSubtitle:[NSString stringWithFormat:@"Change here from line: %@ to line: %@.", previousLine, routeSegment.line]];
+            
+            [self.mapView addAnnotation:pointAnnotation];
+        }
+        
+        previousLine = routeSegment.line;
+    }
 }
 
 - (void)annotateRouteEnd
@@ -107,7 +136,7 @@
     [pointAnnotation setTitle:@"Route end"];
     
     SPDBDateUtilities *dateUtilities = [SPDBDateUtilities new];
-    NSString *subtitle = [NSString stringWithFormat:@"Arrival time: %@", [dateUtilities formatDate:[dateUtilities stripSecondsFromDate:self.arrivalTime] withFormat:@"HH:mm:ss"]];
+    NSString *subtitle = [NSString stringWithFormat:@"Arrival time: %@.", [dateUtilities formatDate:[dateUtilities stripSecondsFromDate:self.arrivalTime] withFormat:@"HH:mm:ss"]];
     
     [pointAnnotation setSubtitle:subtitle];
     
@@ -117,11 +146,19 @@
 - (NSDate *)calculateSetOffTime
 {
     long travelDurationInSeconds = 0;
+    NSNumber *previousLine;
     
     for (int i = 0; i < [self.route count]; ++i)
     {
         SPDBRoute *routeSegment = [self.route objectAtIndex:i];
         travelDurationInSeconds += [[routeSegment duration] longValue];
+        
+        if (routeSegment.line != nil && previousLine != nil && [previousLine longValue] != [routeSegment.line longValue])
+        {
+            travelDurationInSeconds += [[self changeDuration] longValue];
+        }
+        
+        previousLine = routeSegment.line;
     }
     
     SPDBDateUtilities *dateUtilities = [SPDBDateUtilities new];
@@ -129,6 +166,11 @@
     NSDate *setOffTime = [dateUtilities subtractSeconds:travelDurationInSeconds fromDate:arrivalTime];
     
     return setOffTime;
+}
+
+- (NSNumber *)changeDuration
+{
+    return [NSNumber numberWithInt:[[[NSUserDefaults standardUserDefaults] valueForKey:@"changeTimePreference"] intValue]];
 }
 
 - (void)didReceiveMemoryWarning
@@ -171,6 +213,10 @@
         else if ([[annotation title] isEqualToString:@"Route end"])
         {
             [pinView setPinColor:MKPinAnnotationColorRed];
+        }
+        else if ([[annotation title] isEqualToString:@"Change"])
+        {
+            [pinView setPinColor:MKPinAnnotationColorPurple];
         }
         
         pinView.animatesDrop = YES;

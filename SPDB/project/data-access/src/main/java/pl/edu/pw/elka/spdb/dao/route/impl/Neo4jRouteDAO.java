@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.spdb.dao.entries.impl;
+package pl.edu.pw.elka.spdb.dao.route.impl;
 
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
@@ -8,46 +8,33 @@ import org.neo4j.graphdb.DynamicRelationshipType;
 import org.neo4j.graphdb.Node;
 import org.neo4j.graphdb.PathExpanders;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.neo4j.conversion.EndResult;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import pl.edu.pw.elka.spdb.configuration.IConfigurationProvider;
-import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
+import pl.edu.pw.elka.spdb.dao.route.IRouteDAO;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.Route;
 import pl.edu.pw.elka.spdb.relationships.MapEntryRelationships;
 import pl.edu.pw.elka.spdb.repositories.IMapEntryRepository;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Service
 @Transactional
-public class Neo4jMapEntryDAO implements IMapEntryDAO {
+public class Neo4jRouteDAO implements IRouteDAO {
     @Autowired
     private IMapEntryRepository mapEntryRepository;
     @Autowired
     private Neo4jTemplate template;
-    @Autowired
-    private IConfigurationProvider configurationProvider;
-
-    @Override
-    public MapEntry insertMapEntry(MapEntry mapEntry) {
-        return mapEntryRepository.save(mapEntry);
-    }
-
-    @Override
-    public MapEntry findMapEntryById(Long id) {
-        return mapEntryRepository.findOne(id);
-    }
 
     @Override
     public List<Route> findFastestRoute(MapEntry start, MapEntry end) {
         List<Route> fastestRoute = new ArrayList<>();
+        Node startNode = template.getNode(start.getId());
+        Node endNode = template.getNode(end.getId());
 
-        WeightedPath shortestPath = getShortestPath(template.getNode(start.getId()), template.getNode(end.getId()));
+        WeightedPath shortestPath = getShortestPath(startNode, endNode);
 
         if (shortestPath != null) {
             shortestPath.relationships().forEach(rel -> fastestRoute.add(findRouteBetween(rel.getStartNode().getId(),
@@ -66,22 +53,7 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
     }
 
     @Override
-    public MapEntry findNearestMapEntry(double latitude, double longitude) {
-        EndResult<MapEntry> entriesWithinDistance = mapEntryRepository.findWithinDistance("MapEntryLocation", latitude,
-                longitude, configurationProvider.getSearchRadius());
-
-        Iterator<MapEntry> entryIterator = entriesWithinDistance.iterator();
-
-        while (entryIterator.hasNext()) {
-            return entryIterator.next();
-        }
-
-        return null;
-    }
-
-    @Override
-    public Route findRouteBetween(MapEntry start, MapEntry end)
-    {
+    public Route findRouteBetween(MapEntry start, MapEntry end) {
         Route route = mapEntryRepository.getRelationshipBetween(start, end, Route.class,
                 MapEntryRelationships.ROUTES_TO.getValue());
 
@@ -94,8 +66,7 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
     }
 
     @Override
-    public Route findRouteBetween(Long startId, Long endId)
-    {
-        return findRouteBetween(findMapEntryById(startId), findMapEntryById(endId));
+    public Route findRouteBetween(Long startId, Long endId) {
+        return findRouteBetween(mapEntryRepository.findOne(startId), mapEntryRepository.findOne(endId));
     }
 }

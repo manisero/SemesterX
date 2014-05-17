@@ -28,6 +28,7 @@
                                                         toKeyPath:@"routeTo"
                                                         withMapping:[self createObjectMappingForMapEntry]]];
     [mapping addAttributeMappingsFromDictionary:@{@"duration": @"duration"}];
+    [mapping addAttributeMappingsFromDictionary:@{@"line": @"line"}];
         
     return mapping;
 }

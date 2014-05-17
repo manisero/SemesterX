@@ -3,8 +3,8 @@ package pl.edu.pw.elka.spdb.providers;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.cxf.helpers.IOUtils;
-import pl.edu.pw.elka.spdb.adapters.RouteGsonAdapter;
-import pl.edu.pw.elka.spdb.adapters.RouteListAdapter;
+import pl.edu.pw.elka.spdb.adapters.gson.RouteGsonAdapter;
+import pl.edu.pw.elka.spdb.adapters.list.RouteListAdapter;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
@@ -42,10 +42,11 @@ public class RouteListProvider implements MessageBodyWriter<RouteListAdapter>, M
                         MediaType mediaType,
                         MultivaluedMap<String, Object> stringObjectMultivaluedMap, OutputStream outputStream) throws
             IOException, WebApplicationException {
-        List<RouteGsonAdapter> adapterList = route.getRoutes().stream().map(r -> new RouteGsonAdapter(r)).collect
-                (Collectors.toList());
+        List<RouteGsonAdapter> adapterList = route.getRoutes().stream().map(RouteGsonAdapter::new).collect(Collectors
+                .toList());
         String routesAsJson = new Gson().toJson(adapterList, new TypeToken<List<RouteGsonAdapter>>() {
         }.getType());
+
         outputStream.write(routesAsJson.getBytes());
     }
 
@@ -61,7 +62,7 @@ public class RouteListProvider implements MessageBodyWriter<RouteListAdapter>, M
                                      InputStream inputStream) throws IOException, WebApplicationException {
         String json = IOUtils.toString(inputStream);
         List<RouteGsonAdapter> routesFromJson = new Gson().fromJson(json, new TypeToken<List<RouteGsonAdapter>>() {
-                }.getType());
+        }.getType());
 
         return new RouteListAdapter(routesFromJson.stream().map(r -> r.toRoute()).collect(Collectors.toList()));
     }

@@ -70,8 +70,8 @@
 {
     RKObjectManager *objectManager = [self createObjectManager];
     SPDBShortestPathRequest *shortestPathRequest = [SPDBShortestPathRequest
-                                                    requestWithStartingNodeId:[NSNumber numberWithLong:0]
-                                                    andFinishingNodeId:[NSNumber numberWithLong:28]];
+                                                    requestWithStartingNodeId:[NSNumber numberWithLong:165408]
+                                                    andFinishingNodeId:[NSNumber numberWithLong:165416]];
     
     [self prepare];
     

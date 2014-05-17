@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.spdb.adapters;
+package pl.edu.pw.elka.spdb.adapters.list;
 
 import pl.edu.pw.elka.spdb.model.Route;
 

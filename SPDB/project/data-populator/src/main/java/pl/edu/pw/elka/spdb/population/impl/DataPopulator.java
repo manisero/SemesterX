@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.data.neo4j.support.node.Neo4jHelper;
 import org.springframework.transaction.annotation.Transactional;
-import pl.edu.pw.elka.spdb.dao.entries.IMapEntryDAO;
+import pl.edu.pw.elka.spdb.dao.entry.IMapEntryDAO;
 import pl.edu.pw.elka.spdb.population.DataPopulatorException;
 import pl.edu.pw.elka.spdb.population.IDataPopulator;
 import pl.edu.pw.elka.spdb.population.repository.IDataPopulatorRepository;
@@ -34,6 +34,7 @@ public class DataPopulator implements IDataPopulator {
         try {
             populateEntries();
             populateRoutes();
+            populatePublicTransportRoutes();
         } catch (Exception e) {
             throw new DataPopulatorException("Could not populate database", e);
         }
@@ -49,5 +50,9 @@ public class DataPopulator implements IDataPopulator {
 
     private void populateRoutes() {
         repository.getRoutes().forEach(template::save);
+    }
+
+    private void populatePublicTransportRoutes() {
+        repository.getPublicTransportRoutes().forEach(template::save);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import pl.edu.pw.elka.spdb.model.MapEntry;
+import pl.edu.pw.elka.spdb.model.PublicTransportRoute;
 import pl.edu.pw.elka.spdb.model.Route;
 import pl.edu.pw.elka.spdb.population.IDataPopulator;
 
@@ -28,9 +29,11 @@ public class DataPopulatorTests extends TestCase {
         Transaction transaction = template.getGraphDatabaseService().beginTx();
         long entriesCount = template.count(MapEntry.class);
         long routesCount = template.count(Route.class);
+        long publicTransportRoutesCount = template.count(PublicTransportRoute.class);
         transaction.success();
 
         assertTrue(entriesCount > 0);
         assertTrue(routesCount > 0);
+        assertTrue(publicTransportRoutesCount > 0);
     }
 }
