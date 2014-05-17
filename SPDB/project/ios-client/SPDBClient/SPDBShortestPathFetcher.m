@@ -15,10 +15,10 @@
     return self;
 }
 
-- (void)fetchShortestPathFromEntry:(SPDBMapEntry *)fromEntry toEntry:(SPDBMapEntry *)toEntry delegate:(id<SPDBShortestPathFetcherDelegate>)delegate
+- (void)fetchShortestPathFromEntry:(SPDBMapEntry *)fromEntry toEntry:(SPDBMapEntry *)toEntry isPublicTransport:(BOOL)publicTransport withChangeTime:(NSNumber *)changeTime delegate:(id<SPDBShortestPathFetcherDelegate>)delegate
 {
     self.delegate = delegate;
-    
+        
     [self fetchClosestPoint:fromEntry success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult)
     {
         self.entryFrom = [mappingResult array][0];
@@ -27,7 +27,7 @@
         {
             self.entryTo = [mappingResult array][0];
             [self.delegate updateProgress:0.666];
-            [self fetchShortestPath:self.entryFrom to:self.entryTo success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult)
+            [self fetchShortestPath:self.entryFrom to:self.entryTo isPublicTransport:publicTransport withChangeTime:changeTime success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult)
             {
                 [self.delegate updateProgress:1.0];
                 [self.delegate didFetchShortestPath:[mappingResult array]];
@@ -61,10 +61,10 @@
     }];
 }
 
-- (void)fetchShortestPath:(SPDBMapEntry *)fromEntry to:(SPDBMapEntry *)toEntry success:(void (^)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult))success failure:(void (^)(RKObjectRequestOperation *operation, NSError *error))failure
+- (void)fetchShortestPath:(SPDBMapEntry *)fromEntry to:(SPDBMapEntry *)toEntry isPublicTransport:(BOOL)publicTransport withChangeTime:(NSNumber *)changeTime success:(void (^)(RKObjectRequestOperation *operation, RKMappingResult *mappingResult))success failure:(void (^)(RKObjectRequestOperation *operation, NSError *error))failure
 {
     RKObjectManager *objectManager = [self.objectManagerFactory createObjectManager];
-    SPDBShortestPathRequest *shortestPathRequest = [SPDBShortestPathRequest requestWithStartingNodeId:fromEntry.id andFinishingNodeId:toEntry.id];
+    SPDBShortestPathRequest *shortestPathRequest = [SPDBShortestPathRequest requestWithStartingNodeId:fromEntry.id andFinishingNodeId:toEntry.id withPublicTransport:publicTransport andChangeDuration:changeTime];
     [objectManager getObjectsAtPathForRouteNamed:@"ShortestPath" object:shortestPathRequest parameters:nil success:^(RKObjectRequestOperation *operation, RKMappingResult *mappingResult)
     {
         success(operation, mappingResult);

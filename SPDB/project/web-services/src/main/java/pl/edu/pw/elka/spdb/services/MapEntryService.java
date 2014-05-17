@@ -49,33 +49,35 @@ public class MapEntryService {
     }
 
     @GET
-    @Path("/shortestPath/{startingNodeId}/{finishingNodeId}/publicTransport/false")
-    @Produces("application/json")
-    public Response getShortestPath(@PathParam("startingNodeId") long startingNodeId,
-                                    @PathParam("finishingNodeId") long finishingNodeId) {
-        MapEntry startingNode = mapEntryDAO.findMapEntryById(startingNodeId);
-        MapEntry finishingNode = mapEntryDAO.findMapEntryById(finishingNodeId);
-        List<Route> shortestPath = routeDAO.findFastestRoute(startingNode, finishingNode);
-
-        Response response = Response.ok().entity(new RouteListAdapter(shortestPath)).build();
-
-        return response;
-    }
-
-    @GET
-    @Path("/shortestPath/{startingNodeId}/{finishingNodeId}/publicTransport/true/changeDuration/{changeDuration}")
+    @Path("/shortestPath/{startingNodeId}/{finishingNodeId}/publicTransport/{publicTransport}{changeDuration:" +
+            "(/changeDuration/[^/]+?)?}")
     @Produces("application/json")
     public Response getShortestPath(@PathParam("startingNodeId") long startingNodeId,
                                     @PathParam("finishingNodeId") long finishingNodeId,
-                                    @PathParam("changeDuration") long changeDuration) {
+                                    @PathParam("publicTransport") boolean publicTransport,
+                                    @PathParam("changeDuration") String changeDuration) {
         MapEntry startingNode = mapEntryDAO.findMapEntryById(startingNodeId);
         MapEntry finishingNode = mapEntryDAO.findMapEntryById(finishingNodeId);
 
-        List<PublicTransportRoute> shortestPath = publicTransportRouteDAO.findFastestPublicTransportRoute
-                (startingNode, finishingNode, Duration.ofSeconds(changeDuration));
+        if (!publicTransport) {
+            List<Route> shortestPath = routeDAO.findFastestRoute(startingNode, finishingNode);
 
-        Response response = Response.ok().entity(new PublicTransportRouteListAdapter(shortestPath)).build();
+            Response response = Response.ok().entity(new RouteListAdapter(shortestPath)).build();
+            return response;
+        } else {
+            List<PublicTransportRoute> shortestPath = publicTransportRouteDAO.findFastestPublicTransportRoute
+                    (startingNode, finishingNode, Duration.ofSeconds(parseChangeDurationParameter(changeDuration)));
 
-        return response;
+            Response response = Response.ok().entity(new PublicTransportRouteListAdapter(shortestPath)).build();
+            return response;
+        }
+    }
+
+    private long parseChangeDurationParameter(String changeDuration) {
+        if (changeDuration == null || changeDuration.isEmpty()) {
+            return 0L;
+        }
+
+        return Long.valueOf(changeDuration.split("/")[1]);
     }
 }

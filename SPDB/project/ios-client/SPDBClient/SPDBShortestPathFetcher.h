@@ -11,6 +11,6 @@
 @property (nonatomic, strong) SPDBMapEntry *entryFrom;
 @property (nonatomic, strong) SPDBMapEntry *entryTo;
 
-- (void)fetchShortestPathFromEntry:(SPDBMapEntry *)mapEntry toEntry:(SPDBMapEntry *)mapEntry delegate:(id<SPDBShortestPathFetcherDelegate>)delegate;
+- (void)fetchShortestPathFromEntry:(SPDBMapEntry *)mapEntry toEntry:(SPDBMapEntry *)mapEntry isPublicTransport:(BOOL)publicTransport withChangeTime:(NSNumber *)changeTime delegate:(id<SPDBShortestPathFetcherDelegate>)delegate;
 
 @end
