@@ -11,11 +11,13 @@ defaultAlphaBetaHeuristicDepth = 11
 
 
 -- aiMove function
+-- Reference: http://wazniak.mimuw.edu.pl/index.php?title=Sztuczna_inteligencja/SI_Modu%C5%82_8_-_Gry_dwuosobowe
 aiMove :: Board -> Player -> Maybe Board
 aiMove currentBoard player = aiMove_customDepth currentBoard player defaultAlphaBetaHeuristicDepth
 
 aiMove_customDepth :: Board -> Player -> Int -> Maybe Board
 aiMove_customDepth currentBoard player depth = pickChild (getChildren currentBoard player) player depth
+
 
 pickChild :: [Board] -> Player -> Int -> Maybe Board
 pickChild [] _ _ = Nothing
@@ -25,14 +27,13 @@ pickChild (child1:child2:children) player depth = if (alphaBetaHeuristic child1 
 												  else pickChild (child2:children) player depth
 
 
-
--- getChildren function
 getChildren :: Board -> Player -> [Board]
 getChildren board player = map (\move -> applyMove move board) (getMoves board player)
 
 
 
 -- alphaBetaHeuristic function
+-- Reference: http://en.wikipedia.org/wiki/Alpha%E2%80%93beta_pruning
 alphaBetaHeuristic :: Board -> Player -> Player -> Int -> Int
 alphaBetaHeuristic board currentPlayer rootPlayer depth = alphaBetaHeuristic' board currentPlayer rootPlayer (minBound::Int) (maxBound::Int) depth
 
