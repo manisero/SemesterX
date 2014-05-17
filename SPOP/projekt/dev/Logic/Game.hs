@@ -8,6 +8,8 @@ module Logic.Game(
 	hasWon, getResult, getScore)
 	where
 
+-- Reference: http://pl.wikipedia.org/wiki/Wilk_i_owce
+
 -- GameResult type
 data GameResult = Unsettled | Victory | Defeat deriving (Eq, Show)
 
@@ -49,7 +51,9 @@ bottomRightOf field = translate field 1 1
 
 
 -- Move type
-data Move = MoveWolf Field | MoveSheep Field Field deriving (Show)
+data Move = MoveWolf Field        -- move Wolf to ...
+		  | MoveSheep Field Field -- move Sheep from ... to ...
+			deriving (Show)
 
 
 
@@ -65,32 +69,31 @@ data Board = Board {
 -- isValid function
 isValid :: Board -> Bool
 isValid (Board size wolfPosition sheepPositions) = all checkPosition allPositions &&
-												   length ([ True | pos1 <- allPositions, pos2 <- allPositions, pos1 == pos2 ]) == length allPositions
+												   length [ True | pos1 <- allPositions, pos2 <- allPositions, pos1 == pos2 ] == length allPositions -- check for position collisions
 													where
-														checkPosition (row, col) = row >= 0 && row < size && col >= 0 && col < size && odd (row + col)
+														checkPosition (row, col) = row >= 0 && row < size && col >= 0 && col < size && -- fits in board
+																				   odd (row + col)                                     -- is on black field
 														allPositions = wolfPosition : sheepPositions
 
 
 
 -- isMoveAllowed
 isMoveAllowed :: Move -> Board -> Bool
-isMoveAllowed (MoveWolf (row, col)) board = (row == wolfRow - 1 || row == wolfRow + 1) &&
-											(col == wolfCol - 1 || col == wolfCol + 1) &&
-											row >= 0 && row < boardSize &&
-											col >= 0 && col < boardSize &&
-											not (elem (row, col) (getSheepPositions board))
+isMoveAllowed (MoveWolf (row, col)) board = (row == wolfRow - 1 || row == wolfRow + 1) &&                 -- is one row forward or backward
+											(col == wolfCol - 1 || col == wolfCol + 1) &&                 -- is one column to the left or right
+											row >= 0 && row < boardSize && col >= 0 && col < boardSize && -- fits in board
+											not (elem (row, col) (getSheepPositions board))               -- does not collide with any Sheep
 												where
 													wolfPosition = getWolfPosition board
 													wolfRow = getRow wolfPosition
 													wolfCol = getColumn wolfPosition
 													boardSize = getSize board
 
-isMoveAllowed (MoveSheep (fromRow, fromCol) (toRow, toCol)) board = toRow == fromRow + 1 &&
-																	(toCol == fromCol - 1 || toCol == fromCol + 1) &&
-																	toRow < boardSize &&
-																	toCol >= 0 && toCol < boardSize &&
-																	destination /= (getWolfPosition board) &&
-													 				not (elem destination (getSheepPositions board))
+isMoveAllowed (MoveSheep (fromRow, fromCol) (toRow, toCol)) board = toRow == fromRow + 1 &&                                 -- is one row forward
+																	(toCol == fromCol - 1 || toCol == fromCol + 1) &&       -- is one column to the left or right
+																	toRow < boardSize && toCol >= 0 && toCol < boardSize && -- fits in board
+																	destination /= (getWolfPosition board) &&               -- does not collide with Wolf
+													 				not (elem destination (getSheepPositions board))        -- does not collide with any other Sheep
 																		where
 																			boardSize = getSize board
 																			destination = (toRow, toCol)
@@ -149,17 +152,19 @@ getResult board player = if (hasWon player board)
 
 
 -- getScore function
+-- Calculates score of the current state of the board. Range: from -14 to 14.
 getScore :: Board -> Player -> Int
 getScore board Sheep = if (hasWon Sheep board)
 					   then 14
 					   else if (hasWon Wolf board)
 							then -14
-							else (getHeuristicScore board) - 13
+							else (getHeuristicScore board) - 13 -- range: from -13 to 13
 
 getScore board Wolf = -(getScore board Sheep)
 
 
+-- Calculates heuristic score of the current state of the board. Range: from 0 to 26.
 getHeuristicScore :: Board -> Int
-getHeuristicScore board = (4 - (length (getMoves board Wolf))) * 3 +                               -- Wolf's moves factor
-						  getRow (getWolfPosition board) +                                         -- Wolf's row factor
-						  ((getSize board) - 1) - (minimum (map getRow (getSheepPositions board))) -- Sheep's minimum row factor
+getHeuristicScore board = (4 - (length (getMoves board Wolf))) * 3 +                               -- Possible Wolf's moves factor (0 moves: 12, 1 move: 9 etc.)
+						  getRow (getWolfPosition board) +                                         -- Wolf's row factor (from 0 to 7)
+						  ((getSize board) - 1) - (minimum (map getRow (getSheepPositions board))) -- Sheep's minimum row factor: (from 0 to 7)

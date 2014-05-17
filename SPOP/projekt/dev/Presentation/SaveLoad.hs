@@ -57,9 +57,9 @@ readBoard string = case reads string of
 -- handleError function
 handleError :: String -> tResult -> IO tResult
 handleError errorMessage result = do
-								putStrLn ""
-								putStrLn ("Error: " ++ errorMessage)
-								return result
+									putStrLn ""
+									putStrLn ("Error: " ++ errorMessage)
+									return result
 
 
 handleSaveError :: IOError -> IO Bool

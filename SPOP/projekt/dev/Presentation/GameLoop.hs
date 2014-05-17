@@ -6,9 +6,36 @@ import Logic.AI
 import Presentation.GameSpecific
 import Presentation.SaveLoad
 
--- startGame function
+-- startGameFunction
 startGame :: Board -> Player -> IO ()
 startGame emptyBoard humanPlayer = do
+									putStrLn "================"
+									putStrLn ""
+									putStrLn "start - start new game"
+									putStrLn "load - load game"
+									putStrLn ""
+									putStrLn "command:"
+									input <- getLine
+									case input of
+										"start" -> startNewGame emptyBoard humanPlayer
+										"load"  -> do
+													loadedBoard <- loadGame
+													if (isJust loadedBoard)
+														then gameLoop (fromJust loadedBoard) humanPlayer humanPlayer emptyBoard
+														else do
+															putStrLn ""
+															startGame emptyBoard humanPlayer
+										_       -> do
+														putStrLn ""
+														putStrLn "Invalid command"
+														putStrLn ""
+														startGame emptyBoard humanPlayer
+
+
+
+-- startNewGame function
+startNewGame :: Board -> Player -> IO ()
+startNewGame emptyBoard humanPlayer = do
 									board <- initializeBoard emptyBoard
 									if (isJust (board))
 										then gameLoop (fromJust board) humanPlayer humanPlayer emptyBoard
@@ -16,7 +43,7 @@ startGame emptyBoard humanPlayer = do
 											putStrLn ""
 											putStrLn "Invalid command"
 											putStrLn ""
-											startGame emptyBoard humanPlayer
+											startNewGame emptyBoard humanPlayer
 
 
 
@@ -42,9 +69,7 @@ gameLoop board currentPlayer humanPlayer emptyBoard = do
 																								then gameLoop (fromJust loadedBoard) humanPlayer humanPlayer emptyBoard
 																								else gameLoop board humanPlayer humanPlayer emptyBoard
 																							
-																			"restart" -> do
-																							putStrLn ""
-																							startGame emptyBoard humanPlayer
+																			"restart" -> startNewGame emptyBoard humanPlayer
 																			"exit"    -> return ()
 																			_         -> case processMoveCommand input board of
 																							Just afterHumanMove -> gameLoop afterHumanMove opponent humanPlayer emptyBoard
