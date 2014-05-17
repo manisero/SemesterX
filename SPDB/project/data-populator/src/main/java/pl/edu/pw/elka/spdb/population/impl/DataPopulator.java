@@ -34,6 +34,7 @@ public class DataPopulator implements IDataPopulator {
         try {
             populateEntries();
             populateRoutes();
+            populatePublicTransportRoutes();
         } catch (Exception e) {
             throw new DataPopulatorException("Could not populate database", e);
         }
@@ -49,5 +50,9 @@ public class DataPopulator implements IDataPopulator {
 
     private void populateRoutes() {
         repository.getRoutes().forEach(template::save);
+    }
+
+    private void populatePublicTransportRoutes() {
+        repository.getPublicTransportRoutes().forEach(template::save);
     }
 }

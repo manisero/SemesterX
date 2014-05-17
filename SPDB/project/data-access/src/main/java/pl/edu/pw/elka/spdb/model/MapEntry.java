@@ -22,7 +22,7 @@ public class MapEntry {
     private String wkt;
 
     @Indexed(indexType = IndexType.FULLTEXT, indexName = "PublicTransportStop")
-    private Boolean publicTransportStop;
+    private boolean publicTransportStop;
 
     @RelatedToVia
     private Collection<Route> routes = new HashSet<>();
@@ -67,11 +67,11 @@ public class MapEntry {
         this.wkt = wkt;
     }
 
-    public Boolean getPublicTransportStop() {
+    public boolean getPublicTransportStop() {
         return publicTransportStop;
     }
 
-    public void setPublicTransportStop(Boolean publicTransportStop) {
+    public void setPublicTransportStop(boolean publicTransportStop) {
         this.publicTransportStop = publicTransportStop;
     }
 

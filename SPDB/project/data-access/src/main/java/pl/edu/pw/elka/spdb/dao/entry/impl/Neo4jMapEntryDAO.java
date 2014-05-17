@@ -51,7 +51,7 @@ public class Neo4jMapEntryDAO implements IMapEntryDAO {
         Iterator<MapEntry> entryIterator = entriesWithinDistance.iterator();
 
         while (entryIterator.hasNext()) {
-            MapEntry entry = entryIterator.next();
+            MapEntry entry = mapEntryRepository.findOne(entryIterator.next().getId());
 
             if (entry.getPublicTransportStop()) {
                 return entry;

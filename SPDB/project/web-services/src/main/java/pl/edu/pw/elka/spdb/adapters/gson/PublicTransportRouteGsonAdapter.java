@@ -17,15 +17,15 @@ public class PublicTransportRouteGsonAdapter {
         this.id = publicTransportRoute.getId();
         this.line = publicTransportRoute.getLine();
 
-        if (publicTransportRoute.getRouteFrom() == null) {
+        if (publicTransportRoute.getRouteFrom() != null) {
             this.routeFrom = new MapEntryGsonAdapter(publicTransportRoute.getRouteFrom());
         }
 
-        if (publicTransportRoute.getRouteTo() == null) {
+        if (publicTransportRoute.getRouteTo() != null) {
             this.routeTo = new MapEntryGsonAdapter(publicTransportRoute.getRouteTo());
         }
 
-        if (publicTransportRoute.getDuration() == null) {
+        if (publicTransportRoute.getDuration() != null) {
             this.duration = publicTransportRoute.getDuration().getSeconds();
         }
     }
