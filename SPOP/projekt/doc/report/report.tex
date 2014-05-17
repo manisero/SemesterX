@@ -2,11 +2,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[MeX]{polski}
 \usepackage{fullpage}
-\usepackage{amsmath}
-\usepackage{amssymb}
-\usepackage{pgfplots}
-\usepackage{subfigure}
-\usepackage{textcomp}
 
 \title{SPOP 2014 L. Projekt. Opis źródeł.}
 \author{Aniserowicz Michał, Turek Jakub}
@@ -18,13 +13,15 @@
 
 \section{Moduły}
 
+Program składa się z następujących modułów:
+
 \begin{itemize}
- \item Logic.Game
- \item Logic.AI
- \item Presentation.GameLoop
- \item Presentation.GameSpecific
- \item Presentation.SaveLoad
- \item Main
+ \item \verb+Logic.Game+ - zawiera typy i funkcje realizujące zasady gry ``Wilk i Owce'', w tym heurystyczną funkcję oceny stanu planszy z punktu widzenia danego gracza;
+ \item \verb+Logic.AI+ - zawiera funkcje realizujące sztuczną inteligencję, w tym implementację algorytmu minimax wykorzystującego cięcia alfa-beta;
+ \item \verb+Presentation.GameLoop+ - zawiera funkcje implementujące pętlę gry: wyświetlenie i obsługę opcji, wykonanie ruchu komputera itp.;
+ \item \verb+Presentation.GameSpecific+ - zawiera funkcje specyficzne dla gry ``Wilk i Owce'': inicjalizację planszy (wybór pozycji Wilka), wykonanie ruchu gracza itp.;
+ \item \verb+Presentation.SaveLoad+ - zawiera funkcje realizujące odczyt/zapis gry z/do pliku;
+ \item \verb+Main+ - główny moduł programu, inicjalizuje pętlę gry.
 \end{itemize}
 
 
