@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.spdb.tests.dao.entries;
+package pl.edu.pw.elka.spdb.tests.evaluators;
 
 import junit.framework.TestCase;
 import org.junit.Test;

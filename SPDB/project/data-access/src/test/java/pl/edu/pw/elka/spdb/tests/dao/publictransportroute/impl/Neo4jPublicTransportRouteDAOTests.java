@@ -1,10 +1,8 @@
-package pl.edu.pw.elka.spdb.tests.dao.entries;
+package pl.edu.pw.elka.spdb.tests.dao.publictransportroute.impl;
 
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.neo4j.graphdb.Direction;
-import org.neo4j.graphdb.Relationship;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.neo4j.support.Neo4jTemplate;
 import org.springframework.data.neo4j.support.node.Neo4jHelper;
@@ -111,29 +109,42 @@ public class Neo4jPublicTransportRouteDAOTests extends TestCase {
         Route universitySquareToUnderground = template.save(universitySquare.addRoute(universityUndergroundStation,
                 Duration.ofMinutes(2)));
         Route universityUndergroundToSaviourSquare = template.save(universityUndergroundStation.addRoute
-                (saviourSquare, Duration.ofMinutes(3)));
+                (saviourSquare, Duration.ofMinutes(2)));
         Route universityUndergroundToConstitutionSquare = template.save(universityUndergroundStation.addRoute
-                (constitutionSquare, Duration.ofMinutes(5)));
+                (constitutionSquare, Duration.ofMinutes(2)));
+        Route saviourSquareToConstitutionSquare = template.save(saviourSquare.addRoute(constitutionSquare,
+                Duration.ofMinutes(2)));
         template.save(new PublicTransportRoute(15, universitySquareToUnderground));
         template.save(new PublicTransportRoute(15, universityUndergroundToSaviourSquare));
         template.save(new PublicTransportRoute(502, universityUndergroundToConstitutionSquare));
+        template.save(new PublicTransportRoute(15, saviourSquareToConstitutionSquare));
 
-        List<PublicTransportRoute> routeFromUniversitySquareToSaviourSquare = publicTransportRouteDAO
-                .findFastestPublicTransportRoute(universitySquare, saviourSquare, Duration.ofMinutes(5));
-        List<PublicTransportRoute> routeFromUniversitySquareToConstitutionSquare = publicTransportRouteDAO
-                .findFastestPublicTransportRoute(universitySquare, constitutionSquare, Duration.ofMinutes(5));
+        List<PublicTransportRoute> routeFromUniversityToConstitutionSquareNoDelay = publicTransportRouteDAO
+                .findFastestPublicTransportRoute(universitySquare, constitutionSquare, Duration.ofSeconds(0));
+        List<PublicTransportRoute> routeFromUniversityToConstitutionSquareWithDelay = publicTransportRouteDAO
+                .findFastestPublicTransportRoute(universitySquare, constitutionSquare, Duration.ofMinutes(3));
 
-        assertEquals(2, routeFromUniversitySquareToSaviourSquare.size());
-        assertEquals(15, routeFromUniversitySquareToSaviourSquare.get(0).getLine());
-
-        assertEquals(2, routeFromUniversitySquareToConstitutionSquare.size());
-
-        Double undergroundToSaviourSquareCost = evaluator.getCost
-                (fifteenFromUniversityUndergroundToSaviourSquareRelationship, Direction.OUTGOING);
-        Double undergroundToConstitutionSquareCost = evaluator.getCost
-                (fiveHundredAndTwoFromUniversityUndergroundToConstitutionSquareRelationship, Direction.OUTGOING);
-
-        assertEquals(180.0, undergroundToSaviourSquareCost);
-        assertEquals(900.0, undergroundToConstitutionSquareCost);
+        assertNotNull(routeFromUniversityToConstitutionSquareNoDelay);
+        assertEquals(2, routeFromUniversityToConstitutionSquareNoDelay.size());
+        assertEquals(15, routeFromUniversityToConstitutionSquareNoDelay.get(0).getLine());
+        assertEquals(universitySquare, routeFromUniversityToConstitutionSquareNoDelay.get(0).getRouteFrom());
+        assertEquals(universityUndergroundStation, routeFromUniversityToConstitutionSquareNoDelay.get(0).getRouteTo());
+        assertEquals(502, routeFromUniversityToConstitutionSquareNoDelay.get(1).getLine());
+        assertEquals(universityUndergroundStation,
+                routeFromUniversityToConstitutionSquareNoDelay.get(1).getRouteFrom());
+        assertEquals(constitutionSquare, routeFromUniversityToConstitutionSquareNoDelay.get(1).getRouteTo());
+        assertNotNull(routeFromUniversityToConstitutionSquareWithDelay);
+        assertEquals(3, routeFromUniversityToConstitutionSquareWithDelay.size());
+        assertEquals(15, routeFromUniversityToConstitutionSquareWithDelay.get(0).getLine());
+        assertEquals(universitySquare, routeFromUniversityToConstitutionSquareWithDelay.get(0).getRouteFrom());
+        assertEquals(universityUndergroundStation,
+                routeFromUniversityToConstitutionSquareWithDelay.get(0).getRouteTo());
+        assertEquals(15, routeFromUniversityToConstitutionSquareWithDelay.get(1).getLine());
+        assertEquals(universityUndergroundStation,
+                routeFromUniversityToConstitutionSquareWithDelay.get(1).getRouteFrom());
+        assertEquals(saviourSquare, routeFromUniversityToConstitutionSquareWithDelay.get(1).getRouteTo());
+        assertEquals(15, routeFromUniversityToConstitutionSquareWithDelay.get(2).getLine());
+        assertEquals(saviourSquare, routeFromUniversityToConstitutionSquareWithDelay.get(2).getRouteFrom());
+        assertEquals(constitutionSquare, routeFromUniversityToConstitutionSquareWithDelay.get(2).getRouteTo());
     }
 }
