@@ -4,7 +4,7 @@ import junit.framework.TestCase;
 import org.apache.cxf.jaxrs.client.JAXRSClientFactoryBean;
 import org.apache.cxf.jaxrs.client.WebClient;
 import org.junit.Test;
-import pl.edu.pw.elka.spdb.adapters.RouteListAdapter;
+import pl.edu.pw.elka.spdb.adapters.list.RouteListAdapter;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.Route;
 import pl.edu.pw.elka.spdb.providers.MapEntryProvider;
@@ -25,7 +25,7 @@ public class MapEntryServiceIT extends TestCase {
     @Test
     public void testGetNearestMapEntry() throws Exception {
         JAXRSClientFactoryBean clientFactoryBean = new JAXRSClientFactoryBean();
-        clientFactoryBean.setAddress(endpointUrl + "/entry/nearest/52.2206062/21.0105747");
+        clientFactoryBean.setAddress(endpointUrl + "/entry/nearest/52.2206062/21.0105747/publicTransportStop/false");
         clientFactoryBean.setProvider(new MapEntryProvider());
         WebClient client = clientFactoryBean.createWebClient();
 
@@ -41,7 +41,7 @@ public class MapEntryServiceIT extends TestCase {
     public void testGetShortestPath() throws Exception {
         Long startingId = getMapEntryId(52.220067, 21.012119);
         Long finishingId = getMapEntryId(52.230014, 21.011886);
-        String relativeUrl = String.format("/entry/shortestPath/%d/%d", startingId, finishingId);
+        String relativeUrl = String.format("/entry/shortestPath/%d/%d/publicTransport/false", startingId, finishingId);
         JAXRSClientFactoryBean clientFactoryBean = new JAXRSClientFactoryBean();
         clientFactoryBean.setAddress(endpointUrl + relativeUrl);
         clientFactoryBean.setProvider(new RouteListProvider());
@@ -73,7 +73,8 @@ public class MapEntryServiceIT extends TestCase {
     }
 
     private Long getMapEntryId(double latitude, double longitude) throws Exception {
-        String relativeUrl = String.format("/entry/nearest/%f/%f", latitude, longitude).replace(",", ".");
+        String relativeUrl = String.format("/entry/nearest/%f/%f/publicTransportStop/false", latitude,
+                longitude).replace(",", ".");
         JAXRSClientFactoryBean clientFactoryBean = new JAXRSClientFactoryBean();
         clientFactoryBean.setAddress(endpointUrl + relativeUrl);
         clientFactoryBean.setProvider(new MapEntryProvider());

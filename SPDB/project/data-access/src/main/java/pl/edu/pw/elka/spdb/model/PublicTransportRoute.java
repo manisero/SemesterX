@@ -24,6 +24,11 @@ public class PublicTransportRoute {
     }
 
     public PublicTransportRoute(int line, Route route) {
+        this(null, line, route);
+    }
+
+    public PublicTransportRoute(Long id, int line, Route route) {
+        this.id = id;
         this.line = line;
         this.routeFrom = route.getRouteFrom();
         this.routeTo = route.getRouteTo();

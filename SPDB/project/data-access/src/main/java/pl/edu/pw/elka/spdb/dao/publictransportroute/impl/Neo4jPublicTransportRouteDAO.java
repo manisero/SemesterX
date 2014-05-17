@@ -30,6 +30,8 @@ public class Neo4jPublicTransportRouteDAO implements IPublicTransportRouteDAO {
     @Override
     public List<PublicTransportRoute> findFastestPublicTransportRoute(MapEntry start, MapEntry end, Duration
             timeNeededToChange) {
+        validateFindFastestPublicTransportRouteArguments(start, end);
+
         List<PublicTransportRoute> fastestRoute = new ArrayList<>();
         Node startNode = template.getNode(start.getId());
         Node endNode = template.getNode(end.getId());
@@ -42,6 +44,14 @@ public class Neo4jPublicTransportRouteDAO implements IPublicTransportRouteDAO {
         }
 
         return fastestRoute;
+    }
+
+    private void validateFindFastestPublicTransportRouteArguments(MapEntry start, MapEntry end) {
+        if (!start.getPublicTransportStop()) {
+            throw new IllegalArgumentException("Public transport route must start with a bus stop!");
+        } else if (!end.getPublicTransportStop()) {
+            throw new IllegalArgumentException("Public transport route must finish with a bus stop!");
+        }
     }
 
     private WeightedPath getShortestPublicTransportPath(Node start, Node end, Duration timeNeededToChange) {

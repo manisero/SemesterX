@@ -2,7 +2,7 @@ package pl.edu.pw.elka.spdb.providers;
 
 import com.google.gson.Gson;
 import org.apache.cxf.helpers.IOUtils;
-import pl.edu.pw.elka.spdb.adapters.MapEntryGsonAdapter;
+import pl.edu.pw.elka.spdb.adapters.gson.MapEntryGsonAdapter;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 
 import javax.ws.rs.Consumes;

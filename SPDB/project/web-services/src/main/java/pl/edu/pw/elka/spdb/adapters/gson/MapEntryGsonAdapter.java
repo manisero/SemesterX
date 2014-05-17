@@ -1,4 +1,4 @@
-package pl.edu.pw.elka.spdb.adapters;
+package pl.edu.pw.elka.spdb.adapters.gson;
 
 import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.model.MapEntry;

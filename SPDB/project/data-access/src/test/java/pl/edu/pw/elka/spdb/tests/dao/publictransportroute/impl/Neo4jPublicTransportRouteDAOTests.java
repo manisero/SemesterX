@@ -97,8 +97,28 @@ public class Neo4jPublicTransportRouteDAOTests extends TestCase {
         assertNull(foundRouteFromConstitutionToUniversitySquare);
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testFindFastestPublicTransportRouteMethodStartValidation() {
+        MapEntry universitySquare = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.2200113, 21.0120177),
+                true));
+        MapEntry subway = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.2190664, 21.0153627)));
+        template.save(universitySquare.addRoute(subway, Duration.ofMinutes(1)));
+
+        publicTransportRouteDAO.findFastestPublicTransportRoute(universitySquare, subway, Duration.ZERO);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testFindFastestPublicTransportRouteMethodEndValidation() {
+        MapEntry subway = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.2190664, 21.0153627)));
+        MapEntry universitySquare = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.2200113, 21.0120177),
+                true));
+        template.save(subway.addRoute(universitySquare, Duration.ofMinutes(1)));
+
+        publicTransportRouteDAO.findFastestPublicTransportRoute(subway, universitySquare, Duration.ZERO);
+    }
+
     @Test
-    public void testFindFastestPublicTransportRoute() {
+    public void testFindFastestPublicTransportRouteMethod() {
         MapEntry universitySquare = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.2200113, 21.0120177),
                 true));
         MapEntry universityUndergroundStation = mapEntryDAO.insertMapEntry(new MapEntry(new Coordinates(52.219932,
