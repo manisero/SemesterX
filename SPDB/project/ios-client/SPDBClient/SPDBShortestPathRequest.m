@@ -12,7 +12,7 @@
     SPDBShortestPathRequest *request = [SPDBShortestPathRequest new];
     request.startingNodeId = startingNodeId;
     request.finishingNodeId = finishingNodeId;
-    request.publicTransport = [NSNumber numberWithBool:publicTransport];
+    request.publicTransport = publicTransport ? @"true" : @"false";
     request.changeDuration = changeDuration;
     
     return request;

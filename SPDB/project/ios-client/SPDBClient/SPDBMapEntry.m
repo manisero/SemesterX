@@ -13,7 +13,7 @@
     
     mapEntry.latitude = latitude;
     mapEntry.longitude = longitude;
-    mapEntry.publicTransportStop = [NSNumber numberWithBool:stop];
+    mapEntry.publicTransportStop = stop ? @"true" : @"false";
     
     return mapEntry;
 }

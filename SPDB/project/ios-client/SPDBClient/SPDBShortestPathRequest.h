@@ -4,7 +4,7 @@
 
 @property (nonatomic, strong) NSNumber *startingNodeId;
 @property (nonatomic, strong) NSNumber *finishingNodeId;
-@property (nonatomic, strong) NSNumber *publicTransport;
+@property (nonatomic, strong) NSString *publicTransport;
 @property (nonatomic, strong) NSNumber *changeDuration;
 
 + (SPDBShortestPathRequest *)requestWithStartingNodeId:(NSNumber *)startingNodeId andFinishingNodeId:(NSNumber *)finishingNodeId;
