@@ -108,7 +108,7 @@
 {
     NSNumber *previousLine = [[self.route firstObject] line];
     
-    for (int i = 1; i < [self.route count] - 1; ++i)
+    for (int i = 1; i < [self.route count]; ++i)
     {
         SPDBRoute *routeSegment = [self.route objectAtIndex:i];
         SPDBMapEntry *segmentStart = routeSegment.routeFrom;
@@ -120,8 +120,10 @@
             [pointAnnotation setTitle:@"Change"];
             [pointAnnotation setSubtitle:[NSString stringWithFormat:@"Change here from line: %@ to line: %@.", previousLine, routeSegment.line]];
             
-            previousLine = routeSegment.line;
+            [self.mapView addAnnotation:pointAnnotation];
         }
+        
+        previousLine = routeSegment.line;
     }
 }
 
@@ -155,6 +157,8 @@
         {
             travelDurationInSeconds += [[self changeDuration] longValue];
         }
+        
+        previousLine = routeSegment.line;
     }
     
     SPDBDateUtilities *dateUtilities = [SPDBDateUtilities new];
@@ -166,7 +170,7 @@
 
 - (NSNumber *)changeDuration
 {
-    return [[NSUserDefaults standardUserDefaults] valueForKey:@"changeTimePreference"];
+    return [NSNumber numberWithInt:[[[NSUserDefaults standardUserDefaults] valueForKey:@"changeTimePreference"] intValue]];
 }
 
 - (void)didReceiveMemoryWarning
