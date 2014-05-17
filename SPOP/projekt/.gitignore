@@ -3,6 +3,4 @@
 *.log
 *.backup
 
-dev/dist/package.conf.inplace
-dev/dist/build/*
-
+dev/dist/*

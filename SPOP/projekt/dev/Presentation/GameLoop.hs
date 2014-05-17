@@ -12,7 +12,7 @@ startGame emptyBoard humanPlayer = do
 									putStrLn "================"
 									putStrLn ""
 									putStrLn "start - start new game"
-									putStrLn "load - load game"
+									putStrLn "load  - load game"
 									putStrLn ""
 									putStrLn "command:"
 									input <- getLine
@@ -106,9 +106,9 @@ printOptions :: IO ()
 printOptions = do
 				  putStrLn ""
 				  printMoveOptions
-				  putStrLn "save - save game"
-				  putStrLn "load - load game"
+				  putStrLn "save    - save game"
+				  putStrLn "load    - load game"
 				  putStrLn "restart - restart game"
-				  putStrLn "exit - exit"
+				  putStrLn "exit    - exit"
 				  putStrLn ""
 				  putStrLn "command:"

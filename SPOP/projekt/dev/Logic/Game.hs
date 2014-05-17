@@ -167,4 +167,4 @@ getScore board Wolf = -(getScore board Sheep)
 getHeuristicScore :: Board -> Int
 getHeuristicScore board = (4 - (length (getMoves board Wolf))) * 3 +                               -- Possible Wolf's moves factor (0 moves: 12, 1 move: 9 etc.)
 						  getRow (getWolfPosition board) +                                         -- Wolf's row factor (from 0 to 7)
-						  ((getSize board) - 1) - (minimum (map getRow (getSheepPositions board))) -- Sheep's minimum row factor: (from 0 to 7)
+						  ((getSize board) - 1) - (maximum (map getRow (getSheepPositions board))) -- Sheep's maximum row factor: (from 0 to 7)
