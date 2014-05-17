@@ -13,6 +13,7 @@ import Logic.Game
 -- initializeBoard function
 initializeBoard :: Board -> IO (Maybe Board)
 initializeBoard (Board size _ sheepPositions) = do
+													putStrLn ""
 													putStrLn "================"
 													putStrLn ""
 													putStrLn ("Choose Wolf position (" ++ intercalate ", " [ show (column + 1) | column <- [0 .. size - 1], even column ] ++ "):")
