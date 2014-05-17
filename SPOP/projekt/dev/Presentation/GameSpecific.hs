@@ -23,7 +23,9 @@ initializeBoard (Board size _ sheepPositions) = do
 
 
 getInitializedBoard :: Maybe Int -> Int -> [Field] -> Maybe Board
-getInitializedBoard wolfColumn boardSize sheepPositions = if (isJust wolfColumn && column >= 0 && column < boardSize && even column)
+getInitializedBoard wolfColumn boardSize sheepPositions = if (isJust wolfColumn && 
+															  column >= 0 && column < boardSize && -- fits in board
+															  even column)                         -- is black field
 														  then Just (Board boardSize (boardSize - 1, column) sheepPositions)
 														  else Nothing
 															where column = (fromJust wolfColumn) - 1
@@ -46,12 +48,12 @@ printBoard board = putStrLn (showBoard board)
 
 showBoard :: Board -> String
 showBoard board = intercalate "\n" [ [ if ((row, column) == getWolfPosition board) 
-									   then 'W'
+									   then 'W'                                               -- print Wolf
 									   else if (elem (row, column) (getSheepPositions board))
-										then 'S'
+										then 'S'                                              -- print Sheep
 										else if (even (row + column))
-											then '-'
-											else ' '
+											then '-'                                          -- print white field
+											else ' '                                          -- print black field
 									   | column <- axis ]
 									 | row <- axis ]
 					where axis = [ 0 .. (getSize board) - 1 ]
@@ -61,15 +63,15 @@ showBoard board = intercalate "\n" [ [ if ((row, column) == getWolfPosition boar
 -- processMoveCommand function
 processMoveCommand :: String -> Board -> Maybe Board
 processMoveCommand command board = case command of
-											"q"    -> applyHumanMove topLeftOf board
-											"w"    -> applyHumanMove topRightOf board
-											"a"    -> applyHumanMove bottomLeftOf board
-											"s"    -> applyHumanMove bottomRightOf board
+											"q"    -> applyHumanMove board topLeftOf
+											"w"    -> applyHumanMove board topRightOf
+											"a"    -> applyHumanMove board bottomLeftOf
+											"s"    -> applyHumanMove board bottomRightOf
 											_      -> Nothing
 
 
-applyHumanMove :: (Field -> Field) -> Board -> Maybe Board
-applyHumanMove transition board  = do
+applyHumanMove :: Board -> (Field -> Field) -> Maybe Board
+applyHumanMove board transition  = do
 									let move = MoveWolf (transition (getWolfPosition board))
 									if (isMoveAllowed move board)
 										then Just (applyMove move board)
