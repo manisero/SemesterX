@@ -48,6 +48,25 @@
 
 	\section*{Model danych}
 
+	W~aplikacji został wykorzystany sieciowy model danych:
+
+	\begin{itemize}
+		\item Miasto jest opisane przy pomocy węzłów oraz łuków:
+			\begin{itemize}
+				\item Współrzędne węzła (punkty) są opisane długością oraz szerokością geograficzną.
+				\item Węzły opisują różne lokalizacje miejskie: przystanki autobusowe, skrzyżowania, etc.
+				\item Łuki reprezentują połączenia drogowe pomiędzy węzłami. Są skierowane, więc można na nich opisać ruch jednokierunkowy.
+				\item Informacja o~relacjach pomiędzy dwuwymiarowymi strukturami nie jest przechowywana.
+			\end{itemize}
+		\item Nie ma ograniczeń odnośnie planarności sieci: 
+			\begin{itemize}
+				\item Testowy zbiór danych jest siecią planarną.
+				\item Aplikacja bez modyfikacji zadziała dla sieci nieplanarnych (tunele, przejazdy wielokondygnacyjne).
+			\end{itemize}
+	\end{itemize}
+
+	\subsection*{Reprezentacja logiczna modelu danych}
+
 	Tradycyjny, oparty na tabelach model danych nie jest wydajny dla opisu struktury miasta. Struktura ta może być rozpatrywana jako zbiór punktów różnego typu (budynki, skrzyżowania, przystanki autobusowe). Punkty te mogą być ze sobą dowolnie połączone. Połączenie reprezentuje drogę, która umożliwia bezpośrednie przemieszczenie się pomiędzy punktami. Miasto można więc uprościć do przestrzennej struktury grafu planarnego.
 
 	Relacyjny model danych jest problematyczny w~przypadku modelowania relacji wiele-do-wielu. Można wykorzystać dwie strategie:
