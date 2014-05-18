@@ -50,6 +50,7 @@
         <jaxrs:providers>
             <bean class="pl.edu.pw.elka.spdb.providers.MapEntryProvider"/>
             <bean class="pl.edu.pw.elka.spdb.providers.RouteListProvider"/>
+            <bean class="pl.edu.pw.elka.spdb.providers.PublicTransportRouteListProvider"/>
         </jaxrs:providers>
     </jaxrs:server>
 </beans>

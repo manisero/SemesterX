@@ -29,7 +29,7 @@
     
     [self prepare];
     
-    [shortestPathFetcher fetchShortestPathFromEntry:entryFrom toEntry:entryTo delegate:self];
+    [shortestPathFetcher fetchShortestPathFromEntry:entryFrom toEntry:entryTo isPublicTransport:NO withChangeTime:[NSNumber numberWithLong:0] delegate:self];
     
     [self waitForStatus:kXCTUnitWaitStatusSuccess timeout:10.0];
     

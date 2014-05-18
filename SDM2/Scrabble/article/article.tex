@@ -1,7 +1,7 @@
-\documentclass[a4paper,twocolumn,12pt]{article}
+\documentclass[a4paper,twocolumn,11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[MeX]{polski}
-\usepackage{fullpage}
+\usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
 \usepackage[breaklinks=true]{hyperref}
 \usepackage{amsfonts}
 \usepackage{amsthm}
@@ -9,6 +9,8 @@
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes,shapes.multipart,arrows,chains}
 \usepackage{tikz-uml}
+\usepackage[explicit]{titlesec}
+\usepackage{caption}
 
 % ;;;;;;;;; colors ;;;;;;;;;;;;
 
@@ -26,21 +28,45 @@
 \newtheorem{definition}{Definicja}
 \newtheorem{pro}{Dowód}
 
+% ;;;;;;;;; macros ;;;;;;;;;;;;
+
+\newlength{\mysize}
+\newcommand{\mycfs}[1]{\setlength{\mysize}{#1pt}%
+  \fontsize{\mysize}{1.2\mysize}\selectfont}
+\newcommand{\mycfsb}[1]{\bfseries \mycfs{#1}}
+\renewcommand{\captionfont}{\centering \mycfs{10}}
+\renewcommand{\captionlabelfont}{\mycfsb{10}}
+
+% ;;;;;;;;; headers ;;;;;;;;;;;;
+
+\titleformat{\section}[runin]{\bfseries}{}{0pt}{\thesection. #1}[]
+\titleformat{name=\section,numberless}[runin]{\bfseries}{}{0pt}{#1}[]
+\titleformat{\subsection}[runin]{\bfseries}{}{0pt}{\thesubsection. #1}[]
+\titlespacing*{\section} {0pt}{6pt}{2.3ex plus .2ex}
+\titlespacing*{\subsection} {0pt}{3pt}{1.5ex plus .2ex}
+
+% ;;;;;;;;; spacing ;;;;;;;;;;;;
+
+\setlength\parindent{0.4cm}
+\setlength{\columnsep}{0.8cm}
+
 % ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-\title{\LARGE{Zaawansowana sztuczna inteligencja do Scrabble} \\ \vspace{2mm} \large{Podstawy teoretyczne i~opis implementacji algorytmu}}
-\author{Jakub Turek}
-\date{\today}
+\title{{\mycfsb{14} Zaawansowana sztuczna inteligencja do Scrabble.} \\ {\mycfsb{14} Podstawy teoretyczne i~opis implementacji algorytmu.}}
+\author{{\mycfs{12} Jakub Turek} \\ {\mycfs{11} Wydział Elektroniki i~Technik Informacyjnych} \\ {\mycfs{11} J.Turek@stud.elka.pw.edu.pl}}
+\date{}
 
 \begin{document}
 
+\vspace{1.5cm}
+
 \maketitle
 
-\begin{abstract}
-Celem artykułu jest opisanie zbioru koncepcji, które posłużą do implementacji algorytmu sztucznej inteligencji grającego w~grę Scrabble w~języku polskim. Artykuł prezentuje zbiór teoretycznych informacji o~optymalnej strategii gry w~Scrabble. Ponadto zostały w~nim przedstawione elementy algorytmów zastosowanych w~aplikacjach Maven oraz Quackle. Autor wskazuje ich potencjalne słabe punkty i~sposoby usprawnienia, a~także prezentuje wyniki implementacji proponowanych poprawek.
-\end{abstract}
+\section*{Streszczenie}
 
-\section*{Wstęp}
+\emph{Celem artykułu jest opisanie zbioru koncepcji, które posłużą do implementacji algorytmu sztucznej inteligencji grającego w~grę Scrabble w~języku polskim. Artykuł prezentuje zbiór teoretycznych informacji o~optymalnej strategii gry w~Scrabble. Ponadto zostały w~nim przedstawione elementy algorytmów zastosowanych w~aplikacjach Maven oraz Quackle. Autor wskazuje ich potencjalne słabe punkty i~sposoby usprawnienia, a~także prezentuje wyniki implementacji proponowanych poprawek.}
+
+\section{Wstęp}
 
 Scrabble to ,,gra słowna polegająca na układaniu na określonej planszy wyrazów z~losowanych liter''. \cite{scrabble_definition} Jest to bardzo ogólna definicja, którą należy uściślić. Scrabble jest grą przeznaczoną dla 2-4 osób. Akcesoriami do gry są: kwadratowa plansza o~stałym rozmiarze $15 \times 15$, torebka wypełniona płytkami, na których nadrukowane są litery oraz ich wartości punktowe, a~także stojaki, na których gracze umieszczają płytki, którymi w~danej chwili dysponują.
 
@@ -208,7 +234,7 @@ Punktacja za dane zagranie jest obliczana jako suma punktów za wszystkie płytk
  \item [Premia słowna] podwaja lub potraja wartość całego wyrazu.
 \end{description}
 
-\section*{Strategia optymalna}
+\section{Strategia optymalna}
 
 Kluczowym zagadnieniem podczas implementacji algorytmu sztucznej inteligencji do gier planszowych (w~tym Scrabble) jest zbadanie istnienia strategii optymalnej.
 
@@ -265,14 +291,14 @@ Dysponując definicją \ref{def:scrabble_state_space}~można dowieść twierdzen
 
 Zostało udowodnione, że deterministyczna wersja Scrabble dla dwóch graczy należy do problemów klasy \emph{PSPACE-Complete}. \cite{deterministic_scrabble} Klasa \emph{PSPACE-Complete} jest najbardziej obszerną klasą problemów wielomianowych. Każdy problem należący do przestrzeni problemów wielomianowych można przekształcić, w~wielomianowym czasie, do problemu klasy \emph{PSPACE-Complete}.
 
-\section*{Strategia zależna od fazy gry}
+\section{Strategia zależna od fazy gry}
 
 Niestety, w~praktyce wykorzystywanie strategii optymalnej nie jest możliwe. Dla rozgrywki końcowej 7~klocków przeciwko 7~klockom średnia ilość gałęzi w~drzewie przestrzeni stanów wynosi 200. Kolejnym problemem jest głębokość drzewa, która może sięgać czternastu poziomów (gdy gracze wykładają klocki pojedynczo) lub więcej (dochodzi możliwość pasowania). Wartości te są zbyt duże aby stosować pełny algorytm typu $\alpha - \beta$, a~odnoszą się wyłącznie do sytuacji, w~której posiadamy pełną informację o~rozgrywce (to znaczy znane są klocki przeciwnika). Na pozostałych etapach rozgrywki analiza przestrzeni stanów nie jest opcją. Wynika z~tego, że algorytm sztucznej inteligencji do Scrabble musi zmieniać strategię rozgrywki w~zależności od etapu gry.
 
 Wyróżnia się cztery zasadnicze fazy rozgrywki: \cite{sheppard_maven}
 
 \begin{description}
-	\item[Opening Play]\footnote{Opening Play, w~skrócie OP. W~dalszej części artykułu dla określenia faz rozgrywki stosowane będą wyłącznie nazwy skrótowe, a~więc OP, MG, PEG oraz EG.} faza otwarcia. Dotyczy wyłącznie pierwszego zagrania, a~więc kiedy na planszy nie znajduje się jeszcze żaden klocek.
+	\item[Opening Play\footnotemark] \footnotetext{Opening Play, w~skrócie OP. W~dalszej części artykułu dla określenia faz rozgrywki stosowane będą wyłącznie nazwy skrótowe, a~więc OP, MG, PEG oraz EG.} faza otwarcia. Dotyczy wyłącznie pierwszego zagrania, a~więc kiedy na planszy nie znajduje się jeszcze żaden klocek.
 	\item[Mid Game] faza śródgry. Rozpoczyna się po otwarciu, a~kończy wraz z~rozpoczęciem fazy PEG.
 	\item[Pre-End Game] faza przedkońcowa rozgrywki. Rozpoczyna się w~momencie, w~którym rozgrywka może zakończyć się w~dwóch turach, a~więc kiedy w~worku pozostaje siedem lub mniej klocków. Kończy się wraz z~rozpoczęciem fazy EG.
 	\item[End Game] faza zakończenia. Rozpoczyna się, gdy w~worku nie ma już klocków i~trwa aż do końca gry. Charakteryzuje się tym, że w~trakcie jej trwania zawodnicy dysponują pełną informacją o~grze, a~więc również o~literach posiadanych przez przeciwnika.
@@ -300,19 +326,19 @@ Wykonywany algorytm będzie różny w~zależności od fazy rozgrywki. Podczas im
 	\label{fig:strategy_pattern}
 \end{figure}
 
-\section*{Opening Play}
+\section{Opening Play}
 
 Celem fazy OP jest wybranie najwyżej punktowanego zagrania. W~algorytmie Quackle wybór ten jest dokonywany poprzez przeszukiwanie słownika pod kątem posiadanych liter. Wynik punktowy uzyskany za zagranie jest obliczany dynamicznie. 
 
 Wyszukiwanie najlepszego otwarcia może być zoptymalizowane czasowo. Wykorzystując znajomość słownika można przeprowadzić analizę najlepszych otwarć dla wszystkich możliwych kombinacji klocków. Każdej kombinacji liter można przypisać prostą funkcję skrótu, która sortuje te litery alfabetycznie. Po wstępnej analizie słownika można przygotować mapę, która każdej funkcji skrótu przyporządkuje najlepsze zagranie oraz jego wartość punktową. Dzięki temu możliwe jest wykonanie pierwszego zagrania w~czasie jednostkowym\footnote{Przy założeniu, że wśród liter początkowych nie znajdują się blanki.}.
 
-\section*{Mid Game}
+\section{Mid Game}
 
 W~fazie MG w~aplikacji Quackle wykorzystywany jest algorytm z~heurystyczną funkcją oszacowania oraz symulacją dwóch zagrań ,,w~przód''. Schemat tego algorytmu został przedstawiony na rysunku \ref{fig:mid_game_algorithm}.~\cite{quackle_algorithm}
 
 \begin{figure}[ht!]
 	\centering
-	\scalebox{0.57}{
+	\scalebox{0.55}{
 		\begin{tikzpicture}[node distance=2cm]
 			\noindent
 			\tikzstyle{io} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=2cm, minimum height=1cm, text centered, draw=black, fill=UniGreen!80, text width=2.5cm]
@@ -328,14 +354,14 @@ W~fazie MG w~aplikacji Quackle wykorzystywany jest algorytm z~heurystyczną funk
 			\node (possmoves) [io, right of=movegenstaticeval, xshift=4cm] {Wszystkie możliwe ruchy};
 			\node (simulation) [process, below of=staticeval] {Symulacja};
 			\node (bestmoves) [io, below of=possmoves] {23 najlepsze ruchy};
-			\node (hypsequences) [io, below of=bestmoves, text width=5cm] {Hipotetyczna sytuacja 2 ruchy w~przód};
+			\node (hypsequences) [io, below of=bestmoves] {Hipotetyczna sytuacja w~przód};
 			\node (winpercestimation) [process, below of=simulation, text width=4cm] {Oszacowanie prawdopodobieństwa wygranej};
 			\node (end) [process, draw=none, fill=none, below of=winpercestimation, minimum height=1mm] { };
 			\coordinate (staticevalsimulation) at ($(staticeval)!0.5!(simulation)$);
 			\node (tilesleft) [io, left of=winpercestimation,xshift=-2cm,yshift=2cm] {Pozostałe płytki};
 			\node (score) [io, left of=winpercestimation,xshift=-1.5cm,yshift=-2cm] {Wynik};
 			\coordinate (winpercestimationend) at ($(winpercestimation)!0.5!(end)$);
-			\node (chosenmoves) [io, below of=hypsequences,text width=5cm] {10 wybranych, posortowanych ruchów};
+			\node (chosenmoves) [io, below of=hypsequences] {10 wybranych ruchów};
 			\draw [arrow] (movegen) -- (staticeval);
 			\draw [arrow] (staticeval) -- (simulation);
 			\draw [arrow] (simulation) -- (winpercestimation);
@@ -365,7 +391,7 @@ Algorytm składa się z~czterech kroków:
 
 Na potrzeby artykułu pominięte zostanie omówienie fazy generacji ruchu. Jej wynikiem jest lista wszystkich poprawnych ruchów dla określonej kombinacji liter i~ułożenia klocków na planszy.
 
-\subsection*{Statyczne oszacowanie}
+\subsection{Statyczne oszacowanie}
 
 Do statycznego oszacowania wykorzystywana jest funkcja celu postaci $F(x) = P(x) + LV(x)$, gdzie $F(x)$ to wartość oszacowania dla zagrania $x$, $P(x)$ to wartość punktowa tego zagrania, a~$LV(x)$ to współczynnik \emph{leave value} dla klocków pozostałych po zagraniu.
 
@@ -377,7 +403,7 @@ Przykładowo jeśli płytki pozostałe po ułożeniu czteroliterowego wyrazu to 
 
 Statyczne oszacowanie przeprowadza się dla wszystkich dozwolonych ruchów wyznaczonych na etapie generacji. Do kolejnego etapu wybierane są 23 ruchy z~najwyższą wartością funkcji celu.
 
-\subsection*{Symulacja}
+\subsection{Symulacja}
 
 W~fazie symulacji dla każdego z~pozostałych 23 ruchów szacuje się jaki może być ich skutek na dwa zagrania w~przód. Symulacja przeprowadzana jest według poniższego algorytmu:
 
@@ -393,13 +419,13 @@ W~fazie symulacji dla każdego z~pozostałych 23 ruchów szacuje się jaki może
 	\item Wartość $PV_{1}$ jest powiększana o~\emph{leave value} płytek gracza $G_{1}$ po zagraniu $P_{3}$.
 \end{enumerate}
 
-\subsection*{Szacowanie prawdopodobieństwa wygranej}
+\subsection{Szacowanie prawdopodobieństwa wygranej}
 
 Dla każdego z~23 wyników symulacji szacowane jest następnie prawdopodobieństwo wygranej. Prawdopodobieństwo wygranej jest funkcją $W: PV, TR \rightarrow [0;1]$, gdzie $PV$ jest wartością zagrania wyznaczoną w trakcie symulacji, a~$TR$ jest liczbą klocków pozostałych do wykorzystania w~partii. 
 
 Wartości funkcji $W$, podobnie jak wartości funkcji celu dla fazy statycznego oszacowania, są wyznaczane na podstawie bazy danych gier. W~wyniku etapu oszacowania prawdopodobieństwa wygranej pozostawiane jest 10 zagrań o~największym prawdopodobieństwie wygranej.
 
-\subsection*{Usprawnienia fazy mid-game}
+\subsection{Usprawnienia fazy mid-game}
 
 Na etapie symulacji pomijane są dwa istotne aspekty rozgrywki:
 
@@ -420,7 +446,7 @@ Kolejnym usprawnieniem algorytmu może być wprowadzenie rozróżnienia na zagra
 
 Podział zagrań na defensywne i~ofensywne można przeprowadzić na podstawie wielu kryteriów. Pod uwagę można brać między innymi liczbę wykorzystanych podczas zagrania klocków, które znajdowały się na planszy przed rozegraniem. Innym przykładem takiego kryterium jest ilość nowych premii otwartych w~wyniku zagrania.
 
-\section*{End Game}
+\section{End Game}
 
 Algorytm operujący w~fazie EG dysponuje pełną informacją o~grze, gdyż wiadomo jakimi literami dysponuje przeciwnik. W~tych warunkach naturalne jest wykorzystanie przeszukiwania przestrzeni stanów algorytmem typu $\alpha - \beta$. Niestety, nawet w~końcowych etapach rozgrywki przestrzeń stanów jest zbyt duża i~zbyt głęboka aby wykonać takie przeszukiwane. Niezbędne jest wyznaczenie ograniczeń.
 
@@ -438,11 +464,11 @@ Algorytm ten jest kontynuowany do momentu, gdy żaden z~graczy nie może się po
 
 Analiza przestrzeni stanów może być dalej usprawniana. Nie zawsze istnieje bowiem jedna optymalna ścieżka zagrania dla przeciwnika. Przykładowo, gdy może on zagrać słowo \textbf{ALE} w~dwóch różnych pozycjach (za 25 i~28 punktów odpowiednio) korzyść z~zablokowania drugiej na rzecz pierwszej pozycji wynosi tylko trzy punkty. Spostrzeżenie to można zawrzeć w~algorytmie przez wprowadzenie dwóch progów oszacowania: optymistycznego i~pesymistycznego. Niestety, algorytm minimax nie wspiera przedziałów. Do przeszukiwania przestrzeni stanów należy zatem wykorzystać inny algorytm. Przykładem przeszukiwania wspierającego przedziały jest algorytm $B^{*}$. \cite{bstar}
 
-\section*{Pre-end Game}
+\section{Pre-end Game}
 
 W~fazie PEG obliczenia wykonywane przez algorytm dla fazy MG pozostaną poprawne. Pod uwagę należy wziąć również scenariusz końca gry, gdyż wraz z~rozpoczęciem fazy PEG możliwe jest zakończenie rozgrywki w~dwóch turach. Rozwiązaniem jest wykorzystywanie hybrydowego podejścia, które najpierw wyznacza najkorzystniejsze ruchy algorytmem dla fazy MG, a~potem dokonuje dla nich ograniczonego przeszukiwania przestrzeni stanów.
 
-\section*{Wyniki testów}
+\section{Wyniki testów}
 
 Na potrzeby testowania usprawnień algorytmów przedstawionych w~artykule zostały wykonane dwie implementacje sztucznej inteligencji do Scrabble. Jedna, nazywana dalej algorytmem referencyjnym, bazuje bezpośrednio na specyfikacji aplikacji Quackle. \cite{quackle_algorithm} Druga, tak zwany algorytm zmodyfikowany, nanosi do algorytmu referencyjnego wszystkie modyfikacje opisane w~artykule. Oba algorytmy rozegrały przeciwko sobie 1523 partie. Podsumowanie wyników zostało zamieszczone w~tabeli~\ref{tab:test_results}.
 
@@ -468,7 +494,7 @@ Rozkład procentowy wygranych znacząco odbiega od rozkładu $50\% - 50\%$, któ
 
 Ze względu na brak odpowiedniej klasy przeciwników algorytm nie został należycie przetestowany przeciwko ludziom. Okazało się, że przewaga, którą daje znajomość całego słownika jest zbyt duża, aby gracze-amatorzy mogli wygrać chociaż jedną partię z~algorytmem. W~dotychczasowych testach zmodyfikowany algorytm odniósł $100\%$ zwycięstw.
 
-\section*{Podsumowanie}
+\section{Podsumowanie}
 
 Artykuł prezentuje informacje, które mogą posłużyć do implementacji zaawansowanego algorytmu sztucznej inteligencji grającego w~Scrabble. Artykuł przedstawia podstawy teoretyczne niezbędne do jego implementacji. Ponadto opisuje szczegółowo  strategie, które mogą być stosowane na różnym stopniu zaawansowania rozgrywki. 
 

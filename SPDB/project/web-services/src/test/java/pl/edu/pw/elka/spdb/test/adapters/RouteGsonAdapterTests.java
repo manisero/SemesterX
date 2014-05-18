@@ -2,7 +2,7 @@ package pl.edu.pw.elka.spdb.test.adapters;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import pl.edu.pw.elka.spdb.adapters.RouteGsonAdapter;
+import pl.edu.pw.elka.spdb.adapters.gson.RouteGsonAdapter;
 import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.Route;

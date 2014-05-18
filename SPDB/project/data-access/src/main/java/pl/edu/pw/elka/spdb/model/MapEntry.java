@@ -21,8 +21,14 @@ public class MapEntry {
     @Indexed(indexType = IndexType.POINT, indexName = "MapEntryLocation")
     private String wkt;
 
+    @Indexed(indexType = IndexType.FULLTEXT, indexName = "PublicTransportStop")
+    private boolean publicTransportStop;
+
     @RelatedToVia
     private Collection<Route> routes = new HashSet<>();
+
+    @RelatedToVia
+    private Collection<PublicTransportRoute> publicTransportRoutes = new HashSet<>();
 
     public MapEntry() {
     }
@@ -32,8 +38,17 @@ public class MapEntry {
     }
 
     public MapEntry(Long id, Coordinates coordinates) {
+        this(id, coordinates, false);
+    }
+
+    public MapEntry(Coordinates coordinates, boolean publicTransportStop) {
+        this(null, coordinates, publicTransportStop);
+    }
+
+    public MapEntry(Long id, Coordinates coordinates, boolean publicTransportStop) {
         setId(id);
         setCoordinates(coordinates);
+        setPublicTransportStop(publicTransportStop);
     }
 
     public Long getId() {
@@ -50,6 +65,14 @@ public class MapEntry {
 
     public void setWkt(String wkt) {
         this.wkt = wkt;
+    }
+
+    public boolean getPublicTransportStop() {
+        return publicTransportStop;
+    }
+
+    public void setPublicTransportStop(boolean publicTransportStop) {
+        this.publicTransportStop = publicTransportStop;
     }
 
     public Coordinates getCoordinates() {

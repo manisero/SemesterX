@@ -2,7 +2,7 @@ package pl.edu.pw.elka.spdb.test.adapters;
 
 import junit.framework.TestCase;
 import org.junit.Test;
-import pl.edu.pw.elka.spdb.adapters.MapEntryGsonAdapter;
+import pl.edu.pw.elka.spdb.adapters.gson.MapEntryGsonAdapter;
 import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.model.MapEntry;
 

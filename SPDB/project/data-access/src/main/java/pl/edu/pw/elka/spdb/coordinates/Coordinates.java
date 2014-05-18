@@ -31,4 +31,11 @@ public class Coordinates {
     public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        Coordinates other = (Coordinates) obj;
+
+        return other.getLatitude() == getLatitude() && other.getLongitude() == getLongitude();
+    }
 }

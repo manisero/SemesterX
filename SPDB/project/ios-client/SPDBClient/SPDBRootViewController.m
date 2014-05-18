@@ -20,6 +20,14 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self configureTableViewSize];
+}
+
+- (void)configureTableViewSize
+{
+    [self.tableView setBackgroundView:nil];
+    [self.tableView setBackgroundView:[[UIView alloc] init]];
+    self.tableView.contentInset = UIEdgeInsetsMake(0.0, 0.0, 120.0, 0.0);
 }
 
 - (void)didReceiveMemoryWarning
@@ -36,7 +44,7 @@
 {
     if (section == 0)
     {
-        return 3;
+        return 4;
     }
     else if (section == 1)
     {
@@ -50,7 +58,7 @@
 {
     if ([indexPath section] == 0)
     {
-        if ([indexPath row] == 2)
+        if ([indexPath row] == 3)
         {
             return 216.0;
         }
@@ -81,6 +89,10 @@
             return @"PointTo";
         }
         else if ([indexPath row] == 2)
+        {
+            return @"PublicTransport";
+        }
+        else if ([indexPath row] == 3)
         {
             return @"ArrivalTime";
         }
@@ -129,8 +141,16 @@
 {
     if ([indexPath section] == 0)
     {
-        self.selectedPoint = [indexPath row] == 0 ? self.pointFrom : self.pointTo;
-        [self performSegueWithIdentifier:@"PickLocation" sender:self];
+        if ([indexPath row] == 0)
+        {
+            self.selectedPoint = self.pointFrom;
+            [self performSegueWithIdentifier:@"PickLocation" sender:self];
+        }
+        else if ([indexPath row] == 1)
+        {
+            self.selectedPoint = self.pointTo;
+            [self performSegueWithIdentifier:@"PickLocation" sender:self];
+        }
     }
 }
 
@@ -192,7 +212,7 @@
 
 - (void)updateSelectedDate
 {
-    UIView *timePickerContentView = [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]] contentView];
+    UIView *timePickerContentView = [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:3 inSection:0]] contentView];
     
     for (id subview in timePickerContentView.subviews)
     {
@@ -220,17 +240,34 @@
 - (void)fetchShortestPath
 {
     SPDBShortestPathFetcher *shortestPathFetcher = [SPDBShortestPathFetcher new];
-    SPDBMapEntry *entryFrom = [self mapEntryFromPoint:self.pointFrom];
-    SPDBMapEntry *entryTo = [self mapEntryFromPoint:self.pointTo];
+    SPDBMapEntry *entryFrom = [self mapEntryFromPoint:self.pointFrom andPublicTransportStop:[self isPublicTransport]];
+    SPDBMapEntry *entryTo = [self mapEntryFromPoint:self.pointTo andPublicTransportStop:[self isPublicTransport]];
+    NSNumber *changeTime = [[NSUserDefaults standardUserDefaults] valueForKey:@"changeTimePreference"];
     
-    [shortestPathFetcher fetchShortestPathFromEntry:entryFrom toEntry:entryTo delegate:self];
+    [shortestPathFetcher fetchShortestPathFromEntry:entryFrom toEntry:entryTo isPublicTransport:[self isPublicTransport] withChangeTime:changeTime delegate:self];
 }
 
-- (SPDBMapEntry *)mapEntryFromPoint:(NSValue *)point
+- (BOOL)isPublicTransport
+{
+    UIView *switchContentView = [[self.tableView cellForRowAtIndexPath:[NSIndexPath indexPathForRow:2 inSection:0]] contentView];
+    
+    for (id subview in switchContentView.subviews)
+    {
+        if ([subview isKindOfClass:[UISwitch class]])
+        {
+            UISwitch *publicTransportSwitch = subview;
+            return [publicTransportSwitch isOn];
+        }
+    }
+    
+    return NO;
+}
+
+- (SPDBMapEntry *)mapEntryFromPoint:(NSValue *)point andPublicTransportStop:(BOOL)stop
 {
     CGPoint pointStructure = [point CGPointValue];
     
-    return [SPDBMapEntry mapEntryWithLatitude:[NSNumber numberWithDouble:pointStructure.x] andLongitude:[NSNumber numberWithDouble:pointStructure.y]];
+    return [SPDBMapEntry mapEntryWithLatitude:[NSNumber numberWithDouble:pointStructure.x] andLongitude:[NSNumber numberWithDouble:pointStructure.y] asPublicTransportStop:stop];
 }
 
 - (void)updateProgress:(CGFloat)progress

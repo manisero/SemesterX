@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7D75E7EB4BCA46899A3BDB68 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7DE4A21D7249CBBB8C1526 /* libPods.a */; };
+		8C6FC4BC1927F7A900366F89 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8C6FC4BB1927F7A900366F89 /* Settings.bundle */; };
 		8C88BD26190FE8C300A61444 /* SPDBRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */; };
 		8C88BD28190FED1000A61444 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C88BD27190FED1000A61444 /* MapKit.framework */; };
 		8C88BD2C190FF0C700A61444 /* SPDBMapSelectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C88BD2B190FF0C700A61444 /* SPDBMapSelectionViewController.m */; };
@@ -54,6 +55,7 @@
 
 /* Begin PBXFileReference section */
 		5E7DE4A21D7249CBBB8C1526 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C6FC4BB1927F7A900366F89 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = SPDBClient/Settings.bundle; sourceTree = "<group>"; };
 		8C88BD24190FE8C300A61444 /* SPDBRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBRootViewController.h; sourceTree = "<group>"; };
 		8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBRootViewController.m; sourceTree = "<group>"; };
 		8C88BD27190FED1000A61444 /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
@@ -165,6 +167,7 @@
 		8C8A8FA7190F8BD50087AE07 = {
 			isa = PBXGroup;
 			children = (
+				8C6FC4BB1927F7A900366F89 /* Settings.bundle */,
 				8C8A8FB9190F8BD50087AE07 /* SPDBClient */,
 				8C8A8FD8190F8BD50087AE07 /* SPDBClientTests */,
 				8C8A8FB2190F8BD50087AE07 /* Frameworks */,
@@ -470,6 +473,7 @@
 			files = (
 				8CAA19A4190FB1EB00992379 /* config.plist in Resources */,
 				8C8A8FCC190F8BD50087AE07 /* Images.xcassets in Resources */,
+				8C6FC4BC1927F7A900366F89 /* Settings.bundle in Resources */,
 				8C8A8FBE190F8BD50087AE07 /* InfoPlist.strings in Resources */,
 				8C8A8FC7190F8BD50087AE07 /* Main.storyboard in Resources */,
 			);

@@ -35,7 +35,15 @@
         </property>
     </bean>
 
-    <bean class="pl.edu.pw.elka.spdb.population.impl.DataPopulator" />
-    <bean class="pl.edu.pw.elka.spdb.population.repository.impl.DataPopulatorRepository" />
     <bean class="pl.edu.pw.elka.spdb.configuration.impl.ConfigurationProvider"/>
+    <bean class="pl.edu.pw.elka.spdb.population.reader.entry.impl.StreamMapEntryReader" />
+    <bean class="pl.edu.pw.elka.spdb.population.reader.route.impl.StreamRouteReader" />
+    <bean class="pl.edu.pw.elka.spdb.population.reader.publictransportroute.impl.StreamPublicTransportRouteReader" />
+    <bean class="pl.edu.pw.elka.spdb.population.repository.impl.StreamDataPopulatorRepository">
+        <constructor-arg name="entriesStream" value="classpath:entries.txt" type="java.io.InputStream" />
+        <constructor-arg name="routesStream" value="classpath:routes.txt" type="java.io.InputStream" />
+        <constructor-arg name="publicTransportRoutesStream" value="classpath:public_transport_routes.txt"
+                         type="java.io.InputStream" />
+    </bean>
+    <bean class="pl.edu.pw.elka.spdb.population.impl.DataPopulator"/>
 </beans>
