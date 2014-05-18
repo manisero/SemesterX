@@ -168,6 +168,161 @@
 		\label{fig:architecture}
 	\end{figure}
 
+	\subsection*{Serwer}
+
+	Serwer posiada następujące odpowiedzialności:
+
+	\begin{itemize}
+		\item Przechowuje informacje o~sieci miasta.
+		\item Zwraca informacje o~najbliższych punktach z~bazy danych dla danej szerokości i~długości geograficznej\footnote{Przeszukiwanie domyślnie ograniczone jest do promienia 5~kilometrów. Ograniczenie to można zmienić w~pliku \verb+config.properties+.}.
+		\item Zwraca informacje o~najbliższych przystankach komunikacji z~bazy danych dla danej szerokości i~długości geograficznej\footnotemark[2].
+		\item Zwraca informacje o~najszybszej ścieżce dotarcia z~punktu o~identyfikatorze~A do punktu o~identyfikatorze~B. W~zależności od wywołania metody zwracana jest ścieżka dla samochodu lub komunikacji miejskiej.
+	\end{itemize}
+
+	\subsection*{Klient}
+
+	Klient posiada następujące odpowiedzialności:
+
+	\begin{itemize}
+		\item Pozwala zdefiniować punkt początkowy i~końcowy podróży poprzez zaznaczenie na mapie.
+		\item Umożliwia wprowadzenie godziny przyjazdu.
+		\item Rysuje najszybszą ścieżkę na mapie na podstawie informacji pobranych z~serwera.
+		\item Oblicza czas wyjścia z~domu na podstawie obecnego czasu i~długości podróży odebranej z~serwera.
+		\item Pozwala na określenie czasu przesiadki.
+	\end{itemize}
+
+	\subsection*{Zasilanie danymi}
+
+	Aby ułatwić inicjalne zasilanie bazy danych serwera utworzony został moduł o~nazwie \textbf{data-populator}:
+
+	\begin{itemize}
+		\item Moduł ten wypełnia bazę danych wartościami pobranymi ze zdefiniowanego repozytorium.
+		\item Domyślnym repozytorium są trzy pliki płaskie, które odpowiednio zawierają informacje o~węzłach mapy, łukach dróg oraz łukach komunikacji miejskiej.
+	\end{itemize}
+
+	Rysunek~\ref{vrb:entries_repository} przedstawia przykład pliku definiującego punkty wejściowe dla węzłów mapy. Linie rozpoczynające się od znaku \textbf{\#} są traktowane jako komentarz. Kolejne kolumny oznaczają: identyfikator punktu w~obrębie repozytorium, szerokość geograficzną, długość geograficzną oraz flagę oznaczającą czy dany punkt jest przystankiem komunikacji miejskiej. Ostatnia kolumna, w~której znajduje się opis punktu, nie jest wprowadzana do bazy danych.
+
+	\begin{figure}[ht!]
+		\centering
+		\begin{BVerbatim}
+# id    latitude  longitude pt_stop description 
+EN_0001 52.220067 21.012119 true    Plac Politechniki
+EN_0002 52.220146 21.004913 true    Nowowiejska/Al. Niepodległości
+EN_0003 52.223008 21.004934 true    Koszykowa/Chałubińskiego
+EN_0004 52.227885 21.001865 true    Al. Jerozolimskie/Jana Pawła
+EN_0005 52.230014 21.011886 true    Marszałkowska/Al. Jerozolimskie
+EN_0006 52.219893 21.018152 true    Plac Zbawiciela
+EN_0007 52.223232 21.015984 true    Plac Konstytucji
+EN_0008 52.226229 21.014161 true    Marszałkowskiej/Hoża
+EN_0009 52.228353 21.010203 false   Nowogrodzka/Poznańska
+		\end{BVerbatim}
+		\caption{Plik repozytorium zawierający dane wejściowe dla węzłów mapy.}
+		\label{vrb:entries_repository}
+	\end{figure}
+
+	Rysunek~\ref{vrb:routes_repository} przedstawia przykład pliku definiującego łuki reprezentujące drogi. Kolumny oznaczają kolejno: identyfikator drogi w~obrębie repozytorium, identyfikator węzła początkowego drogi, identyfikator węzła końcowego drogi oraz czas podróży podany w~sekundach.
+
+	\begin{figure}[ht!]
+		\centering
+		\begin{BVerbatim}
+# id    from    to      travel_time_in_sec
+RO_0001 EN_0001 EN_0002 180
+RO_0002 EN_0002 EN_0003 120
+RO_0003 EN_0003 EN_0004 240
+RO_0004 EN_0004 EN_0005 300
+RO_0005 EN_0001 EN_0006 120
+RO_0006 EN_0006 EN_0007 120
+RO_0007 EN_0007 EN_0008 120
+RO_0008 EN_0008 EN_0005 240
+		\end{BVerbatim}
+		\caption{Plik repozytorium zawierający dane wejściowe dla łuków reprezentujących drogi.}
+		\label{vrb:routes_repository}
+	\end{figure}
+
+	Rysunek~\ref{vrb:ptroutes_repository} przedstawia przykład pliku definiującego łuki reprezentujące transport publiczny. Kolumny oznaczają kolejno: identyfikator wpisu w~obrębie repozytorium, numer linii komunikacji oraz identyfikator drogi, po której porusza się komunikacja.
+
+	\begin{figure}[ht!]
+		\centering
+		\begin{BVerbatim}
+# id      line route
+PTRO_0001 10   RO_0001
+PTRO_0002 10   RO_0002
+PTRO_0003 10   RO_0003
+PTRO_0004 9    RO_0004
+PTRO_0005 15   RO_0005
+PTRO_0006 15   RO_0006
+PTRO_0007 15   RO_0007
+PTRO_0008 15   RO_0008
+		\end{BVerbatim}
+		\caption{Plik repozytorium zawierający dane wejściowe dla łuków reprezentujących komunikację publiczną.}
+		\label{vrb:ptroutes_repository}
+	\end{figure}	
+
+	\subsection*{Komunikacja}
+
+	Komunikacja odbywa się przy pomocy serwisów w~specyfikacji JAX-RS\footnote{Java API for RESTful Web Services.}. Zostały zdefiniowane dwa serwisy.
+
+	\paragraph{Najbliższy punkt na mapie}
+
+	Metoda jest dostępna przez odwołanie do relatywnej ścieżki \Verb+/nearest/{lat}/{lon}/publicTransportStop/{stop}+. Parametr \Verb+lat+ należy zastąpić szerokością geograficzną w~formacie zmiennoprzecinkowym z~kropką. Parametr \Verb+lon+ należy zastąpić długością geograficzną w~tym samym formacie. Parametr \Verb+stop+ należy natomiast wypełnić wartością \Verb+true+ lub \Verb+false+ jeżeli odpowiednio ma zostać zwrócony przystanek komunikacji miejskiej lub dowolny punkt. Serwis zwraca odpowiedź w~formacie przedstawionym na rysunku~\ref{vrb:entry_service_response}.
+
+	\begin{figure}[ht!]
+		\centering
+		\begin{BVerbatim}
+{
+  "id": 15,
+  "latitude": 52.219893,
+  "longitude": 21.018152
+}
+		\end{BVerbatim}
+		\caption{Przykładowa odpowiedź serwisu odnajdującego najbliższy punkt w~bazie danych.}
+		\label{vrb:entry_service_response}
+	\end{figure}	
+
+	\paragraph{Najszybsza droga}
+
+	Metoda może być wywołana poprzez odwołanie do relatywnej ścieżki \Verb+/shortestPath/{sId}/{fId}/publicTransport/{pT}/changeDuration/{cD}+. Parametr \Verb+sId+ należy zastąpić poprzez identyfikator węzła początkowego. Parametr \Verb+fId+ należy zastąpić poprzez identyfikator węzła końcowego. Oba identyfikatory mogą pochodzić z~wywołania serwisu dla najbliższego punktu na mapie. Parametr \Verb+pT+ należy zastąpić wartością \Verb+true+ lub \Verb+false+ w~zależności od tego czy wyszukana ma być droga dla komunikacji miejskiej lub samochodu. Ostatni parametr \Verb+cD+ należy zastąpić liczbą całkowitą, która oznacza ilość sekund doliczanych na oczekiwanie przy przesiadce. Odwołanie do \Verb+/changeDuration/{cD}+ jest opcjonalne dla najszybszej ścieżki samochodowej i~można je pominąć. Serwis zwraca odpowiedź w~formacie przedstawionym na rysunku~\ref{vrb:entry_service_response}.
+
+	\begin{figure}[ht!]
+		\centering
+		\begin{BVerbatim}
+[
+  {
+    "id": 10,
+    "routeFrom": {
+      "id": 15,
+      "latitude": 52.219893,
+      "longitude": 21.018152
+    },
+    "routeTo": {
+      "id": 329,
+      "latitude": 52.220067,
+      "longitude": 21.012119
+    },
+    "duration": 300,
+    "line": 9
+  },
+  {
+    "id": 73,
+    "routeFrom": {
+      "id": 329,
+      "latitude": 52.220067,
+      "longitude": 21.012119
+    },
+    "routeTo": {
+      "id": 412,
+      "latitude": 52.228353,
+      "longitude": 21.010203
+    },
+    "duration": 240,
+    "line": 15
+  }
+]
+		\end{BVerbatim}
+		\caption{Przykładowa odpowiedź serwisu odnajdującego najszybszą ścieżkę pomiędzy punktami.}
+		\label{vrb:entry_service_response}
+	\end{figure}	
+
 	\section*{Budowanie i~uruchamianie aplikacji}
 
 	Moduł serwerowy oraz kliencki aplikacji budowane są osobno. Część serwerowa jest budowana przy użyciu aplikacji Maven (\url{http://maven.apache.org}). Uruchomienie polecenia \textbf{mvn clean install} w~ścieżce projektu spowoduje ściągnięcie wszystkich zależności, uruchomienie testów jednostkowych oraz integracyjnych, a~także wygenerowanie pliku web-archive (\textbf{.war}), który następnie trzeba \emph{zdeployować} na serwer aplikacji Java.
