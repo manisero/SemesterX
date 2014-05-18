@@ -5,6 +5,8 @@ import pl.edu.pw.elka.spdb.model.MapEntry;
 import pl.edu.pw.elka.spdb.model.PublicTransportRoute;
 import pl.edu.pw.elka.spdb.model.Route;
 import pl.edu.pw.elka.spdb.population.reader.entry.IStreamMapEntryReader;
+import pl.edu.pw.elka.spdb.population.reader.publictransportroute.IStreamPublicTransportRouteReader;
+import pl.edu.pw.elka.spdb.population.reader.route.IStreamRouteReader;
 import pl.edu.pw.elka.spdb.population.repository.IDataPopulatorRepository;
 
 import java.io.InputStream;
@@ -18,7 +20,13 @@ public class StreamDataPopulatorRepository implements IDataPopulatorRepository {
     private final InputStream publicTransportRoutesStream;
 
     @Autowired
-    private IStreamMapEntryReader streamMapEntryReader;
+    private IStreamMapEntryReader mapEntryReader;
+
+    @Autowired
+    private IStreamRouteReader routeReader;
+
+    @Autowired
+    private IStreamPublicTransportRouteReader publicTransportRouteReader;
 
     private Map<String, MapEntry> entries;
     private Map<String, Route> routes;
@@ -33,8 +41,8 @@ public class StreamDataPopulatorRepository implements IDataPopulatorRepository {
 
     @Override
     public List<MapEntry> getEntries() {
-        if (entries.isEmpty()) {
-            entries = streamMapEntryReader.readEntries(entriesStream);
+        if (entries == null) {
+            entries = mapEntryReader.readEntries(entriesStream);
         }
 
         return entries.entrySet().stream().map(e -> e.getValue()).collect(Collectors.toList());
@@ -42,11 +50,32 @@ public class StreamDataPopulatorRepository implements IDataPopulatorRepository {
 
     @Override
     public List<Route> getRoutes() {
-        return null;
+        if (entries == null) {
+            entries = mapEntryReader.readEntries(entriesStream);
+        }
+
+        if (routes == null) {
+            routes = routeReader.readRoutes(entries, routesStream);
+        }
+
+        return routes.entrySet().stream().map(r -> r.getValue()).collect(Collectors.toList());
     }
 
     @Override
     public List<PublicTransportRoute> getPublicTransportRoutes() {
-        return null;
+        if (entries == null) {
+            entries = mapEntryReader.readEntries(entriesStream);
+        }
+
+        if (routes == null) {
+            routes = routeReader.readRoutes(entries, routesStream);
+        }
+
+        if (publicTransportRoutes == null) {
+            publicTransportRoutes = publicTransportRouteReader.readPublicTransportRoutes(routes,
+                    publicTransportRoutesStream);
+        }
+
+        return publicTransportRoutes.entrySet().stream().map(r -> r.getValue()).collect(Collectors.toList());
     }
 }
