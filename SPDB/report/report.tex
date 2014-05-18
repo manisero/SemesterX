@@ -5,6 +5,8 @@
 \usepackage{fullpage}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{tikz}
+\usetikzlibrary{shapes.multipart,positioning}
 
 \title{\LARGE{[SDPB] Wyznaczanie trasy} \\ \vspace{2mm} \large{Dokumentacja końcowa projektu}}
 \author{Michał Aniserowicz, Jakub Turek}
@@ -81,6 +83,30 @@
 	Opisany w~powyższym akapicie narzut nie wyklucza wykorzystania relacyjnej bazy danych do rozwiązania zadanego problemu. Autorzy projektu postanowili jednak skorzystać z~innego podejścia i~wykorzystać bazy danych o~reprezentacji logicznej lepiej nadającej się do modelowania dziedziny problemu.
 
 	Interesującą alternatywę zapewnia ruch \textbf{Not Only SQL}, a~konkretnie jego podzbiór - grafowe bazy danych. Ich logiczny model danych jest spójny z~sieciowym modelem struktury miasta, dlatego bardzo dobrze nadają się do rozwiązania postawionego problemu. Jednym z~najbardziej dojrzałych projektów grafowych baz danych jest \textbf{Neo4j} (\url{http://www.neo4j.org}). Zaletą tej bazy w~kontekście tematyki przestrzennych baz danych jest posiadanie warstwy abstrakcji do obliczeń przestrzennych - \textbf{Neo4j Spatial}. Ze względu na wymienione zalety i~odpowiedniość struktury do dziedziny problemu, do implementacji projektu autorzy skorzystali właśnie z~tej bazy danych.
+
+	\section*{Schemat modelu danych miasta}
+
+	Wykorzystany model danych został schematycznie przedstawiony na rysunku~\ref{fig:data_model}.
+
+	\begin{figure}[ht!]
+		\centering
+		\begin{tikzpicture}[every text node part/.style={align=center,font=\footnotesize}]
+			\node [draw, circle] (1) {{\bfseries Punkt 1} \\ \\ \emph{szerokość}: 52.220067 \\ \emph{długość}: 21.012119 \\ \emph{przystanek}: TAK};
+			\node [draw, circle, above right=of 1, xshift=5cm] (2) {{\bfseries Punkt 2} \\ \\ \emph{szerokość}: 52.220146 \\ \emph{długość}: 21.004913 \\ \emph{przystanek}: TAK};
+			\node [draw, circle, below right=of 1, xshift=5cm] (3) {{\bfseries Punkt 3} \\ \\ \emph{szerokość}: 52.223008 \\ \emph{długość}: 21.004934 \\ \emph{przystanek}: NIE};
+			\draw [->, out=45, in=165, distance=3cm] (1.north) to node[above, rotate=25]{{\bfseries Droga 1} \\ \emph{czas}: 1 min.} (2.north);
+			\draw [->, out=60, in=150, dashed, distance=5cm] (1.north) to node[above, rotate=30]{{\bfseries Komunikacja 1} \\ \emph{linia}: 10} (2.north);
+			\draw [->, out=75, in=135, dashed, distance=6.5cm] (1.north) to node[above, rotate=33]{{\bfseries Komunikacja 2} \\ \emph{linia}: 9} (2.north);
+			\draw [<-, out=15, in=165, distance=1cm] (1.east) to node[above, rotate=45]{{\bfseries Droga 1'} \\ \emph{czas}: 1 min.} (2.west);
+			\draw [<-, out=20, in=200, distance=1cm, dotted] (1.east) to node[above, rotate=15]{{\bfseries Komunikacja 1'} \\ \emph{linia}: 10} (2.south);
+			\draw [->, out=-45, in=-135] (1.south) to node[below, rotate=-35]{{\bfseries Droga 3} \\ \emph{czas}: 4 min.} (3.south);
+			\draw [<-, out=-15, in=-165, distance=1cm] (1.east) to node[above, rotate=-45]{{\bfseries Droga 3'} \\ \emph{czas}: 4 min.} (3.west);
+			\draw [->] (2.south) to node[above, rotate=-90]{{\bfseries Droga 2} \\ \emph{czas}: 2 min.} (3.north);
+		\end{tikzpicture}
+
+		\caption{Schematyczne przedstawienie modelu danych miasta.}
+		\label{fig:data_model}
+	\end{figure}
 
 	\section*{Architektura aplikacji}
 
