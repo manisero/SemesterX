@@ -137,6 +137,23 @@
 		\item Indeks przestrzenny na polach \emph{szerokość} i~\emph{długość} geograficzna\footnote{W~bazie danych Neo4j punkt jest reprezentowany jako łańcuch znaków WKT (Well-Known Text). Przykład: \verb+POINT( 52,223008 21,004934 )+.}.
 	\end{itemize}
 
+	\section*{Metoda wyznaczania trasy}
+
+	Algorytm wyznaczania najszybszej trasy jest dwukrokowy:
+
+	\begin{enumerate}
+		\item W~bazie danych odnajdywane są dwa punkty: najbliższe początkowi i~końcowi trasy spośród wszystkich punktów zdefiniowanych w~bazie danych. W~przypadku wyznaczania trasy komunikacji miejskiej wyznaczane są takie najbliższe punkty, że są one przystankami komunikacji.
+		\item Za pomocą algorytmu Dijkstry wyznaczana jest najszybsza droga pomiędzy znalezionymi punktami:
+			\begin{itemize}
+				\item Dla trasy samochodowej/pieszej pod uwagę brane są tylko i~wyłącznie łuki, które reprezentują relację \textbf{Droga}. Ewaluacja kosztu polega na dodawaniu czasu podróży dla każdego segmentu drogi.
+				\item Dla podróży komunikacją miejską pod uwagę brane są tylko i~wyłącznie łuki, które reprezentują relację \textbf{Komunikacja}. Dla każdego segmentu wykonywana jest ewaluacja kosztu:
+					\begin{itemize}
+						\item Koszt jest zwiększany o~czas podróży dla danego segmentu.
+						\item Wykonywane jest sprawdzenie czy do węzła wejściowego analizowanego łuku prowadzi łuk, który obsługuje ta sama linia komunikacyjna. Jeżeli tak to przesiadka jest zbędna i~ewaluacja kosztu kończy się. W~przeciwnym razie koszt całkowity ścieżki jest powiększany o~zadany czas oczekiwania na przesiadkę.
+					\end{itemize}
+			\end{itemize}
+	\end{enumerate}
+
 	\section*{Architektura aplikacji}
 
 	Aplikacja została zaprojektowana w~architekturze klient-serwer. Szczegółowy schemat architektury przedstawia rysunek~\ref{fig:architecture}. 
