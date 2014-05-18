@@ -2,8 +2,8 @@ package pl.edu.pw.elka.spdb.population.reader.entry.impl;
 
 import pl.edu.pw.elka.spdb.coordinates.Coordinates;
 import pl.edu.pw.elka.spdb.model.MapEntry;
+import pl.edu.pw.elka.spdb.population.reader.StreamReaderException;
 import pl.edu.pw.elka.spdb.population.reader.entry.IStreamMapEntryReader;
-import pl.edu.pw.elka.spdb.population.repository.DataPopulatorRepositoryException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class StreamMapEntryReader implements IStreamMapEntryReader {
                     String exceptionMessage = "Malformed input file, detected too " + (splitLine.length < 5 ?
                             "few" : "many") + " columns.";
 
-                    throw new DataPopulatorRepositoryException(exceptionMessage);
+                    throw new StreamReaderException(exceptionMessage);
                 }
 
                 String id = splitLine[0];
@@ -42,7 +42,7 @@ public class StreamMapEntryReader implements IStreamMapEntryReader {
                 entries.put(id, new MapEntry(new Coordinates(latitude, longitude), busStop));
             }
         } catch (IOException e) {
-            throw new DataPopulatorRepositoryException("Could not read entries", e);
+            throw new StreamReaderException("Could not read entries", e);
         }
 
         return entries;

@@ -7,9 +7,9 @@ import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 import pl.edu.pw.elka.spdb.model.MapEntry;
+import pl.edu.pw.elka.spdb.population.reader.StreamReaderException;
 import pl.edu.pw.elka.spdb.population.reader.entry.IStreamMapEntryReader;
 import pl.edu.pw.elka.spdb.population.reader.entry.impl.StreamMapEntryReader;
-import pl.edu.pw.elka.spdb.population.repository.DataPopulatorRepositoryException;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -30,7 +30,7 @@ public class StreamMapEntryReaderTests extends TestCase {
         InputStream entriesStream = new ByteArrayInputStream(entries.getBytes());
         IStreamMapEntryReader streamMapEntryReader = new StreamMapEntryReader();
 
-        thrown.expect(DataPopulatorRepositoryException.class);
+        thrown.expect(StreamReaderException.class);
         thrown.expectMessage("Malformed input file, detected too few columns.");
 
         streamMapEntryReader.readEntries(entriesStream);
@@ -46,7 +46,7 @@ public class StreamMapEntryReaderTests extends TestCase {
         InputStream entriesStream = new ByteArrayInputStream(entries.getBytes());
         IStreamMapEntryReader streamMapEntryReader = new StreamMapEntryReader();
 
-        thrown.expect(DataPopulatorRepositoryException.class);
+        thrown.expect(StreamReaderException.class);
         thrown.expectMessage("Malformed input file, detected too many columns.");
 
         streamMapEntryReader.readEntries(entriesStream);
