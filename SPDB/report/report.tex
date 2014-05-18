@@ -7,6 +7,7 @@
 \usepackage{hyperref}
 \usepackage{tikz}
 \usetikzlibrary{shapes.multipart,positioning}
+\usepackage{fancyvrb}
 
 \title{\LARGE{[SDPB] Wyznaczanie trasy} \\ \vspace{2mm} \large{Dokumentacja końcowa projektu}}
 \author{Michał Aniserowicz, Jakub Turek}
@@ -14,6 +15,8 @@
 
 \begin{document}
 	\maketitle
+
+	\VerbatimFootnotes
 
 	\section*{Temat projektu}
 
@@ -107,6 +110,32 @@
 		\caption{Schematyczne przedstawienie modelu danych miasta.}
 		\label{fig:data_model}
 	\end{figure}
+
+	Na schemacie pokazane są trzy punkty:
+
+	\begin{enumerate}
+		\item O~współrzędnych $(52.220067,21.012119)$. Przystanek komunikacji miejskiej.
+		\item O~wpółrzędnych $(52.220146,21.004913)$. Przystanek komunikacji miejskiej.
+		\item O~współrzędnych $(52.223008,21.004934)$.
+	\end{enumerate}
+
+	Na schemacie pokazane są dwa typy relacji. Relacja narysowana pełną linią o~nazwie \textbf{Droga} oznacza istnienie drogi pomiędzy punktami. Relacja narysowana linią przerywaną o~nazwie \textbf{Komunikacja} oznacza natomiast istnienie ścieżki przejazdu komunikacji miejskiej jednej linii pomiędzy tymi punktami. Z~relacji przedstawionych na schemacie można więc odczytać:
+
+	\begin{itemize}
+		\item Z~punktu~$1$ do punktu~$2$ prowadzi droga~$1$, której przebycie zajmuje jedną minutę. Istnieje droga powrotna~$1'$, która prowadzi z~punktu~$2$ do punktu~$1$. 
+		\item Z~punktu~$1$ do punktu~$2$ można dojechać dwoma liniami komunikacji miejskiej: $9$~i~$10$. Z~punktu $2$ do punktu $1$ wraca tylko linia numer $10$.
+		\item Punkty $2$ i~$3$ połączone są drogą jednokierunkową, której przebycie zajmuje 2~minuty.
+		\item Punkty $1$ i~$3$ są połączone drogą dwukierunkową, której przejechanie zajmuje 4~minuty.
+	\end{itemize}
+
+	\subsection*{Indeksy}
+
+	W~modelu danych założone są dwa indeksy:
+
+	\begin{itemize}
+		\item Indeks bitmapowy na polu \emph{przystanek}.
+		\item Indeks przestrzenny na polach \emph{szerokość} i~\emph{długość} geograficzna\footnote{W~bazie danych Neo4j punkt jest reprezentowany jako łańcuch znaków WKT (Well-Known Text). Przykład: \verb+POINT( 52,223008 21,004934 )+.}.
+	\end{itemize}
 
 	\section*{Architektura aplikacji}
 
