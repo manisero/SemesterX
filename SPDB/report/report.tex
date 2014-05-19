@@ -281,7 +281,7 @@ PTRO_0008 15   RO_0008
 
 	\paragraph{Najszybsza droga}
 
-	Metoda może być wywołana poprzez odwołanie do relatywnej ścieżki \Verb+/shortestPath/{sId}/{fId}/publicTransport/{pT}/changeDuration/{cD}+. Parametr \Verb+sId+ należy zastąpić poprzez identyfikator węzła początkowego. Parametr \Verb+fId+ należy zastąpić poprzez identyfikator węzła końcowego. Oba identyfikatory mogą pochodzić z~wywołania serwisu dla najbliższego punktu na mapie. Parametr \Verb+pT+ należy zastąpić wartością \Verb+true+ lub \Verb+false+ w~zależności od tego czy wyszukana ma być droga dla komunikacji miejskiej lub samochodu. Ostatni parametr \Verb+cD+ należy zastąpić liczbą całkowitą, która oznacza ilość sekund doliczanych na oczekiwanie przy przesiadce. Odwołanie do \Verb+/changeDuration/{cD}+ jest opcjonalne dla najszybszej ścieżki samochodowej i~można je pominąć. Serwis zwraca odpowiedź w~formacie przedstawionym na rysunku~\ref{vrb:entry_service_response}.
+	Metoda może być wywołana poprzez odwołanie do relatywnej ścieżki \Verb+/shortestPath/{sId}/{fId}/publicTransport/{pT}/changeDuration/{cD}+. Parametr \Verb+sId+ należy zastąpić poprzez identyfikator węzła początkowego. Parametr \Verb+fId+ należy zastąpić poprzez identyfikator węzła końcowego. Oba identyfikatory mogą pochodzić z~wywołania serwisu dla najbliższego punktu na mapie. Parametr \Verb+pT+ należy zastąpić wartością \Verb+true+ lub \Verb+false+ w~zależności od tego czy wyszukana ma być droga dla komunikacji miejskiej lub samochodu. Ostatni parametr \Verb+cD+ należy zastąpić liczbą całkowitą, która oznacza ilość sekund doliczanych na oczekiwanie przy przesiadce. Odwołanie do \Verb+/changeDuration/{cD}+ jest opcjonalne dla najszybszej ścieżki samochodowej i~można je pominąć. Serwis zwraca odpowiedź w~formacie przedstawionym na rysunku~\ref{vrb:route_service_response}.
 
 	\begin{figure}[ht!]
 		\centering
@@ -320,12 +320,12 @@ PTRO_0008 15   RO_0008
 ]
 		\end{BVerbatim}
 		\caption{Przykładowa odpowiedź serwisu odnajdującego najszybszą ścieżkę pomiędzy punktami.}
-		\label{vrb:entry_service_response}
+		\label{vrb:route_service_response}
 	\end{figure}	
 
 	\section*{Budowanie i~uruchamianie aplikacji}
 
-	Moduł serwerowy oraz kliencki aplikacji budowane są osobno. Część serwerowa jest budowana przy użyciu aplikacji Maven (\url{http://maven.apache.org}). Uruchomienie polecenia \textbf{mvn clean install} w~ścieżce projektu spowoduje ściągnięcie wszystkich zależności, uruchomienie testów jednostkowych oraz integracyjnych, a~także wygenerowanie pliku web-archive (\textbf{.war}), który następnie trzeba \emph{zdeployować} na serwer aplikacji Java.
+	Moduł serwerowy oraz kliencki aplikacji budowane są osobno. Część serwerowa jest budowana przy użyciu aplikacji Maven (\url{http://maven.apache.org}). Uruchomienie polecenia \textbf{mvn clean install} w~ścieżce projektu spowoduje ściągnięcie wszystkich zależności, uruchomienie testów jednostkowych oraz integracyjnych, a~także wygenerowanie pliku web-archive (\textbf{.war}), który następnie trzeba przenieść do folderu \emph{webapps} serwera aplikacji Java.
 
 	Budowanie aplikacji klienckiej jest realizowane przy pomocy menadżera zależności CocoaPods (\url{http://cocoapods.org}). Uruchomienie polecenia \textbf{pod install} w~podfolderze z~klientem spowoduje ściągnięcie wszystkich zależności oraz wygenerowanie pliku projektu programu Xcode, za pomocą którego można skompilować i~wyeksportować aplikację.
 
@@ -386,11 +386,11 @@ PTRO_0008 15   RO_0008
 		\item Neo4j API 2.0.2. Interfejs programistyczny dla języka Java umożliwiający korzystanie z~bazy danych Neo4j.
 		\item Neo4j Spatial 0.12. Moduł dla bazy danych Neo4j do realizacji operacji i~indeksów przestrzennych. 
 		\item Spring Data Neo4j 3.0.1.RELEASE. Wtyczka dla Spring Framework, która realizuje mapowanie obiektowe komponentów grafowej bazy danych Neo4j.
-		\item Apache CXF 2.7.11. Biblioteka, która służy do tworzenia web-service'ów. Dostarcza implementację dla interfejsów JAX-WS oraz JAX-RS.
+		\item Apache CXF 2.7.11. Biblioteka, która służy do tworzenia usług sieciowych. Dostarcza implementację dla interfejsów JAX-WS oraz JAX-RS.
 		\item Google Gson 2.2.4. Biblioteka, która służy do automatycznej serializacji obiektów POJO do formatu JSON.
 		\item CocoaPods 0.22.0. Menedżer zależności dla języka Objective-C.
-		\item RestKit 0.20.0. Biblioteka umożliwiające prostą komunikację z~serwisami RESTful dla Objective-C.
-		\item XCTAsyncTestCase 0.1.0. Biblioteka umożliwiające testy jednostkowe kodu wykonywanego asynchronicznie w~Objective-C.
+		\item RestKit 0.20.0. Biblioteka umożliwiająca prostą komunikację z~serwisami RESTful dla Objective-C.
+		\item XCTAsyncTestCase 0.1.0. Biblioteka umożliwiająca testy jednostkowe kodu wykonywanego asynchronicznie w~Objective-C.
 		\item MBProgressHUD 0.8. Kontrolka dla systemu iOS umożliwiająca prezentację paska postępu ładowania.
 		\item PXAlertView 0.1.0. Alternatywna kontrolka służąca do prezentacji komunikatów systemowych na platformie iOS.
 	\end{itemize}
