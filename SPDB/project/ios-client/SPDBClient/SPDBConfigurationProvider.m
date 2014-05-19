@@ -10,7 +10,7 @@
 
 + (NSString *)getServiceAddress
 {
-    return [[self configurationProperties] valueForKey:@"serviceAddress"];
+    return [[NSUserDefaults standardUserDefaults] valueForKey:@"serviceAddressPreference"];
 }
 
 @end

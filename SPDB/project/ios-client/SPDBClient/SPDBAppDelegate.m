@@ -5,7 +5,11 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSDictionary *appDefaults = [NSDictionary dictionaryWithObject:@"300" forKey:@"changeTimePreference"];
+    NSDictionary *appDefaults = [NSDictionary dictionaryWithObjectsAndKeys:
+                                    @"300", @"changeTimePreference",
+                                    @"http://localhost:8080/spdb-web-services-1.0/", @"serviceAddressPreference",
+                                    nil
+                                 ];
     
     [defaults registerDefaults:appDefaults];
     [defaults synchronize];
