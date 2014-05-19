@@ -1,0 +1,45 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[MeX]{polski}
+\usepackage{fullpage}
+
+\title{SPOP 2014 L. Projekt. Opis źródeł.}
+\author{Aniserowicz Michał, Turek Jakub}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section{Moduły}
+
+Program składa się z następujących modułów:
+
+\begin{itemize}
+ \item \verb+Logic.Game+ - zawiera typy i funkcje realizujące zasady gry ``Wilk i Owce'', w tym heurystyczną funkcję oceny stanu gry z punktu widzenia danego gracza;
+ \item \verb+Logic.AI+ - zawiera funkcje realizujące sztuczną inteligencję, w tym implementację algorytmu minimax wykorzystującego cięcia alfa-beta;
+ \item \verb+Presentation.GameLoop+ - zawiera funkcje implementujące pętlę gry: wyświetlenie i obsługę opcji, wykonanie ruchu komputera itp.;
+ \item \verb+Presentation.GameSpecific+ - zawiera funkcje specyficzne dla gry ``Wilk i Owce'': inicjalizację planszy (wybór pozycji Wilka), wykonanie ruchu gracza itp.;
+ \item \verb+Presentation.SaveLoad+ - zawiera funkcje realizujące odczyt/zapis gry z/do pliku;
+ \item \verb+Main+ - główny moduł programu, inicjalizuje pętlę gry.
+\end{itemize}
+
+
+\section{Heurystyka}
+
+Heurystyczna funkcja oceny stanu gry to znormalizowana suma ``punktów'' przyznawanych za następujące aspekty stanu planszy:
+\begin{itemize}
+ \item liczba możliwych ruchów Wilka: $0~\rightarrow~12$~pkt., $1~\rightarrow~9$~pkt., $2~\rightarrow~6$~pkt. itd.;
+ \item odległość Wilka od "owczej`` krawędzi planszy (im większa tym lepiej): $0~-~7$ pkt.;
+ \item minimalna odległóść Owcy od ''wilczej`` krawędzi planszy (im większa tym lepiej): $0~-~7$ pkt.
+\end{itemize}
+
+Suma ta przyjmuje wartości z przedziału $[0; 26]$.
+Normalizacja polega na pomniejszeniu jej wyniku o $13$~pkt., aby uzyskać wartość z przedziału $[-13; 13]$.
+Stąd, ocena zwycięstwa to $14$~pkt., a porażki - $-14$~pkt.
+
+Głębokość przeszukiwania drzewa gry została ustalona eksperymentalnie na $11$.
+Wartość tę można zmienić, modyfikując stałą \verb+Logic.AI.defaultAlphaBetaHeuristicDepth+.
+
+
+\end{document}
