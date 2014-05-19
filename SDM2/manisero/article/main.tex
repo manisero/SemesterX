@@ -1,0 +1,71 @@
+\documentclass[a4paper,twocolumn,11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[MeX]{polski}
+\usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
+\usepackage[breaklinks=true]{hyperref}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+\usepackage{ragged2e}
+\usepackage{tikz}
+\usetikzlibrary{calc,shapes,shapes.multipart,arrows,chains}
+\usepackage{tikz-uml}
+\usepackage[explicit]{titlesec}
+\usepackage{caption}
+
+% ;;;;;;;;; macros ;;;;;;;;;;;;
+
+\newlength{\mysize}
+\newcommand{\mycfs}[1]{\setlength{\mysize}{#1pt}%
+  \fontsize{\mysize}{1.2\mysize}\selectfont}
+\newcommand{\mycfsb}[1]{\bfseries \mycfs{#1}}
+\renewcommand{\captionfont}{\centering \mycfs{10}}
+\renewcommand{\captionlabelfont}{\mycfsb{10}}
+
+% ;;;;;;;;; headers ;;;;;;;;;;;;
+
+\titleformat{\section}[runin]{\bfseries}{}{0pt}{\thesection. #1}[]
+\titleformat{name=\section,numberless}[runin]{\bfseries}{}{0pt}{#1}[]
+\titleformat{\subsection}[runin]{\bfseries}{}{0pt}{\thesubsection. #1}[]
+\titlespacing*{\section} {0pt}{6pt}{2.3ex plus .2ex}
+\titlespacing*{\subsection} {0pt}{3pt}{1.5ex plus .2ex}
+
+% ;;;;;;;;; spacing ;;;;;;;;;;;;
+
+\setlength\parindent{0.4cm}
+\setlength{\columnsep}{0.8cm}
+
+% ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+\title{{\mycfsb{14} Projekt aplikacji mobilnej umożliwiającej umieszczenie wirtualnej grafiki w rzeczywistym położeniu.}}
+\author{{\mycfs{12} Michał Aniserowicz} \\ {\mycfs{11} Wydział Elektroniki i~Technik Informacyjnych} \\ {\mycfs{11} M.Aniserowicz@stud.elka.pw.edu.pl}}
+\date{}
+
+\begin{document}
+
+\vspace{1.5cm}
+
+\maketitle
+
+\section*{Streszczenie}
+
+\emph{abstract.}
+
+\section{Wstęp}
+
+wstęp
+
+\begin{thebibliography}{9}
+ \small
+ 
+ \bibitem{scrabble_definition} 
+  \emph{Wielki słownik ortograficzny PWN},
+  pod red. Edwarda Polańskiego,
+  Wyd. 3 popr. i~uzup.,
+  Warszawa,
+  Wydawnictwo Naukowe PWN,
+  2012,
+  ISBN 978-83-01-16405-8.
+
+\end{thebibliography}
+
+\end{document}
