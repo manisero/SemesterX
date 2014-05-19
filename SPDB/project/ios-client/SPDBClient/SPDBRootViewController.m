@@ -134,7 +134,7 @@
         return [NSString stringWithFormat:@"[%.3f, %.3f]", pointStructure.x, pointStructure.y];
     }
     
-    return @"(undefined)";
+    return NSLocalizedString(@"(undefined)", nil);
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
@@ -204,9 +204,9 @@
 
 - (void)showValidationFailedAlert
 {
-    [PXAlertView showAlertWithTitle:@"Validation failed"
-                            message:@"Please select points before searching route."
-                        cancelTitle:@"OK"
+    [PXAlertView showAlertWithTitle:NSLocalizedString(@"Validation failed", nil)
+                            message:NSLocalizedString(@"Please select points before searching route.", nil)
+                        cancelTitle:NSLocalizedString(@"OK", nil)
                          completion:nil];
 }
 
@@ -234,7 +234,7 @@
 {
     self.progressHud = [MBProgressHUD showHUDAddedTo:self.view animated:YES];
     self.progressHud.mode = MBProgressHUDModeAnnularDeterminate;
-    self.progressHud.labelText = @"Loading";
+    self.progressHud.labelText = NSLocalizedString(@"Loading", nil);
 }
 
 - (void)fetchShortestPath
@@ -290,9 +290,9 @@
 
 - (void)showRouteFetchFailedAlert
 {
-    [PXAlertView showAlertWithTitle:@"Route fetch failed"
-                            message:@"Could not fetch route. Please check your Internet connection."
-                        cancelTitle:@"OK"
+    [PXAlertView showAlertWithTitle:NSLocalizedString(@"Route fetch failed", nil)
+                            message:NSLocalizedString(@"Could not fetch route. Please check your Internet connection.", nil)
+                        cancelTitle:NSLocalizedString(@"OK", nil)
                          completion:nil];
 }
 

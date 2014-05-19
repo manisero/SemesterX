@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7D75E7EB4BCA46899A3BDB68 /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E7DE4A21D7249CBBB8C1526 /* libPods.a */; };
+		8C0A9E45192A8D81003224EE /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 8C0A9E47192A8D81003224EE /* Localizable.strings */; };
 		8C6FC4BC1927F7A900366F89 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 8C6FC4BB1927F7A900366F89 /* Settings.bundle */; };
 		8C88BD26190FE8C300A61444 /* SPDBRootViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */; };
 		8C88BD28190FED1000A61444 /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8C88BD27190FED1000A61444 /* MapKit.framework */; };
@@ -55,6 +56,11 @@
 
 /* Begin PBXFileReference section */
 		5E7DE4A21D7249CBBB8C1526 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8C0A9E40192A84B6003224EE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Main.strings; sourceTree = "<group>"; };
+		8C0A9E41192A84B6003224EE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		8C0A9E42192A84B6003224EE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		8C0A9E46192A8D81003224EE /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		8C0A9E48192A8D87003224EE /* pl */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pl; path = pl.lproj/Localizable.strings; sourceTree = "<group>"; };
 		8C6FC4BB1927F7A900366F89 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = SPDBClient/Settings.bundle; sourceTree = "<group>"; };
 		8C88BD24190FE8C300A61444 /* SPDBRootViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SPDBRootViewController.h; sourceTree = "<group>"; };
 		8C88BD25190FE8C300A61444 /* SPDBRootViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SPDBRootViewController.m; sourceTree = "<group>"; };
@@ -167,6 +173,7 @@
 		8C8A8FA7190F8BD50087AE07 = {
 			isa = PBXGroup;
 			children = (
+				8C0A9E47192A8D81003224EE /* Localizable.strings */,
 				8C6FC4BB1927F7A900366F89 /* Settings.bundle */,
 				8C8A8FB9190F8BD50087AE07 /* SPDBClient */,
 				8C8A8FD8190F8BD50087AE07 /* SPDBClientTests */,
@@ -454,6 +461,7 @@
 			knownRegions = (
 				en,
 				Base,
+				pl,
 			);
 			mainGroup = 8C8A8FA7190F8BD50087AE07;
 			productRefGroup = 8C8A8FB1190F8BD50087AE07 /* Products */;
@@ -472,6 +480,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CAA19A4190FB1EB00992379 /* config.plist in Resources */,
+				8C0A9E45192A8D81003224EE /* Localizable.strings in Resources */,
 				8C8A8FCC190F8BD50087AE07 /* Images.xcassets in Resources */,
 				8C6FC4BC1927F7A900366F89 /* Settings.bundle in Resources */,
 				8C8A8FBE190F8BD50087AE07 /* InfoPlist.strings in Resources */,
@@ -568,10 +577,21 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		8C0A9E47192A8D81003224EE /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				8C0A9E46192A8D81003224EE /* en */,
+				8C0A9E48192A8D87003224EE /* pl */,
+			);
+			name = Localizable.strings;
+			path = SPDBClient;
+			sourceTree = "<group>";
+		};
 		8C8A8FBC190F8BD50087AE07 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
 				8C8A8FBD190F8BD50087AE07 /* en */,
+				8C0A9E41192A84B6003224EE /* pl */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -580,6 +600,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				8C8A8FC6190F8BD50087AE07 /* Base */,
+				8C0A9E40192A84B6003224EE /* pl */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -588,6 +609,7 @@
 			isa = PBXVariantGroup;
 			children = (
 				8C8A8FDC190F8BD50087AE07 /* en */,
+				8C0A9E42192A84B6003224EE /* pl */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";

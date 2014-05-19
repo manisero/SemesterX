@@ -32,7 +32,7 @@
 - (void)drawRoute
 {
     NSArray *coordinatesAsObjects = [self convertRouteToCoordinates:self.route];
-    int routeLength = [coordinatesAsObjects count];
+    long routeLength = [coordinatesAsObjects count];
     CLLocationCoordinate2D coordinates[routeLength];
     
     for (int i = 0; i < routeLength; ++i)
@@ -88,14 +88,14 @@
     
     MKPointAnnotation *pointAnnotation = [MKPointAnnotation new];
     [pointAnnotation setCoordinate:CLLocationCoordinate2DMake([routeStart.latitude doubleValue], [routeStart.longitude doubleValue])];
-    [pointAnnotation setTitle:@"Route start"];
+    [pointAnnotation setTitle:NSLocalizedString(@"Route start", nil)];
 
     SPDBDateUtilities *dateUtilities = [SPDBDateUtilities new];
-    NSString *subtitle = [NSString stringWithFormat:@"Set off time: %@.", [dateUtilities formatDate:[self calculateSetOffTime] withFormat:@"HH:mm:ss"]];
+    NSString *subtitle = [NSString stringWithFormat:NSLocalizedString(@"Set off time: %@.", nil), [dateUtilities formatDate:[self calculateSetOffTime] withFormat:@"HH:mm:ss"]];
     
     if (firstSegment.line != nil)
     {
-        subtitle = [NSString stringWithFormat:@"%@ Enter line: %@.", subtitle, firstSegment.line];
+        subtitle = [NSString stringWithFormat:NSLocalizedString(@"%@ Enter line: %@.", nil), subtitle, firstSegment.line];
     }
                           
     [pointAnnotation setSubtitle:subtitle];
@@ -117,8 +117,8 @@
         {
             MKPointAnnotation *pointAnnotation = [MKPointAnnotation new];
             [pointAnnotation setCoordinate:CLLocationCoordinate2DMake([segmentStart.latitude doubleValue], [segmentStart.longitude doubleValue])];
-            [pointAnnotation setTitle:@"Change"];
-            [pointAnnotation setSubtitle:[NSString stringWithFormat:@"Change here from line: %@ to line: %@.", previousLine, routeSegment.line]];
+            [pointAnnotation setTitle:NSLocalizedString(@"Change", nil)];
+            [pointAnnotation setSubtitle:[NSString stringWithFormat:NSLocalizedString(@"Change here from line: %@ to line: %@.", nil), previousLine, routeSegment.line]];
             
             [self.mapView addAnnotation:pointAnnotation];
         }
@@ -133,10 +133,10 @@
     SPDBMapEntry *routeEnd = lastSegment.routeTo;
     MKPointAnnotation *pointAnnotation = [MKPointAnnotation new];
     [pointAnnotation setCoordinate:CLLocationCoordinate2DMake([routeEnd.latitude doubleValue], [routeEnd.longitude doubleValue])];
-    [pointAnnotation setTitle:@"Route end"];
+    [pointAnnotation setTitle:NSLocalizedString(@"Route end", nil)];
     
     SPDBDateUtilities *dateUtilities = [SPDBDateUtilities new];
-    NSString *subtitle = [NSString stringWithFormat:@"Arrival time: %@.", [dateUtilities formatDate:[dateUtilities stripSecondsFromDate:self.arrivalTime] withFormat:@"HH:mm:ss"]];
+    NSString *subtitle = [NSString stringWithFormat:NSLocalizedString(@"Arrival time: %@.", nil), [dateUtilities formatDate:[dateUtilities stripSecondsFromDate:self.arrivalTime] withFormat:@"HH:mm:ss"]];
     
     [pointAnnotation setSubtitle:subtitle];
     
@@ -206,15 +206,15 @@
                         initWithAnnotation:annotation
                         reuseIdentifier:annotationIdentifier];
         
-        if ([[annotation title] isEqualToString:@"Route start"])
+        if ([[annotation title] isEqualToString:NSLocalizedString(@"Route start", nil)])
         {
             [pinView setPinColor:MKPinAnnotationColorGreen];
         }
-        else if ([[annotation title] isEqualToString:@"Route end"])
+        else if ([[annotation title] isEqualToString:NSLocalizedString(@"Route end", nil)])
         {
             [pinView setPinColor:MKPinAnnotationColorRed];
         }
-        else if ([[annotation title] isEqualToString:@"Change"])
+        else if ([[annotation title] isEqualToString:NSLocalizedString(@"Change", nil)])
         {
             [pinView setPinColor:MKPinAnnotationColorPurple];
         }
