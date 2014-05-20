@@ -3,6 +3,7 @@
 \usepackage[MeX]{polski}
 \usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
 \usepackage[breaklinks=true]{hyperref}
+\usepackage{subfigure}
 \usepackage{amsfonts}
 \usepackage{amsthm}
 \usepackage{textcomp}
@@ -111,7 +112,7 @@ W przypadku wyboru drugiej możliwości, powinien pamiętać o jawnym zakończen
  Obliczenia dla tych punktów wskazują, że policjant powinien przebyć 115,3~m w~kierunku 19,2\textdegree.
  Niedokładność wskazań jest na tyle duża, że może zmylić policjanta - zamiast na ulicę Lwowską, prawdopodobnie pobiegnie on w~kierunku ulicy Śniadeckich (sytuację obrazuje Rysunek~\ref{fig:positionTracking}).
 
-%\input{figures/positionTracking}
+\input{figures/positionTracking}
  
  Jak widać, dokładność jest istotna nawet w sytuacjach, w~których odległość pomiędzy telefonami wynosi ponad sto metrów.
  W przypadku metod odczytu udostępnianych przez system Android nie jest możliwe całkowite usunięcie błędu odczytu - wynika on z jakości odbiorników GPS montowanych w smartfonach.
@@ -131,7 +132,7 @@ W przypadku wyboru drugiej możliwości, powinien pamiętać o jawnym zakończen
  Przykładowo jeśli telefon trzymany jest pionowo w miejscu, to działa na niego jedynie siła grawitacji, dając odczyt wynoszący około $9,81\frac{m}{s^2}$ na osi $y$.
  Zorientowanie osi obrazuje Rysunek \ref{fig:accelerometer_axes}.
  
-% \input{figures/accelerometer_axes}
+ \input{figures/accelerometer_axes}
 
  Na podstawie informacji o tym, na jakie osie i~w~jakim stopniu działa siła grawitacji, można wnioskować o~nachyleniu telefonu.
  Jako że akcelerometr mierzy przyśpieszenie wypadkowe, podczas ruchu urządzenia wnioskowanie to jest obarczone dużym błędem.
@@ -147,7 +148,7 @@ W przypadku wyboru drugiej możliwości, powinien pamiętać o jawnym zakończen
  Macierz tę można zastosować do konwersji współrzędnych punktu z~układu współrzędnych telefonu do układu współrzędnych jego otoczenia (zorientowanie osi otoczenia przedstawia Rysunek \ref{fig:orientation_axes}).
  Aby ją uzyskać, należy pobrać odczyty akcelerometru i~magnetometru i~przekazać je metodzie \emph{getRotationMatrix}.
 
-% \input{figures/orientation_axes}
+ \input{figures/orientation_axes}
 
 
 
@@ -187,11 +188,6 @@ Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną 
  Przed wyświetleniem, wybrane przez programistę składowe barw wierzchołków modelu są mnożone przez ten współczynik.
  Dzięki temu, wraz ze zmianą wartości współczynnika, model automatycznie zmienia swój kolor.
 
- Komponent zawiera jeden przykładowy model typu \emph{PhasingModel}, przygotowany na potrzeby gry \emph{Hare and Houds}.
- Jest to strzałka, która wskazuje użytkownikowi kierunek poruszania się.
- Przykłady kolorowania tego modelu prezentuje Rysunek \ref{fig:spaceGraphics_colors}.
-
-% \input{figures/spaceGraphics_colors}
  
 \subsection{Proces renderowania}
  Dla każdego zdefiniowanego modelu moduł renderujący grafikę automatycznie:
@@ -241,7 +237,7 @@ Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną 
  Przy pomocy funkcji OpenGL model jest obracany zgodnie z~wartościami macierzy, a~następnie rysowany.
  Rysunek \ref{fig:spaceGraphics_orientation} prezentuje kilka przykładów wyświetlania obróconego modelu strzałki.
  
-% \input{figures/spaceGraphics_orientation}
+ \input{figures/spaceGraphics_orientation}
  
  Model strzałki domyślnie wskazuje północ.
  Wskazywany kierunek można jednak dowolnie zmieniać - obrotem modelu może sterować komponent zewnętrzny.
