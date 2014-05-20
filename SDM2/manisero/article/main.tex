@@ -62,8 +62,7 @@ wstęp
 
 \section{Odczytywanie pozycji telefonu}
 
-Komponent \emph{PositionTracking} korzysta z metod odczytywania pozycji telefonu na kuli ziemskiej zaimplementowanych w API platformy Android.
-System udostępnia możliwość odczytywania pozycji z~następujących źródeł~\cite{and:loc}:
+System Android udostępnia możliwość odczytywania pozycji telefonu na kuli ziemskiej z~następujących źródeł~\cite{and:loc}:
 
 \subsection{GPS}
  Odczyt bezpośrednio z~odbiornika GPS zamontowanego w urządzeniu.
@@ -90,21 +89,16 @@ System udostępnia możliwość odczytywania pozycji z~następujących źródeł
 
 Wyboru źródła odczytu dokonuje programista, poprzez jawne wskazanie, którego dostawcy lokalizacji (ang. \emph{LocationProvider}) chce użyć.
 Może również zdać się na system, formułując jedynie kryteria wyboru, takie jak wymagana dokładność odczytu, możliwość uzyskania informacji o~prędkości poruszania się urządzenia i~kierunku jego ruchu, czy zezwolenie na użycie metody, która wiąże się z~naliczeniem opłat przez operatora sieci.
-PositionTracking używa domyślnego sposobu odczytu, podając domyślne kryteria wyboru.
-Pozwala to systemowi wybrać najdokładniejszy w danych warunkach bezpłatny \emph{LocationProvider}.
 
-Użytkownik komponentu może zlecić pojedynczy odczyt lub odczyt cykliczny z~zadanym interwałem czasowym.
-W przypadku wyboru drugiej możliwości, powinien pamiętać o jawnym zakończeniu odczytu, gdy przestanie go potrzebować.
 
-\section{Problem niedokładności odczytów}
- Błąd odczytu odbiornika GPS zaobserwowany w~trakcie testowania \emph{PositionTracking} w~optymalnych warunkach, tj. na otwartym terenie, wahał się od kilku do kilkunastu metrów, w~zależności od miejsca odczytu.
- O ile błąd na poziomie dwóch-trzech metrów można uznać za akceptowalny, o~tyle niedokładność rzędu dwunastu-piętnastu metrów może bardzo niekorzystanie wpływać na doświadczenia użytkowników aplikacji stworzonych przy pomocy \emph{fARmework}.
+\subsection{Problem niedokładności odczytów}
+ Używając nawet najdokładniejszej z metod, błąd odczytu odbiornika GPS waha się od kilku do kilkunastu metrów, w~zależności od miejsca odczytu.
+ O ile błąd na poziomie dwóch-trzech metrów w wielu przypadkach można uznać za akceptowalny, o~tyle niedokładność rzędu dwunastu-piętnastu metrów może bardzo niekorzystanie wpływać na doświadczenia użytkowników aplikacji intensywnie korzystających z~informacji o~położeniu telefonu na kuli ziemskiej.
  
  Za przykład posłużyć może gra w~``policjantów i~złodziei'', w~której osoba goniąca przez cały czas jest informowana o~tym, jaki dystans powinna przebyć i~w jakim kierunku się poruszać, aby dotrzeć do osoby uciekającej.
  Dystans ten typowo wynosił będzie od zera do kilkuset metrów.
  
- \subsection{Przykład}
- W~danym momencie policjant znajduje się w~okolicach wydziału Elektroniki i~Technik Informacyjnych (punkt A(52,219505\textdegree~N, 21,012028\textdegree~E)), a~złodziej - na ulicy Lwowskiej (w punkcie B(52,220458\textdegree~N, 21,012281\textdegree~E)).
+ Załóżmy, że w~danym momencie policjant znajduje się w~okolicach wydziału Elektroniki i~Technik Informacyjnych (punkt A(52,219505\textdegree~N, 21,012028\textdegree~E)), a~złodziej - na ulicy Lwowskiej (w punkcie B(52,220458\textdegree~N, 21,012281\textdegree~E)).
  Odległość między punktami wynosi 103~m, a azymut - 9,24\textdegree.
  Następują odczyty pozycji policjanta i~złodzieja, oba z~niedokładnością około dziesięciu metrów.
  Według odczytów, policjant znajduje się w~punkcie A'(52,219518\textdegree~N, 21,011892\textdegree~E), a~złodziej w~punkcie B'(52,220466\textdegree~N, 21,012431\textdegree~E).
@@ -115,10 +109,7 @@ W przypadku wyboru drugiej możliwości, powinien pamiętać o jawnym zakończen
 \input{figures/positionTracking}
  
  Jak widać, dokładność jest istotna nawet w sytuacjach, w~których odległość pomiędzy telefonami wynosi ponad sto metrów.
- W przypadku metod odczytu udostępnianych przez system Android nie jest możliwe całkowite usunięcie błędu odczytu - wynika on z jakości odbiorników GPS montowanych w smartfonach.
- Można jednakże próbować go zmniejszyć poprzez rozszerzenie istniejących metod o~operacje korygujące takie jak filtrowanie lub uśrednianie kolejnych odczytów.
- Alternatywnym podejściem jest zaimplementowanie nowej metody dającej w określonych warunkach lepsze wyniki niż metody podstawowe.
- To właśnie podejście zastosowano po stworzeniu podstawowej wersji komponentu, czego wynikiem było opracowanie i zaimplementowanie dodatkowej metody odczytu pozycji.
+ W przypadku metod odczytu udostępnianych przez system Android nie jest możliwe całkowite usunięcie błędu odczytu - wynika on z jakości odbiorników GPS montowanych w smartfonach. Można jednakże próbować go zmniejszyć poprzez rozszerzenie istniejących metod o~operacje korygujące, takie jak filtrowanie lub uśrednianie kolejnych odczytów.
 
 
 
@@ -250,15 +241,17 @@ Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną 
 
 \begin{thebibliography}{9}
  \small
+
+ \bibitem{and:loc} Cejas, Fernando.
+                   (28.10.2010).
+                   \emph{Android Location Providers - gps, network, passive.}
+                   dostęp: styczeń 2013.
+                   w: http://www.android10.org/index.php/articleslocationmaps/226-android-location-providers-gps-network-passive/
  
- \bibitem{scrabble_definition} 
-  \emph{Wielki słownik ortograficzny PWN},
-  pod red. Edwarda Polańskiego,
-  Wyd. 3 popr. i~uzup.,
-  Warszawa,
-  Wydawnictwo Naukowe PWN,
-  2012,
-  ISBN 978-83-01-16405-8.
+ \bibitem{wifi:loc} Vaughan-Nichol, Steven J.
+                    \emph{How Google--and everyone else--gets Wi-Fi location data.}
+                    dostęp: styczeń 2013.
+                    w: http://www.zdnet.com/blog/networking/how-google-and-everyone-else-gets-wi-fi-location-data/1664/
 
 \end{thebibliography}
 
