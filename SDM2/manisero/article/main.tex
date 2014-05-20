@@ -5,6 +5,7 @@
 \usepackage[breaklinks=true]{hyperref}
 \usepackage{amsfonts}
 \usepackage{amsthm}
+\usepackage{textcomp}
 \usepackage{ragged2e}
 \usepackage{tikz}
 \usetikzlibrary{calc,shapes,shapes.multipart,arrows,chains}
@@ -36,7 +37,7 @@
 
 % ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-\title{{\mycfsb{14} Projekt aplikacji mobilnej umożliwiającej umieszczenie wirtualnej grafiki w rzeczywistym położeniu.}}
+\title{{\mycfsb{14} Aplikacja mobilna umożliwiająca umieszczenie wirtualnej grafiki w rzeczywistym położeniu.}}
 \author{{\mycfs{12} Michał Aniserowicz} \\ {\mycfs{11} Wydział Elektroniki i~Technik Informacyjnych} \\ {\mycfs{11} M.Aniserowicz@stud.elka.pw.edu.pl}}
 \date{}
 
@@ -53,6 +54,203 @@
 \section{Wstęp}
 
 wstęp
+
+\section{Opis aplikacji}
+
+
+
+\section{Odczytywanie pozycji telefonu}
+
+Komponent \emph{PositionTracking} korzysta z metod odczytywania pozycji telefonu na kuli ziemskiej zaimplementowanych w API platformy Android.
+System udostępnia możliwość odczytywania pozycji z~następujących źródeł~\cite{and:loc}:
+
+\subsection{GPS}
+ Odczyt bezpośrednio z~odbiornika GPS zamontowanego w urządzeniu.
+ Jest to najdokładniejszy sposób określania pozycji telefonu - jego dokładność wynosi od kilku do kilkunastu metrów.
+ Ma jednak znaczące ograniczenia:
+ \begin{itemize}
+  \item ze względu na konstrukcję systemu GPS, do poprawnego działania wymaga otwartej przestrzeni - używanie go w~budynkach lub w~ich pobliżu skutkuje niedokładnymi odczytami,
+  \item przed uzyskaniem pierwszego odczytu musi nawiązać kontakt z~kilkoma (ok. 7) satelitami GPS, co może potrwać nawet do kilku minut,
+  \item pobiera najwięcej energii spośród wszystkich źródeł.
+ \end{itemize}
+
+\subsection{Assisted GPS}
+ Metoda Assisted GPS (AGPS, wspomagany GPS) oprócz odbiornika GPS wykorzystuje sygnał sieci komórkowej.
+ Telefon otrzymuje od pobliskich stacji bazowych informacje na temat dostępności satelitów GPS oraz przybliżonych pozycji tych satelitów.
+ Znacząco przyśpiesza to uzyskanie pierwszego odczytu, a~także eliminuje wymóg otwartej przestrzeni.
+ Co więcej, AGPS pobiera mniej energii niż bezpośredni odczyt GPS.
+ Jego wadą jest jednak dokładność - posiłkowanie się przybliżonymi danymi pochodzącymi ze stacji bazowych powoduje jej spadek do kilkudziesięciu metrów.
+
+\subsection{Odczyt pasywny}
+ Metoda odczytu pasywnego nie korzysta z odbiornika GPS - jest więc najmniej dokładna (jej dokładność wynosi od kilkudziesięciu do kilkuset metrów).
+ Polega na porównaniu siły sygnału odbieranego przez urządzenie od pobliskich stacji bazowych.
+ Znając lokalizajcję stacji bazowych możliwe jest przybliżone określenie pozycji urządzenia.
+ Dodatkowym źródłem informacji jest siła sygnału pochodzącego od sieci Wi-Fi wykrywanych przez urządzenie\footnote{Firma Google, podobnie jak inne firmy działające w~sektorze mobilnym, zbiera i~przechowuje informacje o~lokalizacji sieci bezprzewodowych~\cite{wifi:loc}.}.\\
+
+Wyboru źródła odczytu dokonuje programista, poprzez jawne wskazanie, którego dostawcy lokalizacji (ang. \emph{LocationProvider}) chce użyć.
+Może również zdać się na system, formułując jedynie kryteria wyboru, takie jak wymagana dokładność odczytu, możliwość uzyskania informacji o~prędkości poruszania się urządzenia i~kierunku jego ruchu, czy zezwolenie na użycie metody, która wiąże się z~naliczeniem opłat przez operatora sieci.
+PositionTracking używa domyślnego sposobu odczytu, podając domyślne kryteria wyboru.
+Pozwala to systemowi wybrać najdokładniejszy w danych warunkach bezpłatny \emph{LocationProvider}.
+
+Użytkownik komponentu może zlecić pojedynczy odczyt lub odczyt cykliczny z~zadanym interwałem czasowym.
+W przypadku wyboru drugiej możliwości, powinien pamiętać o jawnym zakończeniu odczytu, gdy przestanie go potrzebować.
+
+\section{Problem niedokładności odczytów}
+ Błąd odczytu odbiornika GPS zaobserwowany w~trakcie testowania \emph{PositionTracking} w~optymalnych warunkach, tj. na otwartym terenie, wahał się od kilku do kilkunastu metrów, w~zależności od miejsca odczytu.
+ O ile błąd na poziomie dwóch-trzech metrów można uznać za akceptowalny, o~tyle niedokładność rzędu dwunastu-piętnastu metrów może bardzo niekorzystanie wpływać na doświadczenia użytkowników aplikacji stworzonych przy pomocy \emph{fARmework}.
+ 
+ Za przykład posłużyć może gra w~``policjantów i~złodziei'', w~której osoba goniąca przez cały czas jest informowana o~tym, jaki dystans powinna przebyć i~w jakim kierunku się poruszać, aby dotrzeć do osoby uciekającej.
+ Dystans ten typowo wynosił będzie od zera do kilkuset metrów.
+ 
+ \subsection{Przykład}
+ W~danym momencie policjant znajduje się w~okolicach wydziału Elektroniki i~Technik Informacyjnych (punkt A(52,219505\textdegree~N, 21,012028\textdegree~E)), a~złodziej - na ulicy Lwowskiej (w punkcie B(52,220458\textdegree~N, 21,012281\textdegree~E)).
+ Odległość między punktami wynosi 103~m, a azymut - 9,24\textdegree.
+ Następują odczyty pozycji policjanta i~złodzieja, oba z~niedokładnością około dziesięciu metrów.
+ Według odczytów, policjant znajduje się w~punkcie A'(52,219518\textdegree~N, 21,011892\textdegree~E), a~złodziej w~punkcie B'(52,220466\textdegree~N, 21,012431\textdegree~E).
+ 
+ Obliczenia dla tych punktów wskazują, że policjant powinien przebyć 115,3~m w~kierunku 19,2\textdegree.
+ Niedokładność wskazań jest na tyle duża, że może zmylić policjanta - zamiast na ulicę Lwowską, prawdopodobnie pobiegnie on w~kierunku ulicy Śniadeckich (sytuację obrazuje Rysunek~\ref{fig:positionTracking}).
+
+%\input{figures/positionTracking}
+ 
+ Jak widać, dokładność jest istotna nawet w sytuacjach, w~których odległość pomiędzy telefonami wynosi ponad sto metrów.
+ W przypadku metod odczytu udostępnianych przez system Android nie jest możliwe całkowite usunięcie błędu odczytu - wynika on z jakości odbiorników GPS montowanych w smartfonach.
+ Można jednakże próbować go zmniejszyć poprzez rozszerzenie istniejących metod o~operacje korygujące takie jak filtrowanie lub uśrednianie kolejnych odczytów.
+ Alternatywnym podejściem jest zaimplementowanie nowej metody dającej w określonych warunkach lepsze wyniki niż metody podstawowe.
+ To właśnie podejście zastosowano po stworzeniu podstawowej wersji komponentu, czego wynikiem było opracowanie i zaimplementowanie dodatkowej metody odczytu pozycji.
+
+
+
+
+\section{Odczytywanie orientacji telefonu}
+
+Źródłem wiedzy o~orientacji urządzenia są odczyty z~wbudowanych w~telefon sensorów: akcelerometru i magnetometru.
+
+\subsubsection{Akcelerometr}
+ Dostarcza informacji o~przyśpieszeniach działających na telefon.
+ Przykładowo jeśli telefon trzymany jest pionowo w miejscu, to działa na niego jedynie siła grawitacji, dając odczyt wynoszący około $9,81\frac{m}{s^2}$ na osi $y$.
+ Zorientowanie osi obrazuje Rysunek \ref{fig:accelerometer_axes}.
+ 
+% \input{figures/accelerometer_axes}
+
+ Na podstawie informacji o tym, na jakie osie i~w~jakim stopniu działa siła grawitacji, można wnioskować o~nachyleniu telefonu.
+ Jako że akcelerometr mierzy przyśpieszenie wypadkowe, podczas ruchu urządzenia wnioskowanie to jest obarczone dużym błędem.
+ Aby zminimalizować błąd, w~systemie Android zastosowano filtr dolnoprzepustowy, który częściowo odcina wpływ poruszania na dokładność odczytów.
+
+\subsubsection{Magnetometr}
+ Odczytuje wartości pola magnetycznego otaczającego urządzenie.
+ Na podstawie tych wartości można określić, w~którą stronę świata zwrócony jest telefon.
+ Sensor podaje odczyty dla wszystkich trzech osi - orientacja urządzenia nie jest więc przeszkodą.
+ Należy jednak zwrócić uwagę na to, że odczyty nie mają szansy być bardzo dokładne - magnetometr mierzy nie tylko pole magnetyczne Ziemi, ale także pola generowane przez inne podzespoły telefonu, na przykład głośnika.\\
+
+ Klasa \emph{SensorManager} należąca do API systemu Android udostępnia operację (\emph{getRotationMatrix}) pozwalają wyznaczyć macierz obrotów telefonu.
+ Macierz tę można zastosować do konwersji współrzędnych punktu z~układu współrzędnych telefonu do układu współrzędnych jego otoczenia (zorientowanie osi otoczenia przedstawia Rysunek \ref{fig:orientation_axes}).
+ Aby ją uzyskać, należy pobrać odczyty akcelerometru i~magnetometru i~przekazać je metodzie \emph{getRotationMatrix}.
+
+% \input{figures/orientation_axes}
+
+
+
+\section{Rozpoznawanie obrazu}
+
+
+
+\section{Wyświetlanie obrazu}
+
+Do generowania grafiki trójwymiarowej system Android wykorzystuje biblioteki OpenGL ES (OpenGL for Embedded Systems).
+Jest to odmiana biblioteki OpenGL dedykowana dla systemów wbudowanych używanych między innymi w~konsolach i~telefonach~\cite{ogl:es}.
+Android oferuje wsparcie dla dwóch standardów biblioteki:
+
+\begin{itemize}
+ \item OpenGL ES 1.x - wykorzystuje potok ustalony (ang. fixed pipeline).
+  Oznacza to, że transformacje oraz obliczenia koloru wierzchołków wykonywane w~celu imitacji cieniowania i~oświetlenia wykonywane są przez kartę graficzną w~sposób narzucony z~góry.
+  Utrudnia to lub uniemożliwia uzyskanie wielu zaawansowanych efektów graficznych, takich jak mapowanie wypukłości\footnote{Mapowanie wypukłości (ang. bump mapping) - technika umożliwiająca symulowanie obiektów o~porowatej powierzchni.}, płaszczyzny refleksji\footnote{Płaszczyzny refleksji (ang. reflection planes) - technika umożliwiająca uzyskanie efektu lustrzanego odbicia sceny na danej powierzchni.}~\cite{tec:3d} czy renderowanie z~użyciem szerokiego zakresu dynamicznego\footnote{Renderowanie z~użyciem szerokiego zakresu dynamicznego (ang. high dynamic range rendering) - technika umożliwiająca uzyskanie realistycznego oświetlenia przez wierne odwzorowanie bardzo jasnych i~ciemnych elementów sceny.}~\cite{nvi:hdr}. 
+ \item OpenGL ES 2.x - wykorzystuje potok programowalny (ang. programmable pipeline).
+  Umożliwia pisanie krótkich programów w~języku GLSL\footnote{GLSL - OpenGL Shading Language, http://www.opengl.org/documentation/glsl/.} nazywanych shaderami, które definiują sposób wykonywania obliczeń na wierzchołkach.
+  Umożliwia to uzyskiwanie zaawansowanych efektów graficznych. Jest jednak trudne do zrozumienia dla początkujących programistów, gdyż wykonywanie transformacji lub oświetlenie sceny wymaga podania kodu źródłowego tych operacji jako wartości zmiennych napisowych (\emph{String}) - poprawność tego kodu nie jest sprawdzana przez kompilator, co znacznie utrudnia wykrycie ewentualnego błędu.
+\end{itemize}
+
+Ze względu na brak wykorzystania efektów wymagających użycia potoku programowalnego, \emph{fARmework} wykorzystuje bibliotekę OpenGL ES w~standardzie 1.x.
+Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną wymianę wersji biblioteki bez konieczności redefiniowania modelu.
+
+\subsection{Definicja modelu}
+ Renderowany na ekranie obiekt rozszerza klasę \emph{Model} i~jest opisany trójkątnymi ścianami.
+ Do zdefiniowania modelu wymagane są następujące informacje:
+
+ \begin{itemize}
+  \item tablica współrzędnych wierzchołków obiektu - każdy wierzchołek opisany jest trzema współrzędnymi $(x, y, z)$,
+  \item tablica kolorów wierzchołków obiektu - każdy wierzchołek opisany jest czterema wartościami $(r, g, b, a)$ definiującymi jasności kanałów: czerwonego, zielonego, niebieskiego i~przezroczystości.
+ \end{itemize}
+
+ W~komponencie zdefiniowany jest również specjalny typ modelu - \emph{PhasingModel}.
+ Ma on zdolność automatycznej transformacji koloru wierzchołków na podstawie zadanego współczynnika z~zakresu $[0, 1]$.
+ Przed wyświetleniem, wybrane przez programistę składowe barw wierzchołków modelu są mnożone przez ten współczynik.
+ Dzięki temu, wraz ze zmianą wartości współczynnika, model automatycznie zmienia swój kolor.
+
+ Komponent zawiera jeden przykładowy model typu \emph{PhasingModel}, przygotowany na potrzeby gry \emph{Hare and Houds}.
+ Jest to strzałka, która wskazuje użytkownikowi kierunek poruszania się.
+ Przykłady kolorowania tego modelu prezentuje Rysunek \ref{fig:spaceGraphics_colors}.
+
+% \input{figures/spaceGraphics_colors}
+ 
+\subsection{Proces renderowania}
+ Dla każdego zdefiniowanego modelu moduł renderujący grafikę automatycznie:
+
+ \begin{enumerate}
+  \item Oblicza i~normalizuje wartości wektorów normalnych dla każdej ściany, co umożliwia poprawne oświetlenie obiektu.
+  \item Ustawia położenie kamery oraz definiuje sposób wyświetlania sceny:
+   \begin{itemize}
+    \item kamera jest automatycznie pozycjonowana ponad zdefiniowanym obiektem,
+    \item scena wyświetlana jest domyślnie z~użyciem projekcji ortogonalnej, co zwiększa czytelność modelu.
+   \end{itemize}
+  \item Dokonuje obrotu modelu zgodnie z~przekazaną do modułu macierzą obrotów.
+   Pozwala to wypozycjonować go tak, aby niezależnie od orientacji telefonu pozostawał nieruchomy względem otoczenia.
+  \item Dokonuje obrotu modelu zgodnie z~przekazanym do modułu azymutem.
+   Pozwala to na orientację obiektu tak, aby wskazywał zadany kąt względem magnetycznej północy.
+  \item Definiuje kolor wierzchołków (w~przypadku modelu typu \emph{PhasingModel}).
+  \item Rysuje zdefiniowany obiekt.
+  \item Oświetla scenę.
+ \end{enumerate}
+
+ Dzięki temu programista może swobodnie używać komponentu bez znajomości biblioteki OpenGL.
+ Wystarczy, że wygeneruje współrzędne oraz kolory wierzchołków trójwymiarowego obiektu (co można wykonać automatycznie narzędziami takimi jak 3ds Max\footnote{3ds Max - oprogramowanie służące do modelowania, renderowania i animowania grafiki 3D. Strona produktu dostępna jest pod adresem: http://usa.autodesk.com/3ds-max/.}) i~jako model przekaże je do komponentu (patrz sekcja~\ref{sec:spaceGraphics_usage}), a~reszta pracy zostanie wykonana samoczynnie.
+
+\subsection{Obracanie modelu}
+ Aby utrzymać model w~pozycji pozornie nieruchomej względem otoczenia telefonu, niezbędna jest wiedza o~aktualnej orientacji urządzenia i~obracanie modelu przeciwnie do tej orientacji.
+
+\subsection{Orientacja urządzenia a tryb wyświetlania}
+ Macierz obrotu zwracana przez metodę \emph{getRotationMatrix} przechowuje wartości określające fizyczną orientację telefonu.
+ Obrót modelu według tych wartości będzie niepoprawny, jeśli ekran urządzenia będzie wyświetlał treści w~trybie innym niż domyślny.
+ Dwa podstawowe tryby wyświetlania, to:
+ \begin{itemize}
+  \item portrait mode (tryb portretu, domyślny) - tryb używany, gdy telefon znajduje się pozycji pionowej,
+  \item landscape mode (tryb krajobrazu) - tryb używany w pozycji poziomej; interfejs graficzny aplikacji jest odpowiednio obrócony.
+ \end{itemize}
+ 
+ Przełączanie pomiędzy trybami odbywa się automatycznie w zależności od pozycji, w~jakiej znajduje się urządzenie.
+ Zachowanie to można wyłączyć korzystając z~ustawień systemu, a~także kontrolować z~poziomu aplikacji - dlatego wyznaczenie poprawnej macierzy obrotów jedynie na podstawie odczytów sensorów nie zawsze jest możliwe.
+ 
+ Android udostępnia informacje o aktualnie stosowanym trybie wyświetlania (dostarcza ich metoda \emph{getRotation} klasy \emph{Display}).
+ W~przypadku, gdy jest on inny od domyślnego, macierz należy skorygować, tzn. zamienić miejscami dwie z~trzech osi.
+ Na przykład przy obrocie ekranu o 90\textdegree~w~prawo, oś $y$ wskazuje tam, gdzie poprzednio wskazywała oś $x$, a~oś $x$ - w kierunku przeciwnym do pierwotnie wskazywanego przez oś $y$.
+ Podając macierz obrotu i~sposób zamiany osi jako argumenty operacji \emph{remapCoordinateSystem} klasy \emph{SensorManager}, komponent uzyskuje skorygowaną macierz.
+
+\subsection{Obrót modelu}
+ Skorygowana macierz obrotu bez dalszych modyfikacji może zostać użyta do obrócenia wyświetlanego modelu tak, aby zniwelować obrót urządzenia.
+ Przed każdorazowym wyrenderowaniem modelu na ekranie telefonu, pobierana jest ostatnio odczytana macierz.
+ Przy pomocy funkcji OpenGL model jest obracany zgodnie z~wartościami macierzy, a~następnie rysowany.
+ Rysunek \ref{fig:spaceGraphics_orientation} prezentuje kilka przykładów wyświetlania obróconego modelu strzałki.
+ 
+% \input{figures/spaceGraphics_orientation}
+ 
+ Model strzałki domyślnie wskazuje północ.
+ Wskazywany kierunek można jednak dowolnie zmieniać - obrotem modelu może sterować komponent zewnętrzny.
+
+
+
+\section{Podsumowanie}
+
+
 
 \begin{thebibliography}{9}
  \small
