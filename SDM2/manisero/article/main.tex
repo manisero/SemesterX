@@ -38,7 +38,7 @@
 
 % ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-\title{{\mycfsb{14} Aplikacja mobilna umożliwiająca umieszczenie wirtualnej grafiki w rzeczywistym położeniu.}}
+\title{{\mycfsb{14} Aplikacja mobilna umożliwiająca umieszczenie wirtualnej grafiki w~rzeczywistym położeniu.}}
 \author{{\mycfs{12} Michał Aniserowicz} \\ {\mycfs{11} Wydział Elektroniki i~Technik Informacyjnych} \\ {\mycfs{11} M.Aniserowicz@stud.elka.pw.edu.pl}}
 \date{}
 
@@ -62,19 +62,29 @@
 
 \section{Wstęp.}
 
-wstęp
+Celem niniejszego artykułu jest wyjaśnienie działania i~ogólny opis poszczególnych aspektów aplikacji umożliwiającej umieszczenie wirtualnej grafiki w~rzeczywistym położeniu.
+
+Rozdział \ref{sec:app_description} (``Opis aplikacji'')
+
+Rozdział \ref{sec:position_tracking} (``Odczytywanie pozycji telefonu'')
+
+Rozdział \ref{sec:orientation_tracking} (``Odczytywanie orientacji telefonu'')
+
+Rozdział \ref{sec:image_rendering} (``Wyświetlanie obrazu'')
+
+Rozdział \ref{sec:summary} podsumowuje artykuł.
 
 
 
 %=========================================
 
-\section{Opis aplikacji.}
+\section{Opis aplikacji.} \label{sec:app_description}
 
 
 
 %=========================================
 
-\section{Odczytywanie pozycji telefonu.}
+\section{Odczytywanie pozycji telefonu.} \label{sec:position_tracking}
 
 System Android udostępnia możliwość odczytywania pozycji telefonu na kuli ziemskiej z~następujących źródeł~\cite{and:loc}:
 
@@ -138,7 +148,7 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
 
 %=========================================
 
-\section{Odczytywanie orientacji telefonu.}
+\section{Odczytywanie orientacji telefonu.} \label{sec:orientation_tracking}
 
 Źródłem wiedzy o~orientacji urządzenia są odczyty z~wbudowanych w~telefon sensorów: akcelerometru i magnetometru.
 
@@ -167,13 +177,7 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
 
 %=========================================
 
-\section{Rozpoznawanie obrazu.}
-
-
-
-%=========================================
-
-\section{Wyświetlanie obrazu.}
+\section{Wyświetlanie obrazu.} \label{sec:image_rendering}
 
 Do generowania grafiki trójwymiarowej system Android wykorzystuje biblioteki OpenGL ES (OpenGL for Embedded Systems).
 Jest to odmiana biblioteki OpenGL dedykowana dla systemów wbudowanych używanych między innymi w~konsolach i~telefonach~\cite{ogl:es}.
@@ -237,7 +241,7 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
 
 %=========================================
 
-\section{Podsumowanie.}
+\section{Podsumowanie.} \label{sec:summary}
 
 
 
