@@ -48,21 +48,36 @@
 
 \maketitle
 
+
+
+%=========================================
+
 \section*{Streszczenie}
 
 \emph{abstract.}
+
+
+
+%=========================================
 
 \section{Wstęp}
 
 wstęp
 
+
+
+%=========================================
+
 \section{Opis aplikacji}
 
 
 
+%=========================================
+
 \section{Odczytywanie pozycji telefonu}
 
 System Android udostępnia możliwość odczytywania pozycji telefonu na kuli ziemskiej z~następujących źródeł~\cite{and:loc}:
+
 
 \subsection{GPS}
  Odczyt bezpośrednio z~odbiornika GPS zamontowanego w urządzeniu.
@@ -74,12 +89,14 @@ System Android udostępnia możliwość odczytywania pozycji telefonu na kuli zi
   \item pobiera najwięcej energii spośród wszystkich źródeł.
  \end{itemize}
 
+
 \subsection{Assisted GPS}
  Metoda Assisted GPS (AGPS, wspomagany GPS) oprócz odbiornika GPS wykorzystuje sygnał sieci komórkowej.
  Telefon otrzymuje od pobliskich stacji bazowych informacje na temat dostępności satelitów GPS oraz przybliżonych pozycji tych satelitów.
  Znacząco przyśpiesza to uzyskanie pierwszego odczytu, a~także eliminuje wymóg otwartej przestrzeni.
  Co więcej, AGPS pobiera mniej energii niż bezpośredni odczyt GPS.
  Jego wadą jest jednak dokładność - posiłkowanie się przybliżonymi danymi pochodzącymi ze stacji bazowych powoduje jej spadek do kilkudziesięciu metrów.
+
 
 \subsection{Odczyt pasywny}
  Metoda odczytu pasywnego nie korzysta z odbiornika GPS - jest więc najmniej dokładna (jej dokładność wynosi od kilkudziesięciu do kilkuset metrów).
@@ -113,14 +130,16 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
 
 
 
+%=========================================
 
 \section{Odczytywanie orientacji telefonu}
 
 Źródłem wiedzy o~orientacji urządzenia są odczyty z~wbudowanych w~telefon sensorów: akcelerometru i magnetometru.
 
-\subsubsection{Akcelerometr}
+
+\subsection{Akcelerometr}
  Dostarcza informacji o~przyśpieszeniach działających na telefon.
- Przykładowo jeśli telefon trzymany jest pionowo w miejscu, to działa na niego jedynie siła grawitacji, dając odczyt wynoszący około $9,81\frac{m}{s^2}$ na osi $y$.
+ Przykładowo, jeśli telefon trzymany jest pionowo w miejscu, to działa na niego jedynie siła grawitacji, dając odczyt wynoszący około $9,81\frac{m}{s^2}$ na osi $y$.
  Zorientowanie osi obrazuje Rysunek \ref{fig:accelerometer_axes}.
  
  \input{figures/accelerometer_axes}
@@ -129,23 +148,24 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
  Jako że akcelerometr mierzy przyśpieszenie wypadkowe, podczas ruchu urządzenia wnioskowanie to jest obarczone dużym błędem.
  Aby zminimalizować błąd, w~systemie Android zastosowano filtr dolnoprzepustowy, który częściowo odcina wpływ poruszania na dokładność odczytów.
 
-\subsubsection{Magnetometr}
+
+\subsection{Magnetometr}
  Odczytuje wartości pola magnetycznego otaczającego urządzenie.
  Na podstawie tych wartości można określić, w~którą stronę świata zwrócony jest telefon.
  Sensor podaje odczyty dla wszystkich trzech osi - orientacja urządzenia nie jest więc przeszkodą.
  Należy jednak zwrócić uwagę na to, że odczyty nie mają szansy być bardzo dokładne - magnetometr mierzy nie tylko pole magnetyczne Ziemi, ale także pola generowane przez inne podzespoły telefonu, na przykład głośnika.\\
 
- Klasa \emph{SensorManager} należąca do API systemu Android udostępnia operację (\emph{getRotationMatrix}) pozwalają wyznaczyć macierz obrotów telefonu.
- Macierz tę można zastosować do konwersji współrzędnych punktu z~układu współrzędnych telefonu do układu współrzędnych jego otoczenia (zorientowanie osi otoczenia przedstawia Rysunek \ref{fig:orientation_axes}).
- Aby ją uzyskać, należy pobrać odczyty akcelerometru i~magnetometru i~przekazać je metodzie \emph{getRotationMatrix}.
-
  \input{figures/orientation_axes}
 
 
 
+%=========================================
+
 \section{Rozpoznawanie obrazu}
 
 
+
+%=========================================
 
 \section{Wyświetlanie obrazu}
 
@@ -162,8 +182,6 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
   Umożliwia to uzyskiwanie zaawansowanych efektów graficznych. Jest jednak trudne do zrozumienia dla początkujących programistów, gdyż wykonywanie transformacji lub oświetlenie sceny wymaga podania kodu źródłowego tych operacji jako wartości zmiennych napisowych (\emph{String}) - poprawność tego kodu nie jest sprawdzana przez kompilator, co znacznie utrudnia wykrycie ewentualnego błędu.
 \end{itemize}
 
-Ze względu na brak wykorzystania efektów wymagających użycia potoku programowalnego, \emph{fARmework} wykorzystuje bibliotekę OpenGL ES w~standardzie 1.x.
-Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną wymianę wersji biblioteki bez konieczności redefiniowania modelu.
 
 \subsection{Definicja modelu}
  Renderowany na ekranie obiekt rozszerza klasę \emph{Model} i~jest opisany trójkątnymi ścianami.
@@ -174,36 +192,14 @@ Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną 
   \item tablica kolorów wierzchołków obiektu - każdy wierzchołek opisany jest czterema wartościami $(r, g, b, a)$ definiującymi jasności kanałów: czerwonego, zielonego, niebieskiego i~przezroczystości.
  \end{itemize}
 
- W~komponencie zdefiniowany jest również specjalny typ modelu - \emph{PhasingModel}.
- Ma on zdolność automatycznej transformacji koloru wierzchołków na podstawie zadanego współczynnika z~zakresu $[0, 1]$.
- Przed wyświetleniem, wybrane przez programistę składowe barw wierzchołków modelu są mnożone przez ten współczynik.
- Dzięki temu, wraz ze zmianą wartości współczynnika, model automatycznie zmienia swój kolor.
-
- 
-\subsection{Proces renderowania}
- Dla każdego zdefiniowanego modelu moduł renderujący grafikę automatycznie:
-
- \begin{enumerate}
-  \item Oblicza i~normalizuje wartości wektorów normalnych dla każdej ściany, co umożliwia poprawne oświetlenie obiektu.
-  \item Ustawia położenie kamery oraz definiuje sposób wyświetlania sceny:
-   \begin{itemize}
-    \item kamera jest automatycznie pozycjonowana ponad zdefiniowanym obiektem,
-    \item scena wyświetlana jest domyślnie z~użyciem projekcji ortogonalnej, co zwiększa czytelność modelu.
-   \end{itemize}
-  \item Dokonuje obrotu modelu zgodnie z~przekazaną do modułu macierzą obrotów.
-   Pozwala to wypozycjonować go tak, aby niezależnie od orientacji telefonu pozostawał nieruchomy względem otoczenia.
-  \item Dokonuje obrotu modelu zgodnie z~przekazanym do modułu azymutem.
-   Pozwala to na orientację obiektu tak, aby wskazywał zadany kąt względem magnetycznej północy.
-  \item Definiuje kolor wierzchołków (w~przypadku modelu typu \emph{PhasingModel}).
-  \item Rysuje zdefiniowany obiekt.
-  \item Oświetla scenę.
- \end{enumerate}
-
- Dzięki temu programista może swobodnie używać komponentu bez znajomości biblioteki OpenGL.
- Wystarczy, że wygeneruje współrzędne oraz kolory wierzchołków trójwymiarowego obiektu (co można wykonać automatycznie narzędziami takimi jak 3ds Max\footnote{3ds Max - oprogramowanie służące do modelowania, renderowania i animowania grafiki 3D. Strona produktu dostępna jest pod adresem: http://usa.autodesk.com/3ds-max/.}) i~jako model przekaże je do komponentu (patrz sekcja~\ref{sec:spaceGraphics_usage}), a~reszta pracy zostanie wykonana samoczynnie.
 
 \subsection{Obracanie modelu}
  Aby utrzymać model w~pozycji pozornie nieruchomej względem otoczenia telefonu, niezbędna jest wiedza o~aktualnej orientacji urządzenia i~obracanie modelu przeciwnie do tej orientacji.
+ 
+ Klasa \emph{SensorManager} należąca do API systemu Android udostępnia operację (\emph{getRotationMatrix}) pozwalają wyznaczyć macierz obrotów telefonu.
+ Macierz tę można zastosować do konwersji współrzędnych punktu z~układu współrzędnych telefonu do układu współrzędnych jego otoczenia (zorientowanie osi otoczenia przedstawia Rysunek \ref{fig:orientation_axes}).
+ Aby ją uzyskać, należy pobrać odczyty akcelerometru i~magnetometru i~przekazać je metodzie \emph{getRotationMatrix}.
+
 
 \subsection{Orientacja urządzenia a tryb wyświetlania}
  Macierz obrotu zwracana przez metodę \emph{getRotationMatrix} przechowuje wartości określające fizyczną orientację telefonu.
@@ -220,7 +216,8 @@ Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną 
  Android udostępnia informacje o aktualnie stosowanym trybie wyświetlania (dostarcza ich metoda \emph{getRotation} klasy \emph{Display}).
  W~przypadku, gdy jest on inny od domyślnego, macierz należy skorygować, tzn. zamienić miejscami dwie z~trzech osi.
  Na przykład przy obrocie ekranu o 90\textdegree~w~prawo, oś $y$ wskazuje tam, gdzie poprzednio wskazywała oś $x$, a~oś $x$ - w kierunku przeciwnym do pierwotnie wskazywanego przez oś $y$.
- Podając macierz obrotu i~sposób zamiany osi jako argumenty operacji \emph{remapCoordinateSystem} klasy \emph{SensorManager}, komponent uzyskuje skorygowaną macierz.
+ Podając macierz obrotu i~sposób zamiany osi jako argumenty operacji \emph{remapCoordinateSystem} klasy \emph{SensorManager}, uzyskać można skorygowaną macierz.
+
 
 \subsection{Obrót modelu}
  Skorygowana macierz obrotu bez dalszych modyfikacji może zostać użyta do obrócenia wyświetlanego modelu tak, aby zniwelować obrót urządzenia.
@@ -229,15 +226,16 @@ Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną 
  Rysunek \ref{fig:spaceGraphics_orientation} prezentuje kilka przykładów wyświetlania obróconego modelu strzałki.
  
  \input{figures/spaceGraphics_orientation}
- 
- Model strzałki domyślnie wskazuje północ.
- Wskazywany kierunek można jednak dowolnie zmieniać - obrotem modelu może sterować komponent zewnętrzny.
 
 
+
+%=========================================
 
 \section{Podsumowanie}
 
 
+
+%=========================================
 
 \begin{thebibliography}{9}
  \small
@@ -245,13 +243,36 @@ Klasy jednakże zostały wydzielone w~sposób, który umożliwia transparentną 
  \bibitem{and:loc} Cejas, Fernando.
                    (28.10.2010).
                    \emph{Android Location Providers - gps, network, passive.}
-                   dostęp: styczeń 2013.
-                   w: http://www.android10.org/index.php/articleslocationmaps/226-android-location-providers-gps-network-passive/
+                   dostęp: maj 2014.
+                   w: http://www.android10.org/index.php/\\articleslocationmaps/226-android-location-providers-gps-network-passive/
  
  \bibitem{wifi:loc} Vaughan-Nichol, Steven J.
                     \emph{How Google--and everyone else--gets Wi-Fi location data.}
-                    dostęp: styczeń 2013.
+                    dostęp: maj 2014.
                     w: http://www.zdnet.com/blog/networking/how-google-and-everyone-else-gets-wi-fi-location-data/1664/
+
+ \bibitem{and:doc:phone:axes} \emph{SensorEvent.}
+                              Android Developers.
+                              dostęp: maj 2014.
+                              w: http://developer.android.com/\\reference/android/hardware/SensorEvent.html
+
+ \bibitem{and:doc:world:axes} \emph{SensorManager.}
+                              Android Developers.
+                              dostęp: maj 2014.
+                              w: http://developer.android.com/\\reference/android/hardware/SensorManager\\.html\#getRotationMatrix(float[], float[], float[], float[])
+
+ \bibitem{ogl:es} \emph{OpenGL ES - The Standard for Embedded Accelerated 3D Graphics.}
+                  dostęp: maj 2014.
+                  w: http://www.khronos.org/opengles/
+
+ \bibitem{tec:3d} \emph{Advanced Shaders.}
+                  dostęp: maj 2014.
+                  w: http://www.techsoft3d.com/getting-started/\\hoops-visualize/advanced-shaders
+
+ \bibitem{nvi:hdr} Green S., Cebenoyan C.
+                   \emph{High Dynamic Range Rendering on the GeForce 6800.}
+                   dostęp: maj 2014.
+                   w: http://download.nvidia.com/developer/\\presentations/2004/6800\_Leagues/6800\_\\Leagues\_HDR.pdf
 
 \end{thebibliography}
 
