@@ -2,7 +2,6 @@
 \usepackage[utf8]{inputenc}
 \usepackage[MeX]{polski}
 \usepackage[top=3cm, bottom=3cm, left=2.5cm, right=2.5cm]{geometry}
-\usepackage[breaklinks=true]{hyperref}
 \usepackage{subfigure}
 \usepackage{amsfonts}
 \usepackage{amsthm}
@@ -64,13 +63,14 @@
 
 Celem niniejszego artykułu jest wyjaśnienie działania i~ogólny opis poszczególnych aspektów aplikacji umożliwiającej umieszczenie wirtualnej grafiki w~rzeczywistym położeniu.
 
-Rozdział \ref{sec:app_description} (``Opis aplikacji'')
+Rozdział \ref{sec:app_description} (``Opis aplikacji'') zawiera opis działania aplikacji i~wypunktowuje kolejne kroki pozyskiwania i przetwarzania wykorzystywanych przez nią danych.
 
-Rozdział \ref{sec:position_tracking} (``Odczytywanie pozycji telefonu'')
+Rozdział \ref{sec:position_tracking} (``Odczytywanie pozycji telefonu'') przybliża metody dokonywania odczytów położenia telefonu na kuli ziemskiej.
+Wyjaśnia również znaczenie dokładności tych odczytów.
 
-Rozdział \ref{sec:orientation_tracking} (``Odczytywanie orientacji telefonu'')
+Rozdział \ref{sec:orientation_tracking} (``Odczytywanie orientacji telefonu'') przedstawia źródła informacji, na podstawie których telefon jest w~stanie określić swój obrót w układzie współrzędnych Ziemi.
 
-Rozdział \ref{sec:image_rendering} (``Wyświetlanie obrazu'')
+Rozdział \ref{sec:image_rendering} (``Wyświetlanie obrazu'') opisuje biblioteki wykorzystywane przez system Android podczas renderowania obrazu. Zawiera także opis danych składających się na definicję wyświetlanego modelu i~informacje na temat jego obracania.
 
 Rozdział \ref{sec:summary} podsumowuje artykuł.
 
@@ -254,7 +254,7 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
                    (28.10.2010).
                    \emph{Android Location Providers - gps, network, passive.}
                    dostęp: maj 2014.
-                   w: http://www.android10.org/index.php/\\articleslocationmaps/226-android-location-providers-gps-network-passive/
+                   w: http://www.android10.org/index.php/articleslocationmaps/226-android-location-providers-gps-network-passive/
  
  \bibitem{wifi:loc} Vaughan-Nichol, Steven J.
                     \emph{How Google--and everyone else--gets Wi-Fi location data.}
@@ -264,12 +264,12 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
  \bibitem{and:doc:phone:axes} \emph{SensorEvent.}
                               Android Developers.
                               dostęp: maj 2014.
-                              w: http://developer.android.com/\\reference/android/hardware/SensorEvent.html
+                              w: http://developer.android.com/reference/android/hardware/SensorEvent.html
 
  \bibitem{and:doc:world:axes} \emph{SensorManager.}
                               Android Developers.
                               dostęp: maj 2014.
-                              w: http://developer.android.com/\\reference/android/hardware/SensorManager\\.html\#getRotationMatrix(float[], float[], float[], float[])
+                              w: http://developer.android.com/reference/android/hardware/SensorManager.html\#getRotationMatrix(float[], float[], float[], float[])
 
  \bibitem{ogl:es} \emph{OpenGL ES - The Standard for Embedded Accelerated 3D Graphics.}
                   dostęp: maj 2014.
@@ -277,12 +277,12 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
 
  \bibitem{tec:3d} \emph{Advanced Shaders.}
                   dostęp: maj 2014.
-                  w: http://www.techsoft3d.com/getting-started/\\hoops-visualize/advanced-shaders
+                  w: http://www.techsoft3d.com/getting-started/hoops-visualize/advanced-shaders
 
  \bibitem{nvi:hdr} Green S., Cebenoyan C.
                    \emph{High Dynamic Range Rendering on the GeForce 6800.}
                    dostęp: maj 2014.
-                   w: http://download.nvidia.com/developer/\\presentations/2004/6800\_Leagues/6800\_\\Leagues\_HDR.pdf
+                   w: http://download.nvidia.com/developer/presentations/2004/6800\_Leagues/6800\_Leagues\_HDR.pdf
 
 \end{thebibliography}
 
