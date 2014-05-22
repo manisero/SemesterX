@@ -80,6 +80,13 @@ Rozdział \ref{sec:summary} podsumowuje artykuł.
 
 \section{Opis aplikacji.} \label{sec:app_description}
 
+\begin{itemize}
+ \item że mobilna (Android)
+ \item co to znaczy ze umieszczenie...
+ \item kolejne kroki (uzasadnic co sie dzieje i dlaczego)
+ \item skupic sie na tych opisanych (czyli po wyborze ``tla'')
+ \item ze rozpoznawanie wykracza poza artykul
+\end{itemize}
 
 
 %=========================================
@@ -89,14 +96,14 @@ Rozdział \ref{sec:summary} podsumowuje artykuł.
 System Android udostępnia możliwość odczytywania pozycji telefonu na kuli ziemskiej z~następujących źródeł~\cite{and:loc}:
 
 \begin{itemize}
- \item Odbiornik GPS,
- \item Assisted GPS,
- \item Odczyt pasywny.
+ \item odbiornik GPS,
+ \item metoda Assisted GPS,
+ \item odczyt pasywny.
 \end{itemize}
 
 
 \subsection{Odbiornik GPS.}
- Odczyt bezpośrednio z~odbiornika GPS zamontowanego w urządzeniu.
+ Pierwsza z metod polega na odczycie bezpośrednio z~odbiornika GPS zamontowanego w~urządzeniu.
  Jest to najdokładniejszy sposób określania pozycji telefonu - jego dokładność wynosi od kilku do kilkunastu metrów.
  Ma jednak znaczące ograniczenia:
  \begin{itemize}
@@ -117,7 +124,7 @@ System Android udostępnia możliwość odczytywania pozycji telefonu na kuli zi
 \subsection{Odczyt pasywny.}
  Metoda odczytu pasywnego nie korzysta z odbiornika GPS - jest więc najmniej dokładna (jej dokładność wynosi od kilkudziesięciu do kilkuset metrów).
  Polega na porównaniu siły sygnału odbieranego przez urządzenie od pobliskich stacji bazowych.
- Znając lokalizajcję stacji bazowych możliwe jest przybliżone określenie pozycji urządzenia.
+ Znając lokalizajcję stacji bazowych, możliwe jest przybliżone określenie pozycji urządzenia.
  Dodatkowym źródłem informacji jest siła sygnału pochodzącego od sieci Wi-Fi wykrywanych przez urządzenie\footnote{Firma Google, podobnie jak inne firmy działające w~sektorze mobilnym, zbiera i~przechowuje informacje o~lokalizacji sieci bezprzewodowych~\cite{wifi:loc}.}.\\
 
 Wyboru źródła odczytu dokonuje programista, poprzez jawne wskazanie, którego dostawcy lokalizacji (ang. \emph{LocationProvider}) chce użyć.
@@ -142,7 +149,7 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
 \input{figures/positionTracking}
  
  Jak widać, dokładność jest istotna nawet w sytuacjach, w~których odległość pomiędzy telefonami wynosi ponad sto metrów.
- W przypadku metod odczytu udostępnianych przez system Android nie jest możliwe całkowite usunięcie błędu odczytu - wynika on z jakości odbiorników GPS montowanych w smartfonach. Można jednakże próbować go zmniejszyć poprzez rozszerzenie istniejących metod o~operacje korygujące, takie jak filtrowanie lub uśrednianie kolejnych odczytów.
+ W przypadku metod odczytu udostępnianych przez system Android, nie jest możliwe całkowite usunięcie błędu odczytu - wynika on z jakości odbiorników GPS montowanych w smartfonach. Można jednakże próbować go zmniejszyć poprzez rozszerzenie istniejących metod o~operacje korygujące, takie jak filtrowanie lub uśrednianie kolejnych odczytów.
 
 
 
@@ -150,7 +157,7 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
 
 \section{Odczytywanie orientacji telefonu.} \label{sec:orientation_tracking}
 
-Źródłem wiedzy o~orientacji urządzenia są odczyty z~wbudowanych w~telefon sensorów: akcelerometru i magnetometru.
+Źródłem wiedzy o~obrocie własnym urządzenia są odczyty z~wbudowanych w~telefon sensorów: akcelerometru, magnetometru i~żyroskopu.
 
 
 \subsection{Akcelerometr.}
@@ -171,7 +178,14 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
  Sensor podaje odczyty dla wszystkich trzech osi - orientacja urządzenia nie jest więc przeszkodą.
  Należy jednak zwrócić uwagę na to, że odczyty nie mają szansy być bardzo dokładne - magnetometr mierzy nie tylko pole magnetyczne Ziemi, ale także pola generowane przez inne podzespoły telefonu, na przykład głośnika.\\
 
- \input{figures/orientation_axes}
+
+Połączone dane z~akcelerometru i~magnetometru pozwalają określić przybliżoną orientajcę telefonu.
+
+
+\subsection{Żyroskop.}
+ Dokładniejszy wynik można jednak otrzymać korzystając z~żyroskopu, montowanego głównie w~telefonach z~wyższej półki.
+ Mierzy on prędkość kątową telefonu wokół każdej z osi.
+ Na podstawie prędkości kątowej możliwe jest wyznaczenie wartości kąta obrotu, czyli uzyskanie informacji o~orientacji urządzenia.
 
 
 
@@ -206,9 +220,11 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
 \subsection{Obracanie modelu.}
  Aby utrzymać model w~pozycji pozornie nieruchomej względem otoczenia telefonu, niezbędna jest wiedza o~aktualnej orientacji urządzenia i~obracanie modelu przeciwnie do tej orientacji.
  
- Klasa \emph{SensorManager} należąca do API systemu Android udostępnia operację (\emph{getRotationMatrix}) pozwalają wyznaczyć macierz obrotów telefonu.
+ Klasa \emph{SensorManager} należąca do API systemu Android udostępnia operację (\emph{getRotationMatrix}) pozwalającą wyznaczyć macierz obrotów telefonu.
  Macierz tę można zastosować do konwersji współrzędnych punktu z~układu współrzędnych telefonu do układu współrzędnych jego otoczenia (zorientowanie osi otoczenia przedstawia Rysunek \ref{fig:orientation_axes}).
- Aby ją uzyskać, należy pobrać odczyty akcelerometru i~magnetometru i~przekazać je metodzie \emph{getRotationMatrix}.
+ Aby ją uzyskać, należy pobrać odczyty akcelerometru i~magnetometru (lub żyroskopu) i~przekazać je metodzie \emph{getRotationMatrix}.
+
+ \input{figures/orientation_axes}
 
 
 \subsection{Orientacja urządzenia a tryb wyświetlania.}
@@ -228,12 +244,8 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
  Na przykład przy obrocie ekranu o 90\textdegree~w~prawo, oś $y$ wskazuje tam, gdzie poprzednio wskazywała oś $x$, a~oś $x$ - w kierunku przeciwnym do pierwotnie wskazywanego przez oś $y$.
  Podając macierz obrotu i~sposób zamiany osi jako argumenty operacji \emph{remapCoordinateSystem} klasy \emph{SensorManager}, uzyskać można skorygowaną macierz.
 
-
-\subsection{Obrót modelu.}
  Skorygowana macierz obrotu bez dalszych modyfikacji może zostać użyta do obrócenia wyświetlanego modelu tak, aby zniwelować obrót urządzenia.
- Przed każdorazowym wyrenderowaniem modelu na ekranie telefonu, pobierana jest ostatnio odczytana macierz.
- Przy pomocy funkcji OpenGL model jest obracany zgodnie z~wartościami macierzy, a~następnie rysowany.
- Rysunek \ref{fig:spaceGraphics_orientation} prezentuje kilka przykładów wyświetlania obróconego modelu strzałki.
+ Rysunek \ref{fig:spaceGraphics_orientation} prezentuje kilka przykładów wyświetlania obróconego przykładowego modelu (strzałki wskazującej północ).
  
  \input{figures/spaceGraphics_orientation}
 
