@@ -60,7 +60,7 @@
 
 %=========================================
 
-\section{Wstęp}
+\section{Wstęp.}
 
 wstęp
 
@@ -68,18 +68,24 @@ wstęp
 
 %=========================================
 
-\section{Opis aplikacji}
+\section{Opis aplikacji.}
 
 
 
 %=========================================
 
-\section{Odczytywanie pozycji telefonu}
+\section{Odczytywanie pozycji telefonu.}
 
 System Android udostępnia możliwość odczytywania pozycji telefonu na kuli ziemskiej z~następujących źródeł~\cite{and:loc}:
 
+\begin{itemize}
+ \item Odbiornik GPS,
+ \item Assisted GPS,
+ \item Odczyt pasywny.
+\end{itemize}
 
-\subsection{GPS}
+
+\subsection{Odbiornik GPS.}
  Odczyt bezpośrednio z~odbiornika GPS zamontowanego w urządzeniu.
  Jest to najdokładniejszy sposób określania pozycji telefonu - jego dokładność wynosi od kilku do kilkunastu metrów.
  Ma jednak znaczące ograniczenia:
@@ -90,7 +96,7 @@ System Android udostępnia możliwość odczytywania pozycji telefonu na kuli zi
  \end{itemize}
 
 
-\subsection{Assisted GPS}
+\subsection{Assisted GPS.}
  Metoda Assisted GPS (AGPS, wspomagany GPS) oprócz odbiornika GPS wykorzystuje sygnał sieci komórkowej.
  Telefon otrzymuje od pobliskich stacji bazowych informacje na temat dostępności satelitów GPS oraz przybliżonych pozycji tych satelitów.
  Znacząco przyśpiesza to uzyskanie pierwszego odczytu, a~także eliminuje wymóg otwartej przestrzeni.
@@ -98,7 +104,7 @@ System Android udostępnia możliwość odczytywania pozycji telefonu na kuli zi
  Jego wadą jest jednak dokładność - posiłkowanie się przybliżonymi danymi pochodzącymi ze stacji bazowych powoduje jej spadek do kilkudziesięciu metrów.
 
 
-\subsection{Odczyt pasywny}
+\subsection{Odczyt pasywny.}
  Metoda odczytu pasywnego nie korzysta z odbiornika GPS - jest więc najmniej dokładna (jej dokładność wynosi od kilkudziesięciu do kilkuset metrów).
  Polega na porównaniu siły sygnału odbieranego przez urządzenie od pobliskich stacji bazowych.
  Znając lokalizajcję stacji bazowych możliwe jest przybliżone określenie pozycji urządzenia.
@@ -108,7 +114,7 @@ Wyboru źródła odczytu dokonuje programista, poprzez jawne wskazanie, którego
 Może również zdać się na system, formułując jedynie kryteria wyboru, takie jak wymagana dokładność odczytu, możliwość uzyskania informacji o~prędkości poruszania się urządzenia i~kierunku jego ruchu, czy zezwolenie na użycie metody, która wiąże się z~naliczeniem opłat przez operatora sieci.
 
 
-\subsection{Problem niedokładności odczytów}
+\subsection{Problem niedokładności odczytów.}
  Używając nawet najdokładniejszej z metod, błąd odczytu odbiornika GPS waha się od kilku do kilkunastu metrów, w~zależności od miejsca odczytu.
  O ile błąd na poziomie dwóch-trzech metrów w wielu przypadkach można uznać za akceptowalny, o~tyle niedokładność rzędu dwunastu-piętnastu metrów może bardzo niekorzystanie wpływać na doświadczenia użytkowników aplikacji intensywnie korzystających z~informacji o~położeniu telefonu na kuli ziemskiej.
  
@@ -132,13 +138,13 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
 
 %=========================================
 
-\section{Odczytywanie orientacji telefonu}
+\section{Odczytywanie orientacji telefonu.}
 
 Źródłem wiedzy o~orientacji urządzenia są odczyty z~wbudowanych w~telefon sensorów: akcelerometru i magnetometru.
 
 
-\subsection{Akcelerometr}
- Dostarcza informacji o~przyśpieszeniach działających na telefon.
+\subsection{Akcelerometr.}
+ Akcelerometr dostarcza informacji o~przyśpieszeniach działających na telefon.
  Przykładowo, jeśli telefon trzymany jest pionowo w miejscu, to działa na niego jedynie siła grawitacji, dając odczyt wynoszący około $9,81\frac{m}{s^2}$ na osi $y$.
  Zorientowanie osi obrazuje Rysunek \ref{fig:accelerometer_axes}.
  
@@ -149,8 +155,8 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
  Aby zminimalizować błąd, w~systemie Android zastosowano filtr dolnoprzepustowy, który częściowo odcina wpływ poruszania na dokładność odczytów.
 
 
-\subsection{Magnetometr}
- Odczytuje wartości pola magnetycznego otaczającego urządzenie.
+\subsection{Magnetometr.}
+ Magnetometr odczytuje wartości pola magnetycznego otaczającego urządzenie.
  Na podstawie tych wartości można określić, w~którą stronę świata zwrócony jest telefon.
  Sensor podaje odczyty dla wszystkich trzech osi - orientacja urządzenia nie jest więc przeszkodą.
  Należy jednak zwrócić uwagę na to, że odczyty nie mają szansy być bardzo dokładne - magnetometr mierzy nie tylko pole magnetyczne Ziemi, ale także pola generowane przez inne podzespoły telefonu, na przykład głośnika.\\
@@ -161,13 +167,13 @@ Może również zdać się na system, formułując jedynie kryteria wyboru, taki
 
 %=========================================
 
-\section{Rozpoznawanie obrazu}
+\section{Rozpoznawanie obrazu.}
 
 
 
 %=========================================
 
-\section{Wyświetlanie obrazu}
+\section{Wyświetlanie obrazu.}
 
 Do generowania grafiki trójwymiarowej system Android wykorzystuje biblioteki OpenGL ES (OpenGL for Embedded Systems).
 Jest to odmiana biblioteki OpenGL dedykowana dla systemów wbudowanych używanych między innymi w~konsolach i~telefonach~\cite{ogl:es}.
@@ -183,9 +189,9 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
 \end{itemize}
 
 
-\subsection{Definicja modelu}
- Renderowany na ekranie obiekt rozszerza klasę \emph{Model} i~jest opisany trójkątnymi ścianami.
- Do zdefiniowania modelu wymagane są następujące informacje:
+\subsection{Definicja modelu.}
+ Renderowany na ekranie model opisany jest trójkątnymi ścianami.
+ Do jego zdefiniowania wymagane są następujące informacje:
 
  \begin{itemize}
   \item tablica współrzędnych wierzchołków obiektu - każdy wierzchołek opisany jest trzema współrzędnymi $(x, y, z)$,
@@ -193,7 +199,7 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
  \end{itemize}
 
 
-\subsection{Obracanie modelu}
+\subsection{Obracanie modelu.}
  Aby utrzymać model w~pozycji pozornie nieruchomej względem otoczenia telefonu, niezbędna jest wiedza o~aktualnej orientacji urządzenia i~obracanie modelu przeciwnie do tej orientacji.
  
  Klasa \emph{SensorManager} należąca do API systemu Android udostępnia operację (\emph{getRotationMatrix}) pozwalają wyznaczyć macierz obrotów telefonu.
@@ -201,7 +207,7 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
  Aby ją uzyskać, należy pobrać odczyty akcelerometru i~magnetometru i~przekazać je metodzie \emph{getRotationMatrix}.
 
 
-\subsection{Orientacja urządzenia a tryb wyświetlania}
+\subsection{Orientacja urządzenia a tryb wyświetlania.}
  Macierz obrotu zwracana przez metodę \emph{getRotationMatrix} przechowuje wartości określające fizyczną orientację telefonu.
  Obrót modelu według tych wartości będzie niepoprawny, jeśli ekran urządzenia będzie wyświetlał treści w~trybie innym niż domyślny.
  Dwa podstawowe tryby wyświetlania, to:
@@ -219,7 +225,7 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
  Podając macierz obrotu i~sposób zamiany osi jako argumenty operacji \emph{remapCoordinateSystem} klasy \emph{SensorManager}, uzyskać można skorygowaną macierz.
 
 
-\subsection{Obrót modelu}
+\subsection{Obrót modelu.}
  Skorygowana macierz obrotu bez dalszych modyfikacji może zostać użyta do obrócenia wyświetlanego modelu tak, aby zniwelować obrót urządzenia.
  Przed każdorazowym wyrenderowaniem modelu na ekranie telefonu, pobierana jest ostatnio odczytana macierz.
  Przy pomocy funkcji OpenGL model jest obracany zgodnie z~wartościami macierzy, a~następnie rysowany.
@@ -231,7 +237,7 @@ Android oferuje wsparcie dla dwóch standardów biblioteki:
 
 %=========================================
 
-\section{Podsumowanie}
+\section{Podsumowanie.}
 
 
 
