@@ -56,7 +56,7 @@
 \emph{
  Artkuł opisuje działanie przykładowej aplikacji mobilnej realizującej koncepcję rzeczywistości rozszerzonej.
  Zawiera także informacje na temat realizacji poszczególnych aspektów aplikacji.
- Najwięcej uwagi poświęcone zostało wykorzystaniu sensorów wbudowanych w~urządzenia mobilne.
+ Najwięcej uwagi poświęcono wykorzystaniu sensorów wbudowanych w~urządzenia mobilne.
 }
 
 
@@ -84,14 +84,40 @@ Rozdział \ref{sec:summary} podsumowuje artykuł.
 
 \section{Opis aplikacji.} \label{sec:app_description}
 
-\begin{itemize}
- \item że mobilna (Android)
- \item co to znaczy ze umieszczenie...
- \item że rzeczywistość rozszerzona
- \item kolejne kroki (uzasadnic co sie dzieje i dlaczego)
- \item skupic sie na tych opisanych (czyli po wyborze ``tla'')
- \item ze rozpoznawanie wykracza poza artykul
-\end{itemize}
+Celem aplikaji opisywanej w niniejszym artykule jest umożliwienie użytkownikowi ``zastąpienia'' rzeczywistego obrazu obrazem wirtualnym, ``widzianym'' za pośrednictwem kamery telefonu klasy smartfon (aplikacja przeznaczona jest na platformę Android).
+Taka funkcjonalność jest jedną z form realizacji koncepcji rzeczywistości rozszerzonej (ang. Augmented Reality)~\cite{aug:real}.
+
+Działanie aplikacji zaczyna się od zdefiniowania pary obraz rzeczywisty-obraz wirtualny (zdefiniować można wiele takich par):
+
+\begin{enumerate}
+ \item Użytkownik wybiera obraz rzeczywisty (poprzez zrobienie jego zdjęcia), który będzie stanowił tło dla obrazu wirtualnego.
+ \item Następuje odczyt współrzędnych geograficznych telefonu (patrz Rozdział~\ref{sec:position_tracking}).
+ \item Następuje odczyt orientacji telefonu (patrz Rozdział~\ref{sec:orientation_tracking}).
+ \item Użytkownik wybiera trójwymiarowy obiekt wirtualny, który ma zastąpić obraz rzeczywisty.
+ \item Pozyskane dane zapisywane są w~bazie danych aplikacji.
+\end{enumerate}
+
+Następnie aplikacja cyklicznie próbuje rozpoznać którykolwiek ze zdefiniowanych obrazów rzeczywistych i~zastąpić go odpowiadającym mu obrazem wirtualnym:
+
+\begin{enumerate}
+ \item Wczytywany jest zbiór $R$~zdefiniowanych obrazów rzeczywistych.
+ \item Następuje odczyt współrzędnych geograficznych telefonu.
+ \item Ze zbioru $R$~usuwane są obrazy, podczas pozyskania których telefon znajdował się dalego od aktualnego położenia.
+ \item Następuje odczyt orientacji telefonu.
+ \item Ze zbioru $R$~usuwane są obrazy, podczas pozyskania których telefon był skierowany w~znacznie inną stronę niż aktualnie.
+ \item Pobierany jest obraz $c$~z~kamery telefonu.
+ \item Dla każdego obrazu $r$~z~$R$:
+  \begin{itemize}
+   \item $r$~jest obracany tak, aby zniwelować różnicę pomiędzy przypisaną do niego orientacją, a~orientacją aktualną (odczytaną w kroku 4),
+   \item określany jest stopień podobieństwa $c$~do~$r$ (szczegóły tej operacji wykraczają poza tematykę niniejszego artykułu).
+  \end{itemize}
+ \item Z $R$~usuwane są obrazy o~nieakceptowalnie małym stopniu podobieństwa do $c$.
+ \item Z $R$~wybierany jest obraz $r_f$~o~największym stopniu podobieństwa do $c$.
+ \item Na ekranie telefonu wyświetlany jest obraz $c$~z~nałożonym na niego (odpowiednio obróconym) obrazem $r_f$.
+\end{enumerate}
+
+Jeśli w~którymkolwiek kroku zbiór $R$~stanie się pusty, algorytm kończy działanie, a~na ekranie telefonu wyświetlany jest obraz pobrany z~kamery urządzenia.
+
 
 
 %=========================================
@@ -267,6 +293,11 @@ Główne problemy tego typu aplikacji to niedokładność odczytów sensorów i 
 
 \begin{thebibliography}{9}
  \small
+
+ \bibitem{aug:real} \emph{Rzeczywistość rozszerzona.}
+                              Wikipedia.
+                              dostęp: maj 2014.
+                              w: http://pl.wikipedia.org/wiki/Rzeczywisto\%C5\%9B\%C4\%87\_rozszerzona
 
  \bibitem{and:loc} Cejas, Fernando.
                    (28.10.2010).
