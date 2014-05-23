@@ -8,8 +8,10 @@
 \usepackage{tikz}
 \usetikzlibrary{shapes.multipart,positioning}
 \usepackage{fancyvrb}
+\usepackage{wrapfig}
+\usepackage{caption}
 
-\title{\LARGE{[SDPB] Wyznaczanie trasy} \\ \vspace{2mm} \large{Dokumentacja końcowa projektu}}
+\title{\LARGE{[SPDB] Wyznaczanie trasy} \\ \vspace{2mm} \large{Dokumentacja końcowa projektu}}
 \author{Michał Aniserowicz, Jakub Turek}
 \date{}
 
@@ -322,6 +324,94 @@ PTRO_0008 15   RO_0008
 		\caption{Przykładowa odpowiedź serwisu odnajdującego najszybszą ścieżkę pomiędzy punktami.}
 		\label{vrb:route_service_response}
 	\end{figure}	
+
+	\section*{Aplikacja kliencka}
+
+	\subsection*{Główny ekran aplikacji}
+
+	Główny ekran aplikacji umożliwia wprowadzenie czterech parametrów wyszukiwania:
+
+	\begin{itemize}
+		\item Punkt początkowy trasy.
+		\item Punkt końcowy trasy.
+		\item Wyznaczenie trasy dla komunikacji miejskiej. Wyłączenie tej opcji powoduje wyszukanie trasy samochodowej.
+		\item Docelowa godzina przyjazdu.
+	\end{itemize} 
+
+	\begin{figure}[ht!]
+		\centering
+		\begin{minipage}{.45\textwidth}
+			\centering
+  			\includegraphics[width=\linewidth, height=.4\textheight,keepaspectratio]{graphics/snapshots/main_screen.png}
+  			\captionof{figure}{Główny ekran aplikacji.}
+  			\label{fig:main_screen}
+		\end{minipage} \hfill
+		\begin{minipage}{.45\textwidth}
+			\centering
+  			\includegraphics[width=\linewidth, height=.4\textheight,keepaspectratio]{graphics/snapshots/location_selection.png}
+  			\captionof{figure}{Ekran wyboru punktu startowego/końcowego.}
+  			\label{fig:location_selection}
+		\end{minipage}
+	\end{figure}
+
+	Wygląd ekranu startowego przedstawia rysunek~\ref{fig:main_screen}. Ostatnie dwie opcje wybiera się bezpośrednio na głównym ekranie. Wybór godziny przyjazdu dokonywany jest standardowym komponentem systemu iOS - przesuwaną ,,rolką'' z~osobnymi kolumnami dla godzin i~minut.
+
+	Wybór punktu startowego i~końcowego wymaga zagłębienia się w~kolejny ekran. Dokonuje się tego poprzez wciśnięcie znaku $>$.
+
+	\subsection*{Ekran wyboru punktu}
+
+	Wyboru punktu startowego oraz docelowego dokonuje się poprzez wskazanie go na mapie. Po przytrzymaniu palcem dowolnego miejsca mapy przez sekundę wybrany punkt jest oznaczany czerwoną pinezką.
+
+	Po wybraniu punktu i~kliknięciu \emph{Wróć} na pasku nawigacyjnym, na ekranie głównym pojawią się współrzędne wybranego punktu skrócone do trzech miejsc po przecinku.
+
+	Ekran wyboru punktu przedstawia rysunek~\ref{fig:location_selection}.
+
+	\subsection*{Ekran prezentacji wyników}
+
+	Ekran prezentacji wyników został przedstawiony na rysunkach~\ref{fig:result_screen_one} oraz~\ref{fig:result_screen_two}.
+
+	\begin{figure}[ht!]
+		\centering
+		\begin{minipage}{.45\textwidth}
+			\centering
+  			\includegraphics[width=\linewidth, height=.4\textheight,keepaspectratio]{graphics/snapshots/result_screen_one.png}
+  			\captionof{figure}{Ekran prezentacji wyników - punkt startowy.}
+  			\label{fig:result_screen_one}
+		\end{minipage} \hfill
+		\begin{minipage}{.45\textwidth}
+			\centering
+  			\includegraphics[width=\linewidth, height=.4\textheight,keepaspectratio]{graphics/snapshots/result_screen_two.png}
+  			\captionof{figure}{Ekran prezentacji wyników - miejsce przesiadki.}
+  			\label{fig:result_screen_two}
+		\end{minipage}
+	\end{figure}
+
+	Na ekranie przedstawiane są następujące informacje:
+
+	\begin{itemize}
+		\item Najkrótsza trasa składająca się z~odcinków narysowanych kolorem fioletowym.
+		\item Punkt początkowy trasy, w~którym prezentowane są informacje o~wymaganym czasie rozpoczęcia podróży oraz linii komunikacji miejskiej (jeżeli opcja została aktywowana), jest oznaczony pinezką koloru zielonego.
+		\item Punkt końcowy trasy, w~którym prezentowana jest informacja o~czasie przyjazdu, jest oznaczony pinezką koloru czerwonego.
+		\item Punkty przesiadek, w~których prezentowana jest informacja do jakiej linii należy się przesiąść, oznaczone są pinezkami koloru fioletowego. Punkty są widoczne tylko podczas wyszukiwania trasy komunikacji miejskiej i~tylko, gdy wyszukana trasa uwzględnia przesiadki.
+	\end{itemize}
+
+	\subsection*{Ekran ustawień}
+
+	Ekran ustawień został przedstawiony na rysunku~\ref{fig:settings_screen}. 
+
+	\begin{figure}[ht!]
+		\centering
+		\includegraphics[width=\linewidth, height=.4\textheight, keepaspectratio]{graphics/snapshots/settings_screen.png}
+		\caption{Ekran ustawień aplikacji.}
+		\label{fig:settings_screen}
+	\end{figure}
+
+	Na ekranie ustawień można wprowadzić:
+
+	\begin{itemize}
+		\item Adres serwisu, z~którym łączy się aplikacja.
+		\item Czas doliczany do każdej przesiadki (podawany w~sekundach).
+	\end{itemize}
 
 	\section*{Budowanie i~uruchamianie aplikacji}
 
